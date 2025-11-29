@@ -14,6 +14,8 @@ Not an OpenCode user? These are pretty tool-agnostic, it should work with Claude
 
 ### plan-with-context agent
 
+> [`agent/plan-with-context.md`](agent/plan-with-context.md)
+
 Use this to plan your work instead of the usual `plan` mode.
 
 ```markdown
@@ -49,6 +51,8 @@ It has some differences from the regular plan mode:
 
 ### build-with-context agent
 
+> [`agent/build-with-context.md`](agent/build-with-context.md)
+
 Same as a regular `build` agent, but has instructions to read and write `CONTEXT.local.md` as it goes.
 
 That means it can read the plan build with *plan-with-context*, and update it with progress, etc.
@@ -56,6 +60,8 @@ That means it can read the plan build with *plan-with-context*, and update it wi
 It helps keep the agent on track across long sessions with multiple session compactions.
 
 ### /continue-from-here
+
+> [`command/continue-from-here.md`](command/continue-from-here.md)
 
 One of my favourite ways to work! Forget prompting, just add comments.
 
