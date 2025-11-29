@@ -10,7 +10,7 @@ Some indispensable prompts and tools I use with [Opencode](https://opencode.ai/)
 
 Not an OpenCode user? These are pretty tool-agnostic, it should work with Claude Code and Gemini CLI and other tools (with some edits).
 
-## Use cases
+## Core tools
 
 ### plan-with-context agent
 
@@ -86,3 +86,26 @@ function getWord(word: string /* AI: also query by `language` */ ) {
 ```
 
 Inspired by [Aider's watch files mode](https://aider.chat/docs/usage/watch.html).
+
+## Extras
+
+### /address-merge-conflict
+
+> [`command/address-merge-conflict.md`](command/address-merge-conflict.md)
+
+Use this after a nasty `git pull`. It'll assess the situation and give suggestions. You can ask the agent to resolve the conflict afterwards.
+
+### /pr-analyse
+
+> [`command/pr-analyse.md`](command/pr-analyse.md)
+
+Analyse a PR. It creates 2 artefacts: a *PR analysis* which summarises a PR for a human to understand what's going on, and *PR feedback* for some comments.
+
+```
+gh pr checkout 1234
+opencode run --command pr-analyse
+.
+.
+cat pr_analysis.md
+cat pr_feedback.md
+```
