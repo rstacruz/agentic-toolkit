@@ -1,4 +1,4 @@
-# Rico's agentic toolkit
+# Agentic toolkit
 
 Some indispensable prompts and tools I use with [Opencode](https://opencode.ai/).
 
