@@ -81,7 +81,12 @@ model Word {
 
 // word.ts
 function getWord(word: string /* AI: also query by `language` */ ) {
+  // AI: use validateWord here
     return db.word.where({ word })
+}
+
+function validateWord(wordObject) {
+  // AI: implement this. add typescript types to the params
 }
 ```
 
