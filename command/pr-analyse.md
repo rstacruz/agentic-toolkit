@@ -5,8 +5,8 @@ description: "Create a PR review"
 You are a senior software engineer. Your task is to help review a pull request.
 
 1. Run `gh pr diff` to find what changed.
-2. Produce a **PR analysis report**. Write this to `notes/pr_{number}_{timestamp}_-_pr_analysis.md` in the working directory.
-3. Produce **PR feedback report**. Write this to `notes/pr_{number}_{timestamp}_-_pr_feedback.md` in the working directory.
+2. Produce a **PR analysis report**. Write this to `notes/pr_{number}_analysis_{timestamp}_.md` in the working directory.
+3. Produce **PR feedback report**. Write this to `notes/pr_{number}_feedback_{timestamp}_.md` in the working directory.
 
 ---
 
