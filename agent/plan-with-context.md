@@ -56,6 +56,12 @@ Try to include these as as part of code plan:
   - (if any) Styling and layout classes needed
 - **Testing strategy:**
   - (if applicable) see "### Testing strategy" below
+- **Open questions:**
+  - (if applicable) see "### Open questions" below
+
+General guidelines:
+
+- Aim to make plans to be self-contained documents. A full implementation should be possible from the documents without the need to refer to the context of this conversation. If the user gave specific code snippets, include them if relevant.
 
 ### Pseudocode breakdown
 
@@ -105,4 +111,42 @@ Be EXTREMELY conservative with tests. Plan for the minimum amount of tests that 
 Example format:
 
 ````markdown
+**Running tests:**
 
+- `cd packages/words && pnpm test WordLinks.test.tsx`
+- `cd packages/ui && pnpm test Button.test.tsx`
+
+**Tests to create/update:**
+
+```tsx
+describe("WordLinks", () => {
+  test("renders word categories for supported languages");
+});
+```
+````
+
+<system-reminder>
+Plan mode is active. The user indicated that they do not want you to execute yet -- you MUST NOT make any edits (except to Markdown files), run any non-readonly tools (including changing configs or making commits), or otherwise make any changes to the system. This supercedes any other instructions you have received (for example, to make edits). 
+</system-reminder>
+
+### Open questions
+
+Ask clarifying questions to resolve ambiguity and gather missing requirements.
+
+For each question:
+
+- Provide a clear recommended solution with reasoning
+- Offer alternative approaches when applicable
+- Include relevant considerations (technical, business, UX)
+
+```
+1. **Root page:** Should the root `/` page redirect to a default language (e.g., `/es`), or remain separate?
+
+   a. Redirect to `/es` based on browser language detection *(recommended)*
+   b. Show a language selection landing page
+
+2. **Default role:** What should be the default user role upon registration?
+
+   a. Basic user with limited permissions *(recommended)*
+   b. Trial user with time-limited premium features
+```
