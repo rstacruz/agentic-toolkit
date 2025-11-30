@@ -9,6 +9,11 @@ Help me continue where I left off with my work.
 - Try to infer the intention basee on changes and comments I might have written.
 - Remove commands marked with "AI:" if any.
 
+$ARGUMENTS
+
+## Additional context
+
+``````
 <output command='git diff --no-ext-diff; git diff --no-ext-diff --cached'>
 !`git diff --no-ext-diff; git diff --no-ext-diff --cached`
 </output>
@@ -16,4 +21,4 @@ Help me continue where I left off with my work.
 <output command='git status --porcelain'>
 !`git status --porcelain`
 </output>
-
+``````
