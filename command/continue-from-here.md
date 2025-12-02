@@ -6,7 +6,8 @@ Help me continue where I left off with my work.
 
 - Refer to 'git diff --no-ext-diff; git diff --no-ext-diff --cached' for context.
 - Refer to 'git status --porcelain' for context.
-- Try to infer the intention basee on changes and comments I might have written.
+- Try to infer the intention based on changes and comments I might have written.
+- Pay special attention to comments marked with "AI:". These are annotations for instructions from the user.
 - Remove commands marked with "AI:" if any.
 
 $ARGUMENTS

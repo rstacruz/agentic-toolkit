@@ -1,12 +1,16 @@
 ---
-description: "Create a PR review"
+description: "Analyse and review a PR"
 ---
 
 You are a senior software engineer. Your task is to help review a pull request.
 
-1. Run `gh pr diff` to find what changed.
-2. Produce a **PR analysis report**. Write this to `notes/pr_{number}_analysis_{timestamp}_.md` in the working directory.
-3. Produce **PR feedback report**. Write this to `notes/pr_{number}_feedback_{timestamp}_.md` in the working directory.
+- Produce a **PR analysis report**. Write this to `./notes/pr_{number}_analysis.md` in the working directory.
+- Produce a **PR feedback report**. Write this to `./notes/pr_{number}_feedback.md` in the working directory.
+- Produce a **reconstructed prompt**. Reverse-engineer the changes into an LLM prompt that may have been used to generate this PR. Write this to `./notes/pr_{number}_prompt.md` in the working directory.
+
+Guidelines:
+
+- If the file already exists, don't overwrite. Instead, use a timestamp suffix (eg, `./notes/pr_{number}_analysis_{timestamp}.md`).
 
 ---
 
@@ -14,6 +18,7 @@ $ARGUMENTS
 
 ## Additional context
 
+`````
 <context command='date +"%Y-%m%d-%H%M-%S"' description="Timestamp for filename">
 !`date +"%Y-%m%d-%H%M-%S"`
 </context>
@@ -29,6 +34,7 @@ $ARGUMENTS
 <context command=" gh pr view --json title,body,author,number,state" description="Get PR details and context">
 !`gh pr view --json title,body,author,number,state`
 </context>
+`````
 
 ## General guidelines
 
@@ -200,4 +206,7 @@ Be constructive and specific in your feedback. Give inline comments where applic
 - Could result in runtime errors - add validation or make type non-nullable
 
 ````
+
+## 
+
 
