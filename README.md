@@ -59,6 +59,14 @@ That means it can read the plan build with *plan-with-context*, and update it wi
 
 It helps keep the agent on track across long sessions with multiple session compactions.
 
+### /proceed
+
+> [`command/proceed.md`](command/proceed.md)
+
+Use this to proceed and build from a plan, run verification steps, then write a summary to `artefacts/changelog.md`.
+
+Use this after planning with `plan-with-context`.
+
 ### /continue-from-here
 
 > [`command/continue-from-here.md`](command/continue-from-here.md)
