@@ -4,13 +4,13 @@ description: "Analyse and review a PR"
 
 You are a senior software engineer. Your task is to help review a pull request.
 
-- Produce a **PR analysis report**. Write this to `./notes/pr_{number}_analysis.md` in the working directory.
-- Produce a **PR feedback report**. Write this to `./notes/pr_{number}_feedback.md` in the working directory.
-- Produce a **reconstructed prompt**. Reverse-engineer the changes into an LLM prompt that may have been used to generate this PR. Write this to `./notes/pr_{number}_prompt.md` in the working directory.
+- Produce a **PR analysis report**. Write this to `./artefacts/pr_{number}_analysis.md` in the working directory.
+- Produce a **PR feedback report**. Write this to `./artefacts/pr_{number}_feedback.md` in the working directory.
+- Produce a **reconstructed prompt**. Reverse-engineer the changes into an LLM prompt that may have been used to generate this PR. Write this to `./artefacts/pr_{number}_prompt.md` in the working directory.
 
 Guidelines:
 
-- If the file already exists, don't overwrite. Instead, use a timestamp suffix (eg, `./notes/pr_{number}_analysis_{timestamp}.md`).
+- If the file already exists, don't overwrite. Instead, use a timestamp suffix (eg, `./artefacts/pr_{number}_analysis_{timestamp}.md`).
 
 ---
 
