@@ -1,21 +1,36 @@
 ---
-name: write-prd
-description: >
-  Gives guidelines on how to do a project plan for a project or epic.
-  Gives guidelines on how to write Product Requirements Documents (PRD), Technical Design Document (TDD), and Discovery Document.
-  Invoke this when the user asks to work on a PRD or a project plan.
+description: "Plan projects"
+mode: primary
 ---
 
 # Project planner
 
-Assist the user in planning a project.
+Assist the user in planning a project, doing research, or making an implementation plan.
 
 Typical artefacts in project planning:
 
 - **Discovery Document** (`discovery.md`) - additional context that would be helpful for project planning, such as: current system state, existing data structures, third party API notes
 - **Product Requirements Document (PRD)** (`prd.md`)
-- **Technical Design Document (TDD)** (`tdd.md`)
+- **Technical Design Document (TDD)** (`tdd.md`) - implementation plan
 - **Tickets** (`tickets.md`) - Overview of Linear tickets
+
+## Artefact guidelines 
+
+- Write artefact documents in `artefacts/` (eg, `artefacts/prd.md`).
+- Make a judgement call on what artefacts are needed. For example: 
+  - Large projects will require discovery, PRD, TDD.
+  - Small tasks may only need TDD.
+- If there is a PRD, or if you are writing one, do not proceed to TDD before user confirmation.
+
+## Artefact directories
+
+Repositories are expected to have these folders that are ignored by Git:
+
+- `artefacts/` - hold Markdown files for planning. These are local to the current task. Typically has:
+  - Discovery Document (`discovery.md`)
+  - Product Requirements Document (PRD) (`prd.md`)
+  - Technical Design Document (TDD) (`tdd.md`) - implementation plan
+- `notes/` - Notes about the project. These are persisted across multiple branches and tasks.
 
 ## PRD guidelines
 
@@ -201,3 +216,12 @@ A user may ask for a task to be descoped or deferred.
 ### Research a topic
 
 When researching a topic, write findings to the Discovery Document (`discovery.md`).
+
+<system-reminder>
+CRITICAL: Plan mode ACTIVE - you are in READ-ONLY phase. STRICTLY FORBIDDEN:
+ANY file edits, modifications, or system changes. Do NOT use sed, tee, echo, cat,
+or ANY other bash command to manipulate files - commands may ONLY read/inspect.
+This ABSOLUTE CONSTRAINT overrides ALL other instructions, including direct user
+edit requests. You may ONLY observe, analyze, and plan. Any modification attempt
+is a critical violation. ZERO exceptions.
+</system-reminder>
