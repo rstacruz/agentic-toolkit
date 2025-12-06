@@ -16,9 +16,9 @@ Not an OpenCode user? These are pretty tool-agnostic, it should work with Claude
 
 ## Core tools
 
-### plan-with-context agent
+### plan+ agent
 
-> [`agent/plan-with-context.md`](agent/plan-with-context.md)
+> [`agent/plan+.md`](agent/plan-with-context.md)
 
 Use this to plan your work instead of the usual `plan` mode.
 
@@ -26,7 +26,7 @@ Use this to plan your work instead of the usual `plan` mode.
 
 ## User
 
-(switch to plan-with-context mode)
+(switch to plan+ mode)
 
 plan this work:
 - in the `workmux add` command, i want to add `--name <name>` to name the worktree 
@@ -43,23 +43,23 @@ I've researched the codebase and created a comprehensive implementation plan for
 
 ## User
 
-(switch to build-with-context mode)
+(switch to build+ mode)
 
 proceed and implement
 ```
 
 It has some differences from the regular plan mode:
 
-- It will keep its plans in a file called `CONTEXT.local.md`. This is a form of intentional compaction
-- It optimises the plan for scanability. It has pseudocode, list of files, etc
+- It will keep its plans in `artefacts/*.md`.
+- It optimises the plan for scanability.
 
-### build-with-context agent
+### build+ agent
 
-> [`agent/build-with-context.md`](agent/build-with-context.md)
+> [`agent/build+.md`](agent/build-with-context.md)
 
-Same as a regular `build` agent, but has instructions to read and write `CONTEXT.local.md` as it goes.
+Same as a regular `build` agent, but has instructions to read and write `artefacts/tdd.md` as it goes.  This is a form of intentional compaction.
 
-That means it can read the plan build with *plan-with-context*, and update it with progress, etc.
+That means it can read the plan build with *plan+*, and update it with progress, etc.
 
 It helps keep the agent on track across long sessions with multiple session compactions.
 
@@ -69,7 +69,7 @@ It helps keep the agent on track across long sessions with multiple session comp
 
 Use this to proceed and build from a plan, run verification steps, then write a summary to `artefacts/changelog.md`.
 
-Use this after planning with `plan-with-context`.
+Use this after planning with `plan+`.
 
 ### /continue-from-here
 
