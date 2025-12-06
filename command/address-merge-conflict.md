@@ -18,4 +18,3 @@ Do NOT do any git operations. Leave it for the user to add and commit.
 !`git status`
 </output>
 `````
-

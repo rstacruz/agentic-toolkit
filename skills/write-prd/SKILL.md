@@ -201,4 +201,3 @@ A user may ask for a task to be descoped or deferred.
 ### Research a topic
 
 When researching a topic, write findings to the Discovery Document (`discovery.md`).
-

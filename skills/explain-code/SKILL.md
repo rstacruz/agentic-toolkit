@@ -51,7 +51,7 @@ graph LR
 Break down the core logic _related to the plan_ into pseudocode to illustrate the flow and key components.
 
 - Add reference letters like `[A]` and `[B]` to make it easier to find connections
-- Mark `[🟢 NEW]` or `[🟡 UPDATED]` or `[🔴 REMOVED]` where necessary
+- When talking about changes (eg, PR analyses), mark `[🟢 NEW]` or `[🟡 UPDATED]` or `[🔴 REMOVED]` where necessary
 - Use "sh" for syntax highlighting language, even if the syntax is not shell
 - If any specific function/file is not updated/removed, leave it out
 
@@ -86,4 +86,3 @@ saveDraftToDB(post)
 ````
 
 </guidelines>
-

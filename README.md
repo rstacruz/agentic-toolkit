@@ -5,8 +5,12 @@ Some indispensable prompts and tools I use with [Opencode](https://opencode.ai/)
 ## Installation
 
 - Install OpenCode
-- Copy `agent/` files into `~/.config/opencode/agent/`
-- Copy `command/` files into `~/.config/opencode/command/`
+- Pick-and-choose what you want to copy:
+  - Copy `agent/` files into `~/.config/opencode/agent/`
+  - Copy `command/` files into `~/.config/opencode/command/`
+  - Copy `skills/` files into `~/.config/opencode/skills/`
+
+Alternatively, run `./push.sh` to push everything.
 
 Not an OpenCode user? These are pretty tool-agnostic, it should work with Claude Code and Gemini CLI and other tools (with some edits).
 
