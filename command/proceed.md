@@ -1,5 +1,6 @@
 ---
 description: "Proceed and build from plan"
+agent: "build+"
 ---
 
 Proceed and build from plan.
