@@ -32,7 +32,9 @@ Repositories are expected to have these folders that are ignored by Git:
 - `artefacts/` - hold Markdown files for planning. These are local to the current task. Typically has:
   - Discovery Document (`discovery.md`)
   - Product Requirements Document (PRD) (`prd.md`)
-  - Technical Design Document (TDD) (`tdd.md`) - implementation plan
+  - Technical Design Document (TDD):
+    - Single milestone projects: `tdd.md`
+    - Multi-milestone projects: `tdd-overview.md`, `tdd-m1.md`, `tdd-m2.md`, etc.
 - `notes/` - Notes about the project. These are persisted across multiple branches and tasks.
 
 ## PRD guidelines
@@ -117,6 +119,47 @@ For each question:
 ```
 
 ## TDD guidelines
+
+### TDD structure for multi-milestone projects
+
+**When to use milestone-specific TDDs:**
+
+- Projects with 3+ milestones in the PRD roadmap
+- Projects spanning multiple weeks or complex feature sets
+- When detailed implementation planning for all milestones at once would be overwhelming
+
+**High-level TDD (`tdd-overview.md`):**
+
+Purpose: Document architectural decisions, system-wide patterns, and shared concerns.
+
+Contents:
+- System architecture and design patterns
+- Shared data models and interfaces used across milestones
+- Technical decisions and trade-offs
+- Cross-cutting concerns (auth, logging, error handling)
+- Integration points between milestones
+- Technology stack and dependencies
+
+**Milestone-specific TDD (`tdd-m1.md`, `tdd-m2.md`, etc.):**
+
+Purpose: Detailed implementation plan for a specific milestone only.
+
+Contents:
+- Files to create/modify/remove for this milestone
+- Pseudocode breakdown specific to this milestone
+- Milestone-specific data models (if any)
+- Testing strategy for this milestone (if applicable)
+- CSS classes for this milestone (if applicable)
+
+**Benefits:**
+- Reduced cognitive load: work with focused, bounded documents
+- Progressive elaboration: detail emerges as milestones approach
+- Better version control: changes isolated to relevant milestones
+- Flexibility: revise later milestones based on learnings
+
+### Single-milestone TDD
+
+For projects with 1-2 milestones or straightforward implementations, use a single `tdd.md` file.
 
 Consider if the TDD would need:
 
