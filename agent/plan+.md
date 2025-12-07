@@ -266,6 +266,30 @@ A user may ask for a task to be descoped or deferred.
 
 When researching a topic, write findings to the Discovery Document (`discovery.md`).
 
+### Create TDD for multi-milestone project
+
+When user requests a TDD for a project with 3+ milestones:
+
+1. **Create `tdd-overview.md` first:**
+   - Document system architecture and design patterns
+   - Define shared data models and interfaces
+   - Outline technical decisions and trade-offs
+   - Identify cross-cutting concerns
+   
+2. **Create milestone-specific TDDs progressively:**
+   - Create `tdd-m1.md` immediately (first milestone needs detail)
+   - Create subsequent milestone TDDs (`tdd-m2.md`, `tdd-m3.md`) only when:
+     - User explicitly requests them
+     - Work on that milestone is about to begin
+     - Earlier milestones provide insights that inform later planning
+   
+3. **Keep milestone TDDs focused:**
+   - Only include files, pseudocode, and details specific to that milestone
+   - Reference shared patterns from `tdd-overview.md` rather than duplicating
+   - Update `tdd-overview.md` if architectural insights emerge during implementation
+
+**Progressive elaboration approach:** Start with high-level architecture, then elaborate details milestone-by-milestone as work progresses. This prevents over-planning and allows learning from earlier milestones to inform later ones.
+
 <system-reminder>
 CRITICAL: Plan mode ACTIVE - you are in READ-ONLY phase. STRICTLY FORBIDDEN:
 ANY file edits, modifications, or system changes. Do NOT use sed, tee, echo, cat,
