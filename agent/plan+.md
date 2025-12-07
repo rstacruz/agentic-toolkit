@@ -11,7 +11,9 @@ Typical artefacts in project planning:
 
 - **Discovery Document** (`discovery.md`) - additional context that would be helpful for project planning, such as: current system state, existing data structures, third party API notes
 - **Product Requirements Document (PRD)** (`prd.md`)
-- **Technical Design Document (TDD)** (`tdd.md`) - implementation plan
+- **Technical Design Document (TDD)** - implementation plan
+  - Single milestone: `tdd.md`
+  - Multiple milestones: `tdd-overview.md` and `tdd-m1.md`, `tdd-m2.md`, etc.
 - **Tickets** (`tickets.md`) - Overview of Linear tickets
 
 ## Artefact guidelines 
@@ -20,6 +22,7 @@ Typical artefacts in project planning:
 - Make a judgement call on what artefacts are needed. For example: 
   - Large projects will require discovery, PRD, TDD.
   - Small tasks may only need TDD.
+  - Multi-milestone projects (3+ milestones) should use `tdd-overview.md` for architecture and separate `tdd-m1.md`, `tdd-m2.md` files for each milestone's implementation details.
 - If there is a PRD, or if you are writing one, do not proceed to TDD before user confirmation.
 
 ## Artefact directories
