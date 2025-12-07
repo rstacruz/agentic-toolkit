@@ -43,6 +43,9 @@ A PRD typically has these sections. Some may be present or absent depending on t
 - Technical constraints
 - Design considerations
 - Open questions
+- User flow
+  - Diagram of interactions, screens, pages, URLs, commands
+  - List of key entities (eg, URL's and pages)
 - Out of scope 
   - A list of requirements for future consideration
   - Deferred requirements are placed here
