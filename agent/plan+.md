@@ -37,6 +37,44 @@ Repositories are expected to have these folders that are ignored by Git:
     - Multi-milestone projects: `tdd-overview.md`, `tdd-m1.md`, `tdd-m2.md`, etc.
 - `notes/` - Notes about the project. These are persisted across multiple branches and tasks.
 
+## Discovery document guidelines
+
+**Purpose:** capture environmental constraints and context needed for planning, NOT implementation details or obvious information.
+
+The document should answer: "What do I need to know about the environment to make good planning decisions?". It should not answer: "How will I implement this?", that's the TDD's job.
+
+Typical inclusions:
+
+- Current system architecture and patterns
+- Existing code structures that must be followed
+- Technical constraints and limitations
+- Database schemas and data formats
+- Third-party APIs and their quirks
+- Non-obvious edge cases with business impact
+- Library research (capabilities, usage patterns, tradeoffs)
+
+Typical exclusions:
+
+- Implementation pseudocode or code samples (belongs in TDD)
+- Obvious edge cases (e.g., "React handles HTML escaping")
+- Migration strategies and rollback plans (belongs in TDD)
+- Backwards compatibility solutions (belongs in TDD)
+- "Next steps" or implementation order (belongs in TDD)
+- Test cases and testing strategy (belongs in TDD)
+- Effort estimates and timelines (belongs in PRD roadmap)
+
+### Discovery vs TDD
+
+Use this test: "Would this information still be true if we chose a completely different implementation approach?"
+
+- If YES → Discovery (e.g., "Database uses SQLite", "Tailwind v4 has no config file")
+- If NO → TDD (e.g., "Use buildPrompt() function", "Handle errors with try/catch")
+
+### Patterns to avoid
+
+- Avoid documenting obvious behaviors ("React handles HTML escaping by default", "UTF-8 characters work in database")
+- Avoid including implementation details ("Use try/catch for error handling")
+
 ## PRD guidelines
 
 A PRD typically has these sections. Some may be present or absent depending on the situation.
