@@ -5,6 +5,9 @@ Some indispensable prompts and tools I use with [Opencode](https://opencode.ai/)
 ## Installation
 
 - Install OpenCode
+- Set up artefacts directories:
+  - Add to global gitignore: `echo artefacts >> ~/.config/git/global_ignore # or wherever it is`
+  - Exclude from global rgignore (for OpenCode): `echo '!artefacts' >> ~/.rgignore`
 - Pick-and-choose what you want to copy:
   - Copy `agent/` files into `~/.config/opencode/agent/`
   - Copy `command/` files into `~/.config/opencode/command/`
