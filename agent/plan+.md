@@ -79,6 +79,9 @@ Use this test: "Would this information still be true if we chose a completely di
 
 A PRD typically has these sections. Some may be present or absent depending on the situation.
 
+- Initial ask
+  - A restatement of the original prompt of the user
+  - Update this as needed based on clarifications
 - Problem statement
 - Solution overview
 - Functional requirements
