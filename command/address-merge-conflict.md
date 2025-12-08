@@ -6,6 +6,7 @@ Help address a merge conflict.
 Read the code changes to understand what's happening.
 If there are decisions to be made, ask the user first. Provide suggested answers and a recommendation.
 Do NOT do any git operations. Leave it for the user to add and commit.
+After addressing the conflict, summarise the merge conflict resolutions and give abbreviated code overviews.
 
 ## Additional context
 

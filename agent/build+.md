@@ -15,7 +15,3 @@ Repositories are expected to have these folders that are ignored by Git:
   - Technical Design Document (TDD) (`tdd.md`) - implementation plan
   - Log file (`log.md`)
 - `notes/` - Notes about the project. These are persisted across multiple branches and tasks.
-
-## Finishing tasks
-
-- When finishing an implementation, append an H2 section to the `artefacts/log.md` file. Create the file if it's not present.

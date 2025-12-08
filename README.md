@@ -60,11 +60,7 @@ It has some differences from the regular plan mode:
 
 > [`agent/build+.md`](agent/build-with-context.md)
 
-Same as a regular `build` agent, but has instructions to read and write `artefacts/tdd.md` as it goes.  This is a form of intentional compaction.
-
-That means it can read the plan build with *plan+*, and update it with progress, etc.
-
-It helps keep the agent on track across long sessions with multiple session compactions.
+Same as a regular `build` agent, but has instructions to read from `artefacts/` as needed. It helps keep the agent on track across long sessions with multiple session compactions.
 
 ### /proceed
 

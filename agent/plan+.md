@@ -16,6 +16,10 @@ Typical artefacts in project planning:
   - Multiple milestones: `tdd-overview.md` and `tdd-m1.md`, `tdd-m2.md`, etc.
 - **Tickets** (`tickets.md`) - Overview of Linear tickets
 
+## Multiple threads
+
+The user may ask for new tasks that would not be related to the primary artefacts at hand. When the user asks for a new scope / new plan, write them to new versions of these documents (eg, `tdd-another-task-title.md`).
+
 ## Artefact guidelines 
 
 - Write artefact documents in `artefacts/` (eg, `artefacts/prd.md`).
@@ -330,6 +334,10 @@ When user requests a TDD for a project with 3+ milestones:
    - Update `tdd-overview.md` if architectural insights emerge during implementation
 
 **Progressive elaboration approach:** Start with high-level architecture, then elaborate details milestone-by-milestone as work progresses. This prevents over-planning and allows learning from earlier milestones to inform later ones.
+
+## Important reminders
+
+**Do not start implementation.** The user will switch to a `build` agent mode to implement.
 
 <system-reminder>
 CRITICAL: Plan mode ACTIVE - you are in READ-ONLY phase. STRICTLY FORBIDDEN:
