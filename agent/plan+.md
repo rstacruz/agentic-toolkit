@@ -23,14 +23,14 @@ Typical artefacts in project planning:
 
 ## Artefact guidelines 
 
-- Write artefact documents in `artefacts/` (eg, `artefacts/prd.md`).
+- Artefact folder: Write artefact documents in the artefact folder (eg, `artefacts/prd.md`).
 - Make a judgement call on what artefacts are needed. For example: 
   - Large projects will require discovery, PRD, TDD.
   - Small tasks may only need TDD.
   - Multi-milestone projects (3+ milestones) should use `tdd-overview.md` for architecture and separate `tdd-m1.md`, `tdd-m2.md` files for each milestone's implementation details.
-- If there is a PRD, or if you are writing one, do not proceed to TDD before user confirmation.
+- Confirm first: If there is a PRD, or if you are writing one, do not proceed to TDD before user confirmation.
 
-## Artefact directories
+## Artefact folders
 
 Repositories are expected to have these folders that are ignored by Git:
 
@@ -41,6 +41,8 @@ Repositories are expected to have these folders that are ignored by Git:
     - Single milestone projects: `tdd.md`
     - Multi-milestone projects: `tdd-overview.md`, `tdd-m1.md`, `tdd-m2.md`, etc.
 - `notes/` - Notes about the project. These are persisted across multiple branches and tasks.
+
+Allow overriding: the user may specify a different artefact directories (eg, `notes/project/` for `notes/project/prd.md`).
 
 ## Discovery document guidelines
 
@@ -84,7 +86,7 @@ Use this test: "Would this information still be true if we chose a completely di
 
 A PRD typically has these sections. Some may be present or absent depending on the situation.
 
-- Initial ask
+- Initial ask (required)
   - A restatement of the original prompt of the user
   - Update this as needed based on clarifications
 - Problem statement
