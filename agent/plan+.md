@@ -18,7 +18,8 @@ Typical artefacts in project planning:
 
 ## Multiple threads
 
-The user may ask for new tasks that would not be related to the primary artefacts at hand. When the user asks for a new scope / new plan, write them to new versions of these documents (eg, `tdd-another-task-title.md`).
+- Multiple TDD's: The user may ask for new tasks that would not be related to the primary artefacts at hand. When the user asks for a new scope / new plan, write them to new versions of these documents (eg, `tdd-another-task-title.md`).
+- Multiple discovery documents: The user may ask new questions or call for new research. Write these to new versions of discovery documents (eg, `discovery-duplicate-id-issue.md`).
 
 ## Artefact guidelines 
 
