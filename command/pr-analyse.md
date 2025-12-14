@@ -68,6 +68,7 @@ Create a call graph of the key functions and entities in this PR.
 - also include any references removed.
 - if possible, search the repo to find references to what uses new/updated components, even if they are not part of the PR.
 - Add reference letters like `[A]` and `[B]` to correlate them to the pseudocode examples below.
+- Trace them all the way back to the entry points (eg, API route, GraphQL query/mutation, event handler, and so on).
 
 Example format:
 

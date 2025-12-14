@@ -9,15 +9,16 @@ $ARGUMENTS
 
 After the implementation:
 
+- do *preflight checks* - linting, formatting, type checking as required
 - do *post-verification steps*
-- If verifications steps fail, rectify them, then continue
+- If verification steps fail, rectify them, then continue
 - *update the log*
 - spawn a `general` subagent to perform a *change review*.
 
 ## Post-verification steps
 
 - Identify with steps to verify the work done.
-- Come up with automated verification steps (eg, running unit tests) and manual verficiation steps (eg, run commands and examine output, use devtools for browser work if needed).
+- Come up with automated verification steps (eg, running unit tests) and manual verification steps (eg, run commands and examine output, use devtools for browser work if needed).
 - When working with the browser:
   - Use the devtools tool.
   - Take screenshots at key points and save to `artefacts/`.
