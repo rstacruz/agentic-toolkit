@@ -13,23 +13,23 @@ The user may ask for these tasks.
 
 ### Evaluate a PRD
 
-- Evaluate a given PRD document based on the *PRD guidelines*.
-- Give some *Open questions*.
+- Evaluate a given PRD document based on the _PRD guidelines_.
+- Give some _Open questions_.
 - Verify if there are any contradictions.
 - Give it a grade of `S`, `A`, `B`, `C`
 
 ### Draft or write a PRD
 
 - Write a PRD for the user.
-- Ask clarifying questions to the user. See *Open questions* for guidelines.
+- Ask clarifying questions to the user. See _Open questions_ for guidelines.
 - Write to `prd.md` unless otherwise specified.
-- For *Roadmap* section, leave it as "*TBD - to be filled in later upon request*".
+- For _Roadmap_ section, leave it as "_TBD - to be filled in later upon request_".
 
 ### Defer a task in a PRD
 
 A user may ask for a task to be descoped or deferred.
 
-- Move these tasks to a *Out of scope* section. Create it if it doesn't exist.
+- Move these tasks to a _Out of scope_ section. Create it if it doesn't exist.
 
 ### Research a topic
 
@@ -44,14 +44,12 @@ When user requests a TDD for a project with 3+ milestones:
    - Define shared data models and interfaces
    - Outline technical decisions and trade-offs
    - Identify cross-cutting concerns
-   
 2. **Create milestone-specific TDDs progressively:**
    - Create `tdd-m1.md` immediately (first milestone needs detail)
    - Create subsequent milestone TDDs (`tdd-m2.md`, `tdd-m3.md`) only when:
      - User explicitly requests them
      - Work on that milestone is about to begin
      - Earlier milestones provide insights that inform later planning
-   
 3. **Keep milestone TDDs focused:**
    - Only include files, pseudocode, and details specific to that milestone
    - Reference shared patterns from `tdd-overview.md` rather than duplicating
@@ -80,7 +78,7 @@ When users request work outside the current scope:
 - New research question: Create new discovery (e.g., `discovery-api-quirks.md`)
 - Same scope, next milestone: Use milestone TDDs (e.g., `tdd-m2.md`)
 
-## Artefact guidelines 
+## Artefact guidelines
 
 - Write artefacts to `artefacts/` folder (eg, `artefacts/prd.md`)
 - Make judgement calls on scope:
@@ -161,14 +159,14 @@ A PRD typically has these sections. Some may be present or absent depending on t
 - User flow
   - Diagram of interactions, screens, pages, URLs, commands
   - List of key entities (eg, URLs and pages)
-- Out of scope 
+- Out of scope
   - A list of requirements for future consideration
   - Deferred requirements are placed here
-- Roadmap 
-   - A list of milestones with tasks in each
-   - Optimise milestone and task order to prioritise getting a working version first.
-   - Number milestones in the format of "M{number}"
-- Additional context 
+- Roadmap
+  - A list of milestones with tasks in each
+  - Optimise milestone and task order to prioritise getting a working version first.
+  - Number milestones in the format of "M{number}"
+- Additional context
   - If the user requested additional information or research, place them here
 
 Good PRD qualities:
@@ -243,6 +241,7 @@ For each question:
 Purpose: Document architectural decisions, system-wide patterns, and shared concerns.
 
 Contents:
+
 - System architecture and design patterns
 - Shared data models and interfaces used across milestones
 - Technical decisions and trade-offs
@@ -255,6 +254,7 @@ Contents:
 Purpose: Detailed implementation plan for a specific milestone only.
 
 Contents:
+
 - Files to create/modify/remove for this milestone
 - Pseudocode breakdown specific to this milestone
 - Milestone-specific data models (if any)
@@ -262,6 +262,7 @@ Contents:
 - CSS classes for this milestone (if applicable)
 
 **Benefits:**
+
 - Reduced cognitive load: work with focused, bounded documents
 - Progressive elaboration: detail emerges as milestones approach
 - Better version control: changes isolated to relevant milestones
@@ -294,71 +295,25 @@ Keep it concise:
 
 ### Pseudocode breakdown
 
-Break down the core logic into pseudocode showing flow and key components.
+Break down the core logic into pseudocode showing flow and key components. See the [Example TDD](#example-tdd) for the recommended format.
 
 - Add reference letters like `[A]` and `[B]` to make it easier to find connections
 - Mark `[🟢 NEW]` or `[🟡 UPDATED]` or `[🔴 REMOVED]` where necessary
 - Use "sh" for syntax highlighting language, even if the syntax is not shell
 - If any specific function/file is not updated/removed, leave it out
-
-Example format:
-
-````
-**publishBlogPost:** publishes a blog post
-
-```sh
-# == blog/publish.ts ==
-
-publishBlogPost(post) # [🟢 NEW]
-  → validatePostContent(post) # [🟢 NEW: checks for required fields]
-  → saveDraftToDB(post) # [🟡 UPDATED: now supports tags]
-  → generateSlug(post.title) # [🟢 NEW]
-  → scheduleForPublication(post, date) # [🟢 NEW: supports future dates]
-  → notifySubscribers(post) # [🟢 NEW]
-```
-
-`[A]` **saveDraftToDB:** saves or updates a blog post draft
-
-```sh
-# == blog/db.ts ==
-
-saveDraftToDB(post)
-  if post.id exists:
-    → update existing draft
-  else:
-    → create new draft
-  → update tags # [🟡 UPDATED: now supports multiple tags]
-```
-````
+- Include descriptive comments to explain the logic flow and business rules
 
 ### Testing strategy
 
-List any unit, integration, and other tests needed. Include test commands to run individual test files.
+List any unit, integration, and other tests needed. Include test commands to run individual test files. See the [Example TDD](#example-tdd) for the recommended format.
 
-Do not include testing strategy unless user asks to add tests.
-
-Be EXTREMELY conservative with tests. Plan for the minimum amount of tests that cover most important scenarios. Prefer to only do one smoke test.
-
-Example format:
-
-````markdown
-**Running tests:**
-
-- `cd packages/words && pnpm test WordLinks.test.tsx`
-- `cd packages/ui && pnpm test Button.test.tsx`
-
-**Tests to create/update:**
-
-```tsx
-describe("WordLinks", () => {
-  test("renders word categories for supported languages");
-});
-```
-````
+- Do not include testing strategy unless user asks to add tests
+- Be EXTREMELY conservative: plan for the minimum amount of tests (e.g., a single smoke test)
+- Include the exact command to run the relevant tests
 
 ### Example TDD
 
-`````markdown
+````markdown
 # TDD: Task completion tracker
 
 ## Initial ask
@@ -371,7 +326,7 @@ Add a task completion feature that marks tasks as done with a timestamp.
 interface Task {
   id: string;
   title: string;
-  status: 'pending' | 'completed';
+  status: "pending" | "completed";
   completedAt: Date | null;
 }
 ```
@@ -384,11 +339,19 @@ interface Task {
 # == tasks/complete.ts ==
 
 completeTask(taskId) # [🟢 NEW]
-  → task = `[A]` getTask(taskId)
+  # 1. Fetch task and validate existence
+  → task = getTask(taskId) # [A]
   if !task:
+    → log "Task not found"
     → return { ok: false, error: "NOT_FOUND" }
-  
-  → `[B]` markComplete(task)
+
+  # 2. Check current status (idempotency)
+  if task.status == 'completed':
+    → log "Task already completed"
+    → return { ok: true, task }
+
+  # 3. Update task status and persist
+  → markComplete(task) # [B]
   → return { ok: true, task }
 ```
 
@@ -398,6 +361,7 @@ completeTask(taskId) # [🟢 NEW]
 # == tasks/db.ts ==
 
 getTask(taskId) # [🟢 NEW]
+  # Uses prisma to fetch unique task by ID
   → prisma.task.findUnique({ where: { id: taskId } })
 ```
 
@@ -407,6 +371,7 @@ getTask(taskId) # [🟢 NEW]
 # == tasks/db.ts ==
 
 markComplete(task) # [🟢 NEW]
+  # Persists completion status and current timestamp
   → prisma.task.update({
       where: { id: task.id },
       data: { status: 'completed', completedAt: new Date() }
@@ -416,10 +381,12 @@ markComplete(task) # [🟢 NEW]
 ## Files
 
 **New files:**
+
 - `src/tasks/complete.ts`
 - `src/tasks/db.ts`
 
 **Modified files:**
+
 - `prisma/schema.prisma` - Add Task model
 
 ## CSS classes
@@ -430,9 +397,17 @@ markComplete(task) # [🟢 NEW]
 
 ## Testing strategy
 
+**Running tests:**
+
+- `npx vitest src/tasks/complete.test.ts`
+
+**Tests to create:**
+
 ```typescript
 describe("completeTask", () => {
   test("marks task as completed with timestamp");
+  test("returns error if task not found");
+  test("is idempotent if task already completed");
 });
 ```
 
@@ -440,14 +415,14 @@ describe("completeTask", () => {
 
 1. **Undo completion:** Should users be able to mark a completed task as incomplete again?
 
-   a. Allow unmarking with completedAt set to null *(recommended)*
+   a. Allow unmarking with completedAt set to null _(recommended)_
    b. No undo - completion is final
 
 2. **UI feedback:** What should happen after clicking the complete button?
 
-   a. Show success toast notification *(recommended)*
+   a. Show success toast notification _(recommended)_
    b. Silently update with visual state change only
-`````
+````
 
 ## Important reminders
 
