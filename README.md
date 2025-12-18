@@ -21,7 +21,7 @@ Not an OpenCode user? These are pretty tool-agnostic, it should work with Claude
 
 ### plan+ agent
 
-> [`agent/plan+.md`](agent/plan-with-context.md)
+> [`agent/plan+.md`](agent/plan+.md)
 
 Use this to plan your work instead of the usual `plan` mode.
 
@@ -58,7 +58,7 @@ It has some differences from the regular plan mode:
 
 ### build+ agent
 
-> [`agent/build+.md`](agent/build-with-context.md)
+> [`agent/build+.md`](agent/build+.md)
 
 Same as a regular `build` agent, but has instructions to read from `artefacts/` as needed. It helps keep the agent on track across long sessions with multiple session compactions.
 

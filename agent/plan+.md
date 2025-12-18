@@ -280,9 +280,17 @@ Include if applicable:
 - **Files:**
   - (if applicable) New, modified, removed files. Include reference/context files for LLM agents to understand existing patterns
 - **CSS classes:**
-  - (if any) Styling and layout classes needed
+  - (if any) Styling and layout classes needed. Don't define full CSS, only list classes.
 - **Testing strategy:**
   - (if applicable, and if user asked for it) see "### Testing strategy" below
+- **Open questions:**
+  - (if applicable) Clarifying questions for ambiguous implementation details
+  - Follow same format as PRD open questions
+
+Keep it concise:
+
+- Omit sections that don't add value for the specific task
+- List items rather than define them when appropriate (e.g., CSS classes)
 
 ### Pseudocode breakdown
 
@@ -347,6 +355,99 @@ describe("WordLinks", () => {
 });
 ```
 ````
+
+### Example TDD
+
+`````markdown
+# TDD: Task completion tracker
+
+## Initial ask
+
+Add a task completion feature that marks tasks as done with a timestamp.
+
+## Data models
+
+```typescript
+interface Task {
+  id: string;
+  title: string;
+  status: 'pending' | 'completed';
+  completedAt: Date | null;
+}
+```
+
+## Pseudocode breakdown
+
+**completeTask:** marks a task as completed
+
+```sh
+# == tasks/complete.ts ==
+
+completeTask(taskId) # [🟢 NEW]
+  → task = `[A]` getTask(taskId)
+  if !task:
+    → return { ok: false, error: "NOT_FOUND" }
+  
+  → `[B]` markComplete(task)
+  → return { ok: true, task }
+```
+
+`[A]` **getTask:** fetches task from database
+
+```sh
+# == tasks/db.ts ==
+
+getTask(taskId) # [🟢 NEW]
+  → prisma.task.findUnique({ where: { id: taskId } })
+```
+
+`[B]` **markComplete:** updates task status
+
+```sh
+# == tasks/db.ts ==
+
+markComplete(task) # [🟢 NEW]
+  → prisma.task.update({
+      where: { id: task.id },
+      data: { status: 'completed', completedAt: new Date() }
+    })
+```
+
+## Files
+
+**New files:**
+- `src/tasks/complete.ts`
+- `src/tasks/db.ts`
+
+**Modified files:**
+- `prisma/schema.prisma` - Add Task model
+
+## CSS classes
+
+- `.task-item` - Task container
+- `.task-checkbox` - Completion checkbox
+- `.task-completed` - Completed state styling
+
+## Testing strategy
+
+```typescript
+describe("completeTask", () => {
+  test("marks task as completed with timestamp");
+});
+```
+
+## Open questions
+
+1. **Undo completion:** Should users be able to mark a completed task as incomplete again?
+
+   a. Allow unmarking with completedAt set to null *(recommended)*
+   b. No undo - completion is final
+
+2. **UI feedback:** What should happen after clicking the complete button?
+
+   a. Show success toast notification *(recommended)*
+   b. Silently update with visual state change only
+`````
 
 ## Important reminders
 
