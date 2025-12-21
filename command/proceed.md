@@ -7,6 +7,10 @@ Proceed and build from plan.
 
 $ARGUMENTS
 
+Guidelines:
+
+- Start with tests first, test-driven development style.
+
 After the implementation:
 
 - do *preflight checks* - linting, formatting, type checking as required
