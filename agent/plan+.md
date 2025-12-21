@@ -494,6 +494,8 @@ For projects with 1-2 milestones or straightforward implementations, use a singl
 
 Include if applicable:
 
+- **Call graph:**
+  - (if applicable) See "### Call graph" below
 - **Pseudocode breakdown:**
   - (if applicable) See "### Pseudocode breakdown" below
 - **Data models:**
@@ -512,6 +514,50 @@ Keep it concise:
 
 - Omit sections that don't add value for the specific task
 - List items rather than define them when appropriate (e.g., CSS classes)
+
+### Call graph
+
+A call graph visualises how functions, modules, and systems interconnect. Use this to explain complex multi-component implementations.
+
+**When to include:**
+
+- Multiple inter-connected functions across files
+- Complex module dependencies
+- System integration points
+- Architectural changes affecting multiple components
+
+**Structure rules:**
+
+1. **Subgraphs:** Group related components by file or module
+2. **Nodes:** Individual functions, components, or modules
+3. **Reference letters:** Add `[A]`, `[B]`, etc. to correlate with pseudocode
+4. **Status markers:** Highlight changes with colour-coded classes:
+   - Green (`.new`): New components
+   - Yellow (`.updated`): Modified components
+   - Red (`.removed`): Removed components
+5. **Arrows:** Show relationships (uses, calls, renders, configured with)
+6. **Quote all labels:** Use `["label"]` syntax to avoid issues with special characters
+
+**What to include:**
+
+- New, modified, and removed functions/components
+- References to what uses new/updated components (search repo if needed)
+- Key integration points between components
+- Data flow direction when relevant
+
+**What to exclude:**
+
+- Internal implementation details (save for pseudocode)
+- Trivial helper functions unless they're central to understanding
+- Standard library or framework functions
+- Tests
+
+**Best practices:**
+
+- Keep graph focused on changed components and their immediate dependencies
+- Use descriptive arrow labels ("uses", "calls", "renders via", "configured with")
+- Search codebase to find what uses new/updated components, even if not part of current changes. Trace it back to the entry points if possible (eg, API calls, CLI actions) - search repo as needed
+- Correlate graph nodes to pseudocode sections using reference letters
 
 ### Pseudocode breakdown
 
@@ -549,6 +595,35 @@ interface Task {
   status: "pending" | "completed";
   completedAt: Date | null;
 }
+```
+
+## Call graph
+
+```mermaid
+graph LR
+  subgraph "api/routes.ts"
+    API["POST /api/tasks/:id/complete"]:::updated
+  end
+  subgraph "tasks/complete.ts"
+    A["[A] completeTask"]:::new
+  end
+  subgraph "tasks/db.ts"
+    B["[B] getTask"]:::new
+    C["[C] markComplete"]:::new
+  end
+  subgraph "lib/prisma.ts"
+    D["prisma.task"]
+  end
+  
+  API -->|"calls"| A
+  A -->|"fetches via"| B
+  A -->|"updates via"| C
+  B -->|"queries"| D
+  C -->|"updates"| D
+  
+  classDef updated fill:#ff9,stroke:#333
+  classDef new fill:#9f9,stroke:#333
+  classDef removed fill:#f99,stroke:#333
 ```
 
 ## Pseudocode breakdown
