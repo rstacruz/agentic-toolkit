@@ -574,6 +574,7 @@ Break down the core logic into pseudocode showing flow and key components. See t
 List any unit, integration, and other tests needed. Include test commands to run individual test files. See the [Example TDD](#example-tdd) for the recommended format.
 
 - List test data and test fixtures that will be used. This allows reviewers to gauge how complex the test file will be
+- List what dependencies need mocking and why (external APIs, databases, time-dependent functions)
 - Be EXTREMELY conservative: plan for the minimum amount of tests (e.g., a single smoke test)
 - Include the exact command to run the relevant tests
 
@@ -692,24 +693,24 @@ markComplete(task) # [🟢 NEW]
 
 ## Testing strategy
 
-**Running tests:**
+### Running tests
 
 - `npx vitest src/tasks/complete.test.ts`
 
-**Tests to create:**
+### complete.test.ts
 
 ```typescript
-const testFixture1 = {
-  /* description */
-};
-const testFixture2 = {
-  /* description */
-};
+// Mocks
+vi.mock("./tasks/db"); // getTask, markComplete - avoid database dependency
+
+// Test data
+const pendingTask = { id: "1", title: "Test", status: "pending", completedAt: null };
+const completedTask = { id: "2", title: "Done", status: "completed", completedAt: new Date() };
 
 describe("completeTask", () => {
-  test("marks task as completed with timestamp"); // use testFixture1
-  test("returns error if task not found"); // use testFixture2
-  test("is idempotent if task already completed"); // use testFixture2
+  test("marks task as completed with timestamp"); // use pendingTask
+  test("returns error if task not found");
+  test("is idempotent if task already completed"); // use completedTask
 });
 ```
 
