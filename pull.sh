@@ -5,7 +5,7 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SOURCE_DIR="${HOME}/.config/opencode"
 
 # Directories to scan
-SYNC_DIRS=("agent" "command" "skills")
+SYNC_DIRS=("agent" "command" "skill")
 
 echo "Pulling files from ${SOURCE_DIR}..."
 
@@ -23,20 +23,20 @@ for dir in "${SYNC_DIRS[@]}"; do
     echo "  ⚠ Skipping ${dir}/ (not in repository)"
     continue
   fi
-  
+
   echo "  ← Checking ${dir}/"
-  
+
   # Find all files in repo for this directory (relative paths)
   while IFS= read -r -d '' repo_file; do
     # Get relative path from the directory
     rel_path="${repo_file#${REPO_ROOT}/${dir}/}"
     source_file="${SOURCE_DIR}/${dir}/${rel_path}"
-    
+
     # Dereference if it's a symlink
     if [[ -L "${source_file}" ]] && [[ -e "${source_file}" ]]; then
       source_file="$(readlink -f "${source_file}")"
     fi
-    
+
     if [[ -f "${source_file}" ]]; then
       echo "    ${rel_path}"
       cp "${source_file}" "${repo_file}"

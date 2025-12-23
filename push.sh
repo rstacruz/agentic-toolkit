@@ -5,7 +5,7 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TARGET_DIR="${HOME}/.config/opencode"
 
 # Directories to sync
-SYNC_DIRS=("agent" "command" "skills")
+SYNC_DIRS=("agent" "command" "skill")
 
 echo "Pushing files to ${TARGET_DIR}..."
 
@@ -18,7 +18,7 @@ for dir in "${SYNC_DIRS[@]}"; do
     echo "  → Syncing ${dir}/"
     mkdir -p "${TARGET_DIR}/${dir}"
     # Check if directory has files before copying
-    if compgen -G "${REPO_ROOT}/${dir}/*" > /dev/null; then
+    if compgen -G "${REPO_ROOT}/${dir}/*" >/dev/null; then
       cp -r "${REPO_ROOT}/${dir}"/* "${TARGET_DIR}/${dir}/"
     fi
   else

@@ -11,7 +11,7 @@ Some indispensable prompts and tools I use with [Opencode](https://opencode.ai/)
 - Pick-and-choose what you want to copy:
   - Copy `agent/` files into `~/.config/opencode/agent/`
   - Copy `command/` files into `~/.config/opencode/command/`
-  - Copy `skills/` files into `~/.config/opencode/skills/`
+  - Copy `skill/` files into `~/.config/opencode/skill/` (ensure you use OpenCode 1.0.190+)
 
 Alternatively, run `./push.sh` to push everything.
 
