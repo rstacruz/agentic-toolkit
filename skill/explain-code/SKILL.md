@@ -1,9 +1,13 @@
 ---
 name: "explain-code"
 description: >
-  Gives guidelines on how to explain code with pseudocode.
-
-  Invoke this when creating code explanations.
+  Gives guidelines on how to explain code with call graphs and pseudocode.
+  Invoke this when creating code explanations. Common user requests:
+  - "Explain {feature or function}"
+  - "Show me how {feature} works"
+  - "Create pseudocode for {feature}"
+  - "Generate call graph for {feature}"
+  - "Show logic for {function}"
 ---
 
 WHen explain routines or changes with pseudocode, consult the guidelines below.

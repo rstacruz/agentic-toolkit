@@ -46,7 +46,7 @@ I've researched the codebase and created a comprehensive implementation plan for
 
 ## User
 
-(switch to build+ mode)
+(switch to build mode)
 
 proceed and implement
 ```
@@ -55,12 +55,6 @@ It has some differences from the regular plan mode:
 
 - It will keep its plans in `artefacts/*.md`.
 - It optimises the plan for scanability.
-
-### build+ agent
-
-> [`agent/build+.md`](agent/build+.md)
-
-Same as a regular `build` agent, but has instructions to read from `artefacts/` as needed. It helps keep the agent on track across long sessions with multiple session compactions.
 
 ### /proceed
 
