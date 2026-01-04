@@ -4,15 +4,15 @@ Some indispensable prompts and tools I use with [Opencode](https://opencode.ai/)
 
 ## Installation
 
-- Install OpenCode
-- Set up artefacts directories:
-  - Add to global gitignore: `echo artefacts >> ~/.config/git/global_ignore # or wherever it is`
-  - Exclude from global rgignore (for OpenCode): `echo '!artefacts' >> ~/.rgignore`
-- Pick-and-choose what you want to copy:
-  - Copy `command/` files into `~/.config/opencode/command/`
-  - Copy `skill/` files into `~/.config/opencode/skill/` (ensure you use OpenCode 1.0.190+)
+Consider this repo as a glimpse into what I do, *not* a pre-packaged system to install. I recommend perusing it and taking what you need.
 
-Alternatively, run `./push.sh` to push everything.
+1. Install [OpenCode](https://opencode.ai).
+2. Set up artefacts directories:
+  - Add to global gitignore: `echo artefacts >> ~/.config/git/global_ignore` (or wherever your global ignore is)
+  - Exclude from global rgignore (for OpenCode): `echo '!artefacts' >> ~/.rgignore`
+3. Pick-and-choose what you want to copy:
+  - Copy `command/atk/` files into `~/.config/opencode/command/atk/`
+  - Copy `skill/atk/` files into `~/.config/opencode/skill/atk/` (ensure you use OpenCode 1.0.190+)
 
 Not an OpenCode user? These are pretty tool-agnostic, it should work with Claude Code and Gemini CLI and other tools (with some edits).
 
@@ -26,43 +26,157 @@ Not an OpenCode user? These are pretty tool-agnostic, it should work with Claude
 Use this to plan your work instead of the usual `plan` mode.
 
 ```markdown
-
 ## User
 
-/plan 
-in the `workmux add` command, i want to add `--name <name>` to name the worktree 
-
-because: branch names can be very long, they dont make very good worktree names
-
-also research: are there places in the codebase that don't make a distinction between worktree name and branch name? because those need to change
+/plan add dark mode toggle to settings
 
 ## Assistant
 
-I've researched the codebase and created a comprehensive implementation plan for adding --name <name> to the workmux add command.
+**Plan mode engaged.**
 
-(TODO update w new fmt)
+[Researches codebase, creates todo list]
+
+Before I draft the plan, I have a clarifying question:
+
+1. **Theme detection:** Should the app detect system theme preference automatically?
+   - a. Yes, respect system preference (recommended)
+   - b. No, manual toggle only
 
 ## User
 
-/proceed
+1a
+
+## Assistant
+
+Here's the implementation plan:
+
+1. Add theme context provider with system detection
+2. Create toggle component in settings page
+3. Update CSS with theme variables
+4. Persist preference to localStorage
+
+Ready when you say **go**.
+
+## User
+
+go
+
+## Assistant
+
+**Plan mode disengaged.** [Begins implementation]
 ```
 
-### plan-with-tdd-and-prd 
+### Plan with TDD and PRD
 
-Todo:
-tbd 
+> [`plan-with-tdd-and-prd` skill](skill/atk/plan-with-tdd-and-prd/SKILL.md)
 
-### /proceed
+Use this for complex features and technical research requiring structured planning before implementation.
 
-> [`command/proceed.md`](command/proceed.md)
+Creates comprehensive planning documents:
+- **Discovery documents** - environmental context and constraints
+- **PRD** (Product Requirements Document) - product requirements with user flows
+- **TDD** (Technical Design Document) - implementation plans with pseudocode
 
-Use this to proceed and build from a plan, run verification steps, then write a summary to `artefacts/changelog.md`.
+```markdown
+## User
 
-Use this after planning with `plan+`.
+Write a PRD for a notification system
 
-### /continue-from-here
+## Assistant
 
-> [`command/continue-from-here.md`](command/continue-from-here.md)
+**Now writing a PRD.**
+
+[Researches codebase, creates discovery document]
+
+Before I draft the PRD, I have clarifying questions:
+
+1. **Delivery channels:** Which notification channels should be supported?
+   - a. In-app and email (recommended)
+   - b. In-app only
+
+## User
+
+1a
+
+## Assistant
+
+[Writes `artefacts/prd-notifications.md` with requirements, user flows, screen interactions]
+
+PRD complete. Would you like me to write the TDD?
+
+## User
+
+Yes, write the TDD
+
+## Assistant
+
+**Now writing a TDD.**
+
+[Writes `artefacts/tdd-notifications.md` with pseudocode, data models, files, testing strategy]
+
+TDD complete. Ready for implementation.
+```
+
+### Execute plan
+
+> [`/proceed` command](command/atk/proceed.md) +
+> [`execute-plan` skill](skill/atk/execute-plan/SKILL.md)
+
+Use this to execute implementation plans from the planning phase to verified completion.
+
+Orchestrates the full implementation workflow:
+1. Execute the plan (tests first when applicable)
+2. Run verification checks
+3. Perform peer review with subagent
+4. Generate changelog to `artefacts/changelog.md`
+
+Use this after creating a plan with `/plan` or writing a TDD.
+
+### Analyse PR
+
+> [`/pr-analyse` command](command/atk/pr-analyse.md) +
+> [`analyse-and-review-pr` skill](skill/atk/analyse-and-review-pr.md)
+
+Analyse a PR. It creates 2 artefacts: a *PR analysis* which summarises a PR for a human to understand what's going on, and *PR feedback* for some comments.
+
+Use for:
+
+- Help you to review colleague PR's
+
+```
+gh pr checkout 1234
+opencode run --command atk/pr-analyse
+.
+.
+cat pr_analysis.md
+cat pr_feedback.md
+```
+
+### Reflect
+
+> [`/reflect` command](command/atk/reflect.md) +
+> [`reflect` skill](skill/atk/reflect/SKILL.md)
+
+Use this to improve the toolkit itself by distilling learnings from your sessions.
+
+Examines the current session and provides suggestions to:
+- Refine skill prompts to better fit your needs
+- Update project guidelines (AGENTS.md) to prevent future issues
+- Capture patterns and best practices
+
+Run this after completing work to continuously improve your development workflow.
+
+## Extras
+
+### Address merge conflict
+
+> [`/address-merge-conflict` command](command/atk/address-merge-conflict.md)
+
+Use this after a nasty `git pull`. It'll assess the situation and give suggestions. You can ask the agent to resolve the conflict afterwards.
+
+### Continue from here
+
+> [`/continue-from-here` command](command/atk/continue-from-here.md)
 
 One of my favourite ways to work! Forget prompting, just add comments.
 
@@ -93,25 +207,3 @@ function validateWord(wordObject) {
 
 Inspired by [Aider's watch files mode](https://aider.chat/docs/usage/watch.html).
 
-## Extras
-
-### /address-merge-conflict
-
-> [`command/address-merge-conflict.md`](command/address-merge-conflict.md)
-
-Use this after a nasty `git pull`. It'll assess the situation and give suggestions. You can ask the agent to resolve the conflict afterwards.
-
-### /pr-analyse
-
-> [`command/pr-analyse.md`](command/pr-analyse.md)
-
-Analyse a PR. It creates 2 artefacts: a *PR analysis* which summarises a PR for a human to understand what's going on, and *PR feedback* for some comments.
-
-```
-gh pr checkout 1234
-opencode run --command pr-analyse
-.
-.
-cat pr_analysis.md
-cat pr_feedback.md
-```
