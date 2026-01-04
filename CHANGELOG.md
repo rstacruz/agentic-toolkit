@@ -2,8 +2,11 @@
 
 ## Next version (unreleased)
 
-**Breaking changes:**
+- TBD
 
+## v2026.01.04
+
+**Breaking changes:**
 - **New plan mode** - Replaced `plan+` mode with new `/plan` command and plan-mode workflow
 - **Skills replaces agents** - No more agents, and commands are slimmer now with logic moved to skills
 - **Organised into atk/** - commands now in `command/atk/`, skills in `skill/atk/` for easy updating
