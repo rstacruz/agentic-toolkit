@@ -68,19 +68,43 @@ Generated roadmap files should include:
 **Best practices:**
 - Keep phases focused (3-5 tasks per phase ideal)
 
+## Task sizing guidelines
+
+**Size definitions:**
+
+- **S (Small):** Single file, clear scope, minimal dependencies
+  - Examples: Add validation rule, update CSS styling, add field to model
+  
+- **M (Medium):** Multiple files, moderate complexity, integration points
+  - Examples: Build authentication flow, implement search feature, create data export system
+  
+- **L (Large):** Cross-cutting concerns, multiple integrations, significant testing
+  - Examples: Refactor data layer, implement real-time sync, build admin dashboard
+  
+- **XL (Extra Large):** Very broad scope, extensive changes across many areas
+  - Examples: Implement multi-tenancy, build payment system, create full CMS
+  
+- **XXL (Extra Extra Large):** Too large - should be broken down into smaller tasks
+  - Flag for re-evaluation: "This task needs breaking down into multiple tickets"
+
+**Guidelines for sizing:**
+- Default to **M** if uncertain
+- If estimating **XXL**, stop and ask: "Can this be split into separate tasks?"
+- Prefer multiple **M** tasks over one **L** task when dependencies allow
+
 ## Work breakdown guidelines
 
 **Format:**
 ```markdown
 ### Phase N: Phase Name
-*   **TASK-ID: Task Title**
-    *   Bullet point describing what needs to be done
-    *   Additional implementation notes
-    *   Technical constraints or requirements
+- **TASK-ID: Task title** (size S/M/L/XL/XXL)
+  - Bullet point describing what needs to be done
+  - Additional implementation notes
+  - Technical constraints or requirements
 ```
 
 **Writing style:**
-- Use imperative verbs (Add, Implement, Create, Update, Refactor)
+- Use imperative verbs (Add, Implement, Update, Refactor)
 - Include specific details (file names, function names, model fields)
 - Mention tools/libraries when relevant
 - Note compatibility requirements
@@ -94,15 +118,16 @@ Generated roadmap files should include:
 ## Phasing strategy
 
 **Principles:**
-1. Foundation first - enable downstream work
-2. Logic second - core functionality
-3. Migration third - data handling
-4. Interface last - user experience
+1. **Each phase delivers value** - prioritize demonstrable/testable deliverables over theoretical completeness
+2. **Feedback loops early** - structure phases to gather user/stakeholder feedback as soon as possible
+3. **Right-size tasks** - aim for S/M tasks when possible; flag XXL for breakdown
 
 **Considerations:**
-- Can early phases be deployed without breaking production?
+- Can this phase be demonstrated independently?
+- What's the smallest deliverable that validates assumptions?
+- Can users provide feedback at this phase boundary?
+- Are any tasks sized XXL? Should they be broken down?
 - Which tasks enable the most parallel work downstream?
-- What's the minimum viable Phase 1 that unblocks everything else?
 
 ## Validation checklist
 
@@ -110,6 +135,7 @@ Before finalizing:
 - [ ] No circular dependencies, all dependencies point forward
 - [ ] All PRD requirements covered
 - [ ] Each phase independently deployable
+- [ ] XXL tasks avoided
 
 ## Example roadmap
 
@@ -137,19 +163,19 @@ graph TD
 ## Work breakdown
 
 ### Phase 1: Foundation
-*   **AUTH-1: DB Schema**
-    *   Add `email`, `passwordHash` to User model
-    *   Generate migration with Prisma
+- **AUTH-1: DB Schema** (size S)
+  - Add `email`, `passwordHash` to User model
+  - Generate migration with Prisma
 
 ### Phase 2: Logic
-*   **AUTH-2: Registration**
-    *   Server Action for user creation
-    *   Validate email uniqueness, password complexity
+- **AUTH-2: Registration** (size M)
+  - Server Action for user creation
+  - Validate email uniqueness, password complexity
 
 ### Phase 3: Interface
-*   **AUTH-3: Login Pages**
-    *   Build `/signup` and `/login` routes
-    *   Form validation and error states
+- **AUTH-3: Login Pages** (size M)
+  - Build `/signup` and `/login` routes
+  - Form validation and error states
 
 ## Technical considerations
 
