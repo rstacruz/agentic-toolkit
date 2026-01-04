@@ -20,10 +20,18 @@ Not an OpenCode user? These are pretty tool-agnostic, it should work with Claude
 
 ### Plan mode
 
-> [`/plan` command](command/atk/plan.md) +
-> [`plan-mode` skill](command/atk/plan-mode.md)
+> [`plan-mode` skill](command/atk/plan-mode.md),
+> [`/plan` command](command/atk/plan.md)
 
-Use this to plan your work instead of the usual `plan` mode.
+Ask the agent to confirm actions before doing them. Unlike OpenCode's built in plan mode:
+
+- No need to switch to plan/build agents
+- More eager to get your input with questions
+
+I use this:
+
+- As a replacement for the built-in `plan` mode
+- For almost every change (*/plan change test names to be descriptive* → *(answer q's)* → *go*)
 
 ```markdown
 ## User
@@ -68,7 +76,9 @@ go
 
 ### Plan with TDD and PRD
 
-> [`plan-with-tdd-and-prd` skill](skill/atk/plan-with-tdd-and-prd/SKILL.md)
+> [`plan-with-tdd-and-prd` skill](skill/atk/plan-with-tdd-and-prd/SKILL.md),
+> [`tdd` command](command/atk/tdd.md),
+> [`discovery` command](command/atk/discovery.md)
 
 Use this for complex features and technical research requiring structured planning before implementation.
 
@@ -77,22 +87,28 @@ Creates comprehensive planning documents:
 - **PRD** (Product Requirements Document) - product requirements with user flows
 - **TDD** (Technical Design Document) - implementation plans with pseudocode
 
+There are convenience commands `/tdd` and `/discovery` to trigger this skill.
+
+I use this:
+
+- For anything sized for one PR
+
 ```markdown
 ## User
 
-Write a PRD for a notification system
+/tdd a task completion tracker
 
 ## Assistant
 
-**Now writing a PRD.**
+**Now writing a TDD.**
 
-[Researches codebase, creates discovery document]
+[Researches codebase, checks existing patterns]
 
-Before I draft the PRD, I have clarifying questions:
+Before I draft the TDD, I have a clarifying question:
 
-1. **Delivery channels:** Which notification channels should be supported?
-   - a. In-app and email (recommended)
-   - b. In-app only
+1. **Undo completion:** Should users be able to mark a completed task as incomplete again?
+   - a. Allow unmarking with completedAt set to null (recommended)
+   - b. No undo - completion is final
 
 ## User
 
@@ -100,27 +116,16 @@ Before I draft the PRD, I have clarifying questions:
 
 ## Assistant
 
-[Writes `artefacts/prd-notifications.md` with requirements, user flows, screen interactions]
-
-PRD complete. Would you like me to write the TDD?
-
-## User
-
-Yes, write the TDD
-
-## Assistant
-
-**Now writing a TDD.**
-
-[Writes `artefacts/tdd-notifications.md` with pseudocode, data models, files, testing strategy]
+[Writes `artefacts/tdd-task-completion.md` with pseudocode, data models, files, testing strategy]
 
 TDD complete. Ready for implementation.
 ```
 
 ### Execute plan
 
-> [`/proceed` command](command/atk/proceed.md) +
-> [`execute-plan` skill](skill/atk/execute-plan/SKILL.md)
+> [`execute-plan` skill](skill/atk/execute-plan/SKILL.md),
+> [`/proceed` command](command/atk/proceed.md)
+
 
 Use this to execute implementation plans from the planning phase to verified completion.
 
@@ -139,9 +144,9 @@ Use this after creating a plan with `/plan` or writing a TDD.
 
 Analyse a PR. It creates 2 artefacts: a *PR analysis* which summarises a PR for a human to understand what's going on, and *PR feedback* for some comments.
 
-Use for:
+I use this:
 
-- Help you to review colleague PR's
+- To help review colleague PR's - the analysis is a rapid explanation of how it works
 
 ```
 gh pr checkout 1234
@@ -154,7 +159,7 @@ cat pr_feedback.md
 
 ### Reflect
 
-> [`/reflect` command](command/atk/reflect.md) +
+> [`/reflect` command](command/atk/reflect.md),
 > [`reflect` skill](skill/atk/reflect/SKILL.md)
 
 Use this to improve the toolkit itself by distilling learnings from your sessions.
@@ -178,7 +183,7 @@ Use this after a nasty `git pull`. It'll assess the situation and give suggestio
 
 > [`/continue-from-here` command](command/atk/continue-from-here.md)
 
-One of my favourite ways to work! Forget prompting, just add comments.
+One of my favourite ways to work! Forget prompting, just add comments. Inspired by [Aider's watch files mode](https://aider.chat/docs/usage/watch.html).
 
 - Add `// AI:` comments around your code.
 - Run `/continue-from-here`.
@@ -205,5 +210,4 @@ function validateWord(wordObject) {
 }
 ```
 
-Inspired by [Aider's watch files mode](https://aider.chat/docs/usage/watch.html).
 
