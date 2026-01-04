@@ -9,7 +9,6 @@ Some indispensable prompts and tools I use with [Opencode](https://opencode.ai/)
   - Add to global gitignore: `echo artefacts >> ~/.config/git/global_ignore # or wherever it is`
   - Exclude from global rgignore (for OpenCode): `echo '!artefacts' >> ~/.rgignore`
 - Pick-and-choose what you want to copy:
-  - Copy `agent/` files into `~/.config/opencode/agent/`
   - Copy `command/` files into `~/.config/opencode/command/`
   - Copy `skill/` files into `~/.config/opencode/skill/` (ensure you use OpenCode 1.0.190+)
 
@@ -19,9 +18,10 @@ Not an OpenCode user? These are pretty tool-agnostic, it should work with Claude
 
 ## Core tools
 
-### plan+ agent
+### Plan mode
 
-> [`agent/plan+.md`](agent/plan+.md)
+> [`/plan` command](command/atk/plan.md) +
+> [`plan-mode` skill](command/atk/plan-mode.md)
 
 Use this to plan your work instead of the usual `plan` mode.
 
@@ -29,32 +29,28 @@ Use this to plan your work instead of the usual `plan` mode.
 
 ## User
 
-(switch to plan+ mode)
+/plan 
+in the `workmux add` command, i want to add `--name <name>` to name the worktree 
 
-plan this work:
-- in the `workmux add` command, i want to add `--name <name>` to name the worktree 
+because: branch names can be very long, they dont make very good worktree names
 
-because:
-- branch names can be very long, they dont make very good worktree names
-
-also research:
-- are there places in the codebase that don't make a distinction between worktree name and branch name? because those need to change
+also research: are there places in the codebase that don't make a distinction between worktree name and branch name? because those need to change
 
 ## Assistant
 
 I've researched the codebase and created a comprehensive implementation plan for adding --name <name> to the workmux add command.
 
+(TODO update w new fmt)
+
 ## User
 
-(switch to build mode)
-
-proceed and implement
+/proceed
 ```
 
-It has some differences from the regular plan mode:
+### plan-with-tdd-and-prd 
 
-- It will keep its plans in `artefacts/*.md`.
-- It optimises the plan for scanability.
+Todo:
+tbd 
 
 ### /proceed
 

@@ -1,80 +1,47 @@
 ---
-name: "plan-with-tdd-and-prd"
-description: >
-  Comprehensive planning guidelines for PRDs, TDDs, and discovery documents.
-  Invoke when planning projects or code changes.
-  
-  Common user requests:
-  - "Write a PRD for [feature]"
-  - "Draft a TDD for [feature]"
-  - "Plan [feature]"
-  - "Plan a code change"
-  - "Write discovery document for [feature]"
-  - "Research and plan [topic]"
+name: plan-with-tdd-and-prd
+description: Use when initiating new features, complex code changes, or technical research tasks that require structured planning and documentation before implementation.
 ---
-
-Assist the user in planning a project with PRDs, TDDs, and discovery documents, or planning code changes.
 
 <guidelines>
 
-## Actions
+## User actions
 
 **Common user requests:**
 - "Write a PRD for [feature]" → See [Draft or write a PRD](#draft-or-write-a-prd)
 - "Draft a TDD for [feature]" → See [Write a TDD](#write-a-tdd)
 - "Plan a code change" → See [Write a TDD](#write-a-tdd)
 - "Research [topic/technology/approach]" → See [Research a topic](#research-a-topic)
-- "Descope [task] from the PRD" → See [Defer a task in a PRD](#defer-a-task-in-a-prd)
 
 The user may ask for these tasks.
 
 ### Draft or write a PRD
 
-- Write a PRD for the user.
-- Ask clarifying questions to the user. See _Open questions_ for guidelines.
-- Write to `prd.md` unless otherwise specified.
-- For _Roadmap_ section, leave it as "_TBD - to be filled in later upon request_".
+When user requests a PRD, follow these steps sequentially:
+
+0. Acknowledge before starting: **Now writing a PRD.**
+1. **Codebase research:** Understand existing systems and constraints that impact the feature. Write findings to `artefacts/discovery-<title>.md` if research reveals non-obvious constraints, quirks, or patterns that would impact planning.
+2. **Context alignment:** Check `artefacts/discovery-<title>.md` for environmental context (if exists).
+3. **Clarifying questions:** Identify ambiguities or missing requirements before drafting. Ask user with recommended solutions. See *Open questions guidelines*.
+4. **Draft PRD:** Follow the PRD structure and guidelines described in the "PRD guidelines" section below.
+5. **Document remaining questions:** Add unresolved questions to the PRD's "Open questions" section.
+6. **Document persistence:** Write to `artefacts/prd-{slug}.md` unless otherwise specified.
 
 ### Write a TDD
 
-When user requests a TDD:
+When user requests a TDD, follow these steps sequentially:
 
-1. **Determine TDD type:**
-   - Simple task (1-2 milestones): See [Create single TDD](#create-single-tdd) below
-   - Multi-milestone project (3+ milestones): See [Create TDD for multi-milestone project](#create-tdd-for-multi-milestone-project) below
-
-2. **Check if PRD exists:**
-   - If PRD exists: Base TDD on PRD requirements and roadmap
-   - If no PRD: Create TDD directly from user request (for small tasks)
-
-### Create single TDD
-
-For simple tasks or projects with 1-2 milestones:
-
-- Follow guidelines in "TDD guidelines" section
-- Write to `artefacts/tdd-<feature>.md`
-
-### Defer a task in a PRD
-
-A user may ask for a task to be descoped or deferred.
-
-- Move these tasks to a _Out of scope_ section. Create it if it doesn't exist.
+0. Acknowledge before starting: **Now writing a TDD.**
+1. **Codebase research:** Search for relevant code patterns, existing data models, and integration points. Write findings to `artefacts/discovery-<title>.md` if research reveals non-obvious constraints, quirks, or patterns that would impact implementation.
+2. **Context alignment:** Check `artefacts/prd-{slug}.md` and `artefacts/discovery-<title>.md` to ensure the design adheres to requirements and environmental constraints.
+3. **Clarifying questions:** Identify ambiguities or missing technical decisions that would significantly impact the design. Ask user before proceeding with recommended solutions.
+4. **Draft design:** Follow the TDD structure and guidelines described in the "TDD guidelines" section below.
+5. **Document remaining questions:** Add any unresolved implementation-specific open questions to the TDD with proposed solutions.
+6. **Document persistence:** Write the final design to `artefacts/tdd-<feature>.md`.
 
 ### Research a topic
 
-When researching a topic, write findings to the Discovery Document (`discovery.md`).
-
-### Create TDD for multi-milestone project
-
-For projects with 3+ milestones:
-
-1. **Create `tdd-overview.md` first:** architecture, shared models, technical decisions, cross-cutting concerns
-2. **Create milestone TDDs progressively:**
-   - `tdd-m1.md` immediately
-   - Later milestones (`tdd-m2.md`, `tdd-m3.md`) only when requested or work begins
-3. **Keep milestone TDDs focused:** milestone-specific details only, reference `tdd-overview.md` for shared patterns
-
-Elaborate details progressively as work progresses to prevent over-planning.
+When researching a topic, write findings to the Discovery Document (`artefacts/discovery-<title>.md`).
 
 ## Planning artefacts
 
@@ -83,17 +50,14 @@ Elaborate details progressively as work progresses to prevent over-planning.
 Project planning uses these artefacts in `artefacts/` (local, git-ignored):
 
 - Discovery documents (`discovery-<title>.md`) - environmental context and constraints
-- Product requirements document (PRD, `prd.md`) - product requirements
-- Technical design document (TDD) - implementation plans:
-  - Single milestone/task: `tdd-<feature>.md`
-  - Multi-milestone (2+): `tdd-overview.md`, `tdd-m1.md`, `tdd-m2.md`
-- Tickets (`tickets.md`) - Linear ticket overview
+- Product requirements document (PRD, `prd-{slug}.md`) - product requirements
+- Technical design document (TDD, `tdd-<feature>.md`) - implementation plans
 
 Notes persist in `notes/` across branches. Users may specify custom locations.
 
 **Guidelines:**
 
-- Write artefacts to `artefacts/` folder (eg, `artefacts/prd.md`)
+- Write artefacts to `artefacts/` folder (eg, `artefacts/prd-{slug}.md`)
 - Make judgement calls on scope:
   - Large projects: discovery, PRD, TDD
   - Small tasks: TDD only
@@ -105,7 +69,6 @@ When users request work outside the current scope:
 
 - New feature/scope: Create new TDD (e.g., `tdd-another-feature.md`)
 - New research question: Create new discovery (e.g., `discovery-api-quirks.md`)
-- Same scope, next milestone: Use milestone TDDs (e.g., `tdd-m2.md`)
 
 ## Discovery document guidelines
 
@@ -173,12 +136,11 @@ A PRD typically has these sections. Some may be present or absent depending on t
 - **Functional requirements** — Detailed feature requirements using hierarchical IDs (F1, F1.1, F1.2). Use compact bullet format with em-dashes.
 - **Non-functional requirements** — Performance, accessibility, scalability requirements (NF1, NF2...). Use compact bullet format.
 - **Technical constraints** — Technology stack, integration, and implementation constraints (TC1, TC2...). Use compact bullet format.
-- **Design considerations** — Important design decisions, UI/UX patterns, and implementation notes. Use H3 headings for each consideration.
+- **Design considerations** — Important design decisions and implementation notes (DC1, DC2...). Use compact bullet format.
 - **Screen interactions** — Mermaid diagram showing UI structure, components, and navigation flows. Include "Key entities" subsection listing pages/URLs, UI components, and API endpoints.
 - **User flow** — Mermaid diagram showing end-to-end user journey through the feature.
 - **Open questions** — Clarifying questions with recommended solutions and alternatives.
 - **Out of scope** — Features deferred for future consideration.
-- **Roadmap** — Milestones (M1, M2...) with tasks. Optimize for getting a working version first.
 - **Additional context** — Environmental information, existing systems, and research findings.
 
 Good PRD qualities:
@@ -213,15 +175,9 @@ See "PRD example" for examples.
 - Technical constraints (TC1, TC2...)
 - Any other requirement lists
 
-### Open questions
+### Design considerations
 
-Ask clarifying questions for ambiguity or missing requirements.
-
-For each question:
-
-- Provide a clear recommended solution with reasoning
-- Offer alternative approaches when applicable
-- Include relevant considerations (technical, business, UX)
+Document important design decisions that don't fit neatly into functional requirements. See example.
 
 ### Screen interactions diagram
 
@@ -353,12 +309,17 @@ Notification delivery channels:
 
 ## Non-functional requirements
 
-- ...
+- **NC1.1. Performance** — Real-time notifications delivered within 2 seconds
 
 ## Technical constraints
 
 - **TC1. Database** — Use existing PostgreSQL database with Prisma ORM
 - **TC2. Authentication** — Integrate with current NextAuth session management
+
+## Design considerations
+
+- **DC1. No backward compatibility** — New implementation replaces legacy system entirely
+- **DC2. Separate personal and business contacts** — Keep distinct data models for each type
 
 ## Screen interactions
 
@@ -465,60 +426,20 @@ The following features are deferred for future consideration:
 
 1. **Root page:** Should the root `/` page redirect to a default language (e.g., `/es`), or remain separate?
 
-   a. Redirect to `/es` based on browser language detection _(recommended)_
-   b. Show a language selection landing page
+   - a. Redirect to `/es` based on browser language detection _(recommended)_
+   - b. Show a language selection landing page
 
 2. **Default role:** What should be the default user role upon registration?
 
-   a. Basic user with limited permissions _(recommended)_
-   b. Trial user with time-limited premium features
+   - a. Basic user with limited permissions _(recommended)_
+   - b. Trial user with time-limited premium features
 ````
 
 ## TDD guidelines
 
-### TDD structure for multi-milestone projects
+### TDD structure
 
-**When to use milestone-specific TDDs:**
-
-- Projects with 3+ milestones in the PRD roadmap
-- Projects spanning multiple weeks or complex feature sets
-- When detailed implementation planning for all milestones at once would be overwhelming
-
-**High-level TDD (`tdd-overview.md`):**
-
-Purpose: Document architectural decisions, system-wide patterns, and shared concerns.
-
-Contents:
-
-- System architecture and design patterns
-- Shared data models and interfaces used across milestones
-- Technical decisions and trade-offs
-- Cross-cutting concerns (auth, logging, error handling)
-- Integration points between milestones
-- Technology stack and dependencies
-
-**Milestone-specific TDD (`tdd-m1.md`, `tdd-m2.md`, etc.):**
-
-Purpose: Detailed implementation plan for a specific milestone only.
-
-Contents:
-
-- Files to create/modify/remove for this milestone
-- Pseudocode breakdown specific to this milestone
-- Milestone-specific data models (if any)
-- Testing strategy for this milestone (if applicable)
-- CSS classes for this milestone (if applicable)
-
-**Benefits:**
-
-- Reduced cognitive load: work with focused, bounded documents
-- Progressive elaboration: detail emerges as milestones approach
-- Better version control: changes isolated to relevant milestones
-- Flexibility: revise later milestones based on learnings
-
-### Single-milestone TDD
-
-For projects with 1-2 milestones or straightforward implementations, use a single `tdd-<feature>.md` file.
+Use a single `tdd-<feature>.md` file for all projects.
 
 Include if applicable:
 
@@ -536,7 +457,7 @@ Include if applicable:
   - (if applicable, and if user asked for it) see "### Testing strategy" below
 - **Open questions:**
   - (if applicable) Clarifying questions for ambiguous implementation details
-  - Follow same format as PRD open questions
+  - See "Open questions guidelines" section
 
 Keep it concise:
 
@@ -626,80 +547,31 @@ interface Task {
 }
 ```
 
-## Call graph
-
-```mermaid
-graph LR
-  subgraph "api/routes.ts"
-    API["POST /api/tasks/:id/complete"]:::updated
-  end
-  subgraph "tasks/complete.ts"
-    A["[A] completeTask"]:::new
-  end
-  subgraph "tasks/db.ts"
-    B["[B] getTask"]:::new
-    C["[C] markComplete"]:::new
-  end
-  subgraph "lib/prisma.ts"
-    D["prisma.task"]
-  end
-  
-  API -->|"calls"| A
-  A -->|"fetches via"| B
-  A -->|"updates via"| C
-  B -->|"queries"| D
-  C -->|"updates"| D
-  
-  classDef updated fill:#ff9,stroke:#333
-  classDef new fill:#9f9,stroke:#333
-  classDef removed fill:#f99,stroke:#333
-```
-
 ## Pseudocode breakdown
 
-**completeTask:** marks a task as completed
+**completeTask:** mark task complete
 
 ```sh
 # == tasks/complete.ts ==
 
 completeTask(taskId) # [🟢 NEW]
-  # 1. Fetch task and validate existence
-  → task = getTask(taskId) # [A]
+  # Validate task exists
+  → task = prisma.task.findUnique({ where: { id: taskId } })
   if !task:
     → log "Task not found"
     → return { ok: false, error: "NOT_FOUND" }
 
-  # 2. Check current status (idempotency)
+  # Check if already completed
   if task.status == 'completed':
-    → log "Task already completed"
+    → log "Already completed"
     → return { ok: true, task }
 
-  # 3. Update task status and persist
-  → markComplete(task) # [B]
-  → return { ok: true, task }
-```
-
-`[A]` **getTask:** fetches task from database
-
-```sh
-# == tasks/db.ts ==
-
-getTask(taskId) # [🟢 NEW]
-  # Uses prisma to fetch unique task by ID
-  → prisma.task.findUnique({ where: { id: taskId } })
-```
-
-`[B]` **markComplete:** updates task status
-
-```sh
-# == tasks/db.ts ==
-
-markComplete(task) # [🟢 NEW]
-  # Persists completion status and current timestamp
+  # Mark complete and persist
   → prisma.task.update({
-      where: { id: task.id },
+      where: { id: taskId },
       data: { status: 'completed', completedAt: new Date() }
     })
+  → return { ok: true, task }
 ```
 
 ## Files
@@ -707,7 +579,6 @@ markComplete(task) # [🟢 NEW]
 **New files:**
 
 - `src/tasks/complete.ts`
-- `src/tasks/db.ts`
 
 **Modified files:**
 
@@ -729,16 +600,16 @@ markComplete(task) # [🟢 NEW]
 
 ```typescript
 // Mocks
-vi.mock("./tasks/db"); // getTask, markComplete - avoid database dependency
+vi.mock("@/lib/prisma");
 
 // Test data
-const pendingTask = { id: "1", title: "Test", status: "pending", completedAt: null };
-const completedTask = { id: "2", title: "Done", status: "completed", completedAt: new Date() };
+const PENDING_TASK = { id: "1", title: "Test", status: "pending", completedAt: null };
+const COMPLETED_TASK = { id: "2", title: "Done", status: "completed", completedAt: new Date() };
 
 describe("completeTask", () => {
-  test("marks task as completed with timestamp"); // use pendingTask
+  test("marks task as completed with timestamp");
   test("returns error if task not found");
-  test("is idempotent if task already completed"); // use completedTask
+  test("is idempotent if task already completed");
 });
 ```
 
@@ -754,5 +625,28 @@ describe("completeTask", () => {
    a. Show success toast notification _(recommended)_
    b. Silently update with visual state change only
 ````
+
+## Open questions guidelines
+
+Ask clarifying questions for ambiguity or missing requirements.
+
+If there are points for clarification that will significantly change the plan depending on its answer, ask them *before* creating plans.
+
+**In chat conversation:**
+
+For each question, provide:
+- Clear recommended solution with reasoning
+- Alternative approaches when applicable
+- Relevant considerations (technical, business, UX)
+
+**In the document:**
+
+Also add questions to the document's "Open questions" section using minimal format:
+- Question title only
+- Lettered options (a, b, c)
+- Mark recommended option with _(recommended)_
+- No explanations or reasoning
+
+**When the user answers a question:** Update the **Initial ask** section with the additional clarification. This keeps it as the single source of truth for the refined requirements.
 
 </guidelines>
