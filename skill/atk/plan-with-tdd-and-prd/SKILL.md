@@ -452,7 +452,7 @@ Include if applicable:
 - **Files:**
   - (if applicable) New, modified, removed files. Include reference/context files for LLM agents to understand existing patterns
 - **CSS classes:**
-  - (if any) Styling and layout classes needed. Don't define full CSS, only list classes.
+  - (if any) Styling and layout classes needed. List class names only - no definitions, no Tailwind utilities, no CSS code.
 - **Testing strategy:**
   - (if applicable, and if user asked for it) see "### Testing strategy" below
 - **Open questions:**
@@ -517,6 +517,31 @@ Break down the core logic into pseudocode showing flow and key components. See t
 - Use "sh" for syntax highlighting language, even if the syntax is not shell
 - If any specific function/file is not updated/removed, leave it out
 - Include descriptive comments to explain the logic flow and business rules
+- Keep JSX/markup minimal: use high-level component references, not full JSX trees
+- Focus on logic flow, not rendering details
+- Use `→ render <Component>` rather than showing JSX structure
+
+**Example: Avoid verbose JSX with nested tags**
+
+```sh
+# AVOID: Too verbose
+renderNotificationPanel()
+  → notifications = getUnreadNotifications()
+  → return (
+      <div className="fixed right-0 w-96 shadow-lg">
+        <div className="border-b p-4">
+          <h2>Notifications</h2>
+            ... [skip]
+
+# PREFER: Concise and logic-focused
+renderNotificationPanel()
+  → notifications = getUnreadNotifications()
+  → render <NotificationPanel notifications={notifications}>
+      <h2>Notifications</h2>
+      {/* for each notification: */}
+        <Notification ...>
+    </>
+```
 
 ### Testing strategy
 
@@ -573,6 +598,16 @@ completeTask(taskId) # [🟢 NEW]
     })
   → return { ok: true, task }
 ```
+
+## Files
+
+**New files:**
+
+- `src/tasks/complete.ts`
+
+**Modified files:**
+
+- `prisma/schema.prisma` - Add Task model
 
 ## Files
 
