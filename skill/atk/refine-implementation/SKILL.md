@@ -2,7 +2,7 @@
 name: refine-implementaion
 description: Refine an implementation
 ---
-# Refine implementayion
+# Refine implementation
 
 Refine the current implementation (uncommitted changes, branch, PR).
 
@@ -46,15 +46,15 @@ Use best judgement when processing input.
 - Broken error handling that swallows failures, throws unexpectedly or returns error types that are not caught.
 
 **Impact** - Your secondary focus
-- Identify parts of this codebase that maybe affected by this change.
-- Assess if anything needs to change, either in those related systems or the ones updated in this change.
+- Identify parts of this codebase that may be affected by this change
+- Assess if anything needs to change, either in those related systems or the ones updated in this change
 
 **Structure** - Does the code fit the codebase?
 - Does it follow existing patterns and conventions?
 - Are there established abstractions it should use but doesn't?
 - Excessive nesting that could be flattened with early returns or extraction
 
-**Performance** - Only flag if obviously problematic.
+**Performance** - Only flag if obviously problematic
 - O(n²) on unbounded data, N+1 queries, blocking I/O on hot paths
 
 **Cconsistency**
@@ -63,8 +63,8 @@ Use best judgement when processing input.
 
 **Alignment**
  - Check if the implementation aligns with project guidelines described in its AGENTS.md files
- - Does code follow coding guidelines (if given)?
- - Do tests follow follow test guidelines (if given)?
+ - Does code follow coding guidelines (if available)?
+ - Do tests follow follow test guidelines (if available)?
 
 **Also**
  - Are there outdated documentation or comments?
@@ -103,7 +103,7 @@ Give a summary of what has transpired.
 
 Also give this session a final summary code: `CHANGES_DONE` or `NO_CHANGES_REQUIRED`
 
-## **Guidelines
+## Guidelines
 
 - Provide assessments in the conversation for user review; don't write Markdown files.
 - Remember your goal is to refine these changes to be ready for merging into the main branch.
