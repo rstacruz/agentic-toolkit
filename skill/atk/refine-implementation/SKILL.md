@@ -47,7 +47,8 @@ Use best judgement when processing input.
 
 **Impact** - Your secondary focus
 - Identify parts of this codebase that may be affected by this change
-- Assess if anything needs to change, either in those related systems or the ones updated in this change
+- Focus on the functions that have have been changed in this branch. follow the code paths that use them
+- Ask yourself: are there any concerns that need to be explored further?
 
 **Structure** - Does the code fit the codebase?
 - Does it follow existing patterns and conventions?
