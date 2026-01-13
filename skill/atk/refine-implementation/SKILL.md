@@ -1,10 +1,10 @@
 ---
-name: refine-implementaion
+name: refine-implementation
 description: Refine an implementation
 ---
 # Refine implementation
 
-Refine the current implementation (uncommitted changes, branch, PR).
+Refine implementation (uncommitted changes, branch, PR) by identifying bugs/impacts, predicting issues, verifying changes.
 
 ## Workflow
 
@@ -46,9 +46,11 @@ Use best judgement when processing input.
 - Broken error handling that swallows failures, throws unexpectedly or returns error types that are not caught.
 
 **Impact** - Your secondary focus
-- Identify parts of this codebase that may be affected by this change
-- Focus on the functions that have have been changed in this branch. follow the code paths that use them
-- Ask yourself: are there any concerns that need to be explored further?
+- Integration points affected: APIs, shared state, database schema, config changes
+- Downstream consumers: UI components, services, scripts that call modified code
+- Cross-cutting concerns touched: auth, logging, caching, error handling
+- Migration implications: data transforms, backwards compatibility breaks
+- Follow code paths through changed functions to assess ripple effects
 
 **Structure** - Does the code fit the codebase?
 - Does it follow existing patterns and conventions?
@@ -58,17 +60,13 @@ Use best judgement when processing input.
 **Performance** - Only flag if obviously problematic
 - O(n²) on unbounded data, N+1 queries, blocking I/O on hot paths
 
-**Cconsistency**
-- Verify that the implementation aligns with existing codebase patterns
-- eg, Naming conventions, testing strategies, architectural style
+**Consistency**
+- Verify implementation aligns with existing codebase patterns and project guidelines
+- Naming conventions, testing strategies, architectural style
+- Code/tests follow AGENTS.md guidelines (if provided)
 
-**Alignment**
- - Check if the implementation aligns with project guidelines described in its AGENTS.md files
- - Does code follow coding guidelines (if available)?
- - Do tests follow follow test guidelines (if available)?
-
-**Also**
- - Are there outdated documentation or comments?
+**Polish**
+ - Outdated documentation or comments?
  - Opportunities to simplify?
  - Accessibility issues? (eg, wrong role, missing labels)
 
@@ -80,6 +78,7 @@ Use best judgement when processing input.
 - Don't flag something as a bug if you're unsure - investigate first
 - Don't invent hypothetical problems - if an edge case matters, explain the realistic scenario where it breaks
 - If you need more context to be sure, use the available tools to get it
+- If concerns require user decisions/context, ask focused clarifying questions before refining
 
 **Don't be a zealot about style.** When checking code against conventions:
 
@@ -106,5 +105,7 @@ Also give this session a final summary code: `CHANGES_DONE` or `NO_CHANGES_REQUI
 
 ## Guidelines
 
-- Provide assessments in the conversation for user review; don't write Markdown files.
-- Remember your goal is to refine these changes to be ready for merging into the main branch.
+- Focus refinements on high-signal feedback—not style nitpicks
+- Propose concrete alternatives, not just problems
+- Provide assessments in the conversation for user review; don't write Markdown files
+- Remember your goal is to refine these changes to be ready for merging into the main branch

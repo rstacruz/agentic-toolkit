@@ -12,7 +12,7 @@ description: Use when initiating new features, complex code changes, or technica
 - Optimize for conciseness, brevity, scannability
 - Use lists, sentence fragments, broken grammar OK
 - Remove unnecessary articles, verbose phrasing
-- Direct, terse language
+- Direct, high-density language
 
 ## User actions
 

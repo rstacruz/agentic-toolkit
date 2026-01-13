@@ -1,14 +1,14 @@
 ---
-name: terse-writing-style
+name: high-density-writing-style
 description: Guidelines for a writing style that's concise and direct. Use for writing/editing prompts, artefact documents, TDD, PRD, discovery documents, research, AGENTS.md, and more.
 ---
 
-# Terse writing style
+# High-density writing style
 
 - Optimize for conciseness, brevity, scannability
 - Use lists, sentence fragments, broken grammar OK
 - Remove unnecessary articles, verbose phrasing
-- Direct, terse language
+- Direct, high-density language
 
 ## Example
 

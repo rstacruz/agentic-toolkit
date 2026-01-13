@@ -3,7 +3,11 @@ description: "Proceed and build from plan"
 agent: build
 ---
 
-Use the *execute-plan* skill (which orchestrates *verify-implementation*, *review-with-subagent*, and *generate-changelog*), then **go** and proceed to build from plan.
+**Go** and proceed to build from plan using the *execute-plan* skill for guidance.
 
+After the implementation, the *refine-implementation* skill.
+
+<additional-instructions>
 $ARGUMENTS
+</additional-instructions>
 
