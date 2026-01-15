@@ -16,7 +16,7 @@ Pre-requisites:
 
 Workflow:
 
-1. Spawn a @general agent to do the instructions in `<skill_dir>/once.md`. Use its instructions in verbatim, but change the file paths if needed, and include additional instructions / preamble if given by user.
+1. Spawn a @general agent to do the instructions in `<skill_dir>/once.md`. Do not reuse agents: do not pass a session_id so agents start fresh. Use its instructions in verbatim, but change the file paths if needed, and include additional instructions / preamble if given by user.
 
 2. Verify that the agent created a git commit. If it didn't, create one.
 
