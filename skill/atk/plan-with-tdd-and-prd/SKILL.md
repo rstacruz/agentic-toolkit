@@ -233,8 +233,6 @@ Break feature into small, independently completable execution subtasks optimized
 **Acceptance Criteria:**
 - [ ] Specific verifiable criterion
 - [ ] Another criterion
-
-**Dependencies:** US-002 (optional - only if story depends on another)
 ```
 
 **Guidelines:**
@@ -246,8 +244,8 @@ Break feature into small, independently completable execution subtasks optimized
 - Acceptance criteria must be verifiable, not vague
   - Bad: "Works correctly"
   - Good: "Button shows confirmation dialog before deleting"
-- Include dependencies field only if story depends on another
-- Do NOT include quality gate commands in acceptance criteria (defined in Quality Gates section)
+- Bundle tests with each story in acceptance criteria — don't create separate "write tests" story
+- Test cases should be verifiable checkboxes: `- [ ] Test: X happens when Y`
 - Stories may not cover all FRs (edge cases, system behavior) - they're execution units, not complete spec
 
 See "Story dependencies" for visualizing dependencies.
@@ -279,6 +277,7 @@ graph TD
 **Guidelines:**
 
 - Only include if stories have dependencies
+- Do NOT add "Dependencies" field to individual user stories — express all dependencies in this Mermaid graph
 - Use node IDs matching story numbers (US001, US002)
 - Include story titles in quoted labels
 - Arrows show "must complete before" relationship
@@ -453,11 +452,11 @@ For UI stories, also include:
 - [ ] Add Notification model to Prisma schema with fields: id, userId, taskId, eventType, triggeredBy, createdAt, readAt
 - [ ] Run database migration
 - [ ] EventType enum supports: COMMENT, STATUS_CHANGE, MENTION, ASSIGNMENT
+- [ ] Test: Prisma schema validates correctly
+- [ ] Test: EventType enum includes all four types
 
 ### US-002: Implement notification service
 [snip]
-
-**Dependencies:** US-001
 
 ### US-003: Add real-time notification delivery
 [snip]
