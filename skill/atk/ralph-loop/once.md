@@ -1,6 +1,6 @@
 0. Gather context
-   - Read `artefacts/progress.md`
-   - Read plan
+   - Read *progress file* (default: `artefacts/progress.md`)
+   - Read *plan file* (default: `artefacts/prd.md`)
 
 2. Identify story
    - Pick one story - the most important one that's not blocked. It may not be the top-most story
@@ -16,11 +16,11 @@
    - Make judgement call on which of its feedback to address
 
 5. Mark progress
-   - update prd.md to mark things as done
+   - update *plan file* to mark story as done
 
 6. Document learnings
    - assess the conversation, identify roadblocks, summarise work done, include assumptions flagged
-   - append them in `artefacts/progress.md` (create if it doesn't exist) - this is to assist future work
+   - append them to *progress file* (create if it doesn't exist) - this is to assist future work
 
 7. Commit changes
    - Include story ID in commit title
