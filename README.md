@@ -18,6 +18,4 @@ Not an OpenCode user? These are pretty tool-agnostic, it should work with Claude
 
 ## Contents
 
-See [skill/atk/](skill/atk/) for the skills
-
-
+See [skill/atk/](skill/atk/) for the skills.

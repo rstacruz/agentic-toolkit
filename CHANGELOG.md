@@ -3,8 +3,8 @@
 ## v2026.01.15
 
 **Added:**
-- New skills: `analyse-and-review-pr`, `execute-plan`, `explain-code`, `mermaid-diagrams`, `refine-implementation`, `triangulate-plan`, `verify-implementation`, `high-density-writing-style`
-- New command: `/triangulate-plan`
+- New skills: `ralph-loop`, `analyse-and-review-pr`, `execute-plan`, `explain-code`, `mermaid-diagrams`, `refine-implementation`, `triangulate-plan`, `verify-implementation`, `high-density-writing-style`
+- New commands: `/triangulate-plan`, `/proceed`
 - Comprehensive READMEs for all `atk` skills
 - Roadmap task sizing and phasing guide
 - Quality gates and user stories sections in planning documentation
@@ -15,6 +15,8 @@
 - Updated `pull.sh` to use `--delete` with `rsync`
 - Refined `reflection` skill and command instructions
 - Streamlined root `README.md`
+- Renamed `/refine-plan` to include updated logic
+- Refined `proceed` command logic
 
 **Removed:**
 - Obsolete tool usage instructions from documentation
