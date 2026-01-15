@@ -26,7 +26,9 @@
    - Include story ID in commit title
 
 8. Assess done-ness
-   - If PRD is done, say `<progress>PRD_FINISHED</progress>`
+   - Check if there are any user stories requiring action after this
+   - If there are none, say: `<progress>PRD_FINISHED</progress>`
+   - Else, say: `<progress>PRD_IN_PROGRESS</progress>`
 
 Code writing guidelines:
 
