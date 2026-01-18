@@ -5,13 +5,13 @@ description: tbd
 
 ## Ralph loop
 
-A "ralph loop" iterates through a plan in a story-by-story basis.
+A "ralph loop" iterates through a plan in a ticket-by-ticket basis.
 
 Pre-requisites:
 
 1. Ensure there is a PRD as a Markdown file (`artefacts/prd.md` by default)
-2. Ensure the PRD has user stories
-3. Ensure user stories have acceptance criteria
+2. Ensure the PRD has tickets
+3. Ensure tickets have acceptance criteria
 4. Ensure there is a progress file (`artefacts/progress.md`) - create an empty one if not
 
 Workflow:

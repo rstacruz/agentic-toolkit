@@ -1,10 +1,10 @@
 # Ralph loop
 
-Iteratively implement features from a PRD using a story-by-story feedback loop.
+Iteratively implement features from a PRD using a ticket-by-ticket feedback loop.
 
 See: <https://ghuntley.com/ralph/>
 
-1. Create a PRD with user stories ([`plan-with-tdd-and-prd`](../plan-with-tdd-and-prd/) ca help)
+1. Create a PRD with tickets ([`plan-with-tdd-and-prd`](../plan-with-tdd-and-prd/) ca help)
 2. Say `proceed with plan using *ralph-loop*`
 
 Examples:

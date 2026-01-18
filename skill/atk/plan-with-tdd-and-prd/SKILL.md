@@ -142,9 +142,9 @@ Typical sections (include if applicable):
 - **Functional requirements** — Complete technical specification of what system does (F1, F1.1, F1.2). Compact bullet format with em-dashes. See "Functional requirements" section.
 - **Non-functional requirements** — Performance, accessibility, scalability (NF1, NF2...). Compact bullets.
 - **Technical constraints** — Tech stack, integration, implementation constraints (TC1, TC2...). Compact bullets.
-- **Quality gates** — Commands that must pass for every user story (typecheck, lint, tests, etc). See "Quality gates" section.
-- **User stories** — Feature broken into independently completable execution subtasks (US-001, US-002). See "User stories" section.
-- **Story dependencies** — Mermaid graph showing dependencies between user stories. See "Story dependencies" section.
+- **Quality gates** — Commands that must pass for every ticket (typecheck, lint, tests, etc). See "Quality gates" section.
+- **Tickets** — Feature broken into independently completable execution subtasks (T-001, T-002). See "Tickets" section.
+- **Ticket dependencies** — Mermaid graph showing dependencies between tickets. See "Ticket dependencies" section.
 - **Design considerations** — Important design decisions/implementation notes (DC1, DC2...). Compact bullets.
 - **Screen interactions** — Mermaid diagram: UI structure, components, navigation flows. Include "Key entities" subsection (pages/URLs, UI components, API endpoints).
 - **User flow** — Mermaid diagram: end-to-end user journey through feature.
@@ -191,41 +191,41 @@ See "PRD example".
 
 ### Quality gates
 
-List commands that must pass for every user story. Applied automatically during task orchestration.
+List commands that must pass for every ticket. Applied automatically during task orchestration.
 
-**Purpose:** Define project-specific verification commands that ensure quality for every story.
+**Purpose:** Define project-specific verification commands that ensure quality for every ticket.
 
 **Format:**
 
 ```markdown
 ## Quality gates
 
-These commands must pass for every user story:
+These commands must pass for every ticket:
 - `pnpm typecheck` - Type checking
 - `pnpm lint` - Linting
 - `pnpm test` - Unit tests
 
-For UI stories, also include:
+For UI tickets, also include:
 - Verify in browser using dev-browser skill
 ```
 
 **Guidelines:**
 
 - Include UI verification requirements if applicable
-- Individual user stories should NOT include quality gate commands in their acceptance criteria - they're defined once here and applied automatically.
+- Individual tickets should NOT include quality gate commands in their acceptance criteria - they're defined once here and applied automatically.
 
-### User stories
+### Tickets
 
 Break feature into small, independently completable execution subtasks optimized for AI agent execution.
 
-**Purpose:** Enable task orchestration by defining discrete units of work. User stories are actionable subtasks that implement functional requirements.
+Tickets are actionable subtasks that implement functional requirements. **Purpose:** Enable task orchestration by defining discrete units of work.
 
 **Format:**
 
 ```markdown
-## User stories
+## Tickets
 
-### US-001: [Title]
+### T-001: [Title]
 **Description:** As a [user], I want [feature] so that [benefit].
 
 **Implements:** F1.1, F1.2
@@ -237,49 +237,59 @@ Break feature into small, independently completable execution subtasks optimized
 
 **Guidelines:**
 
-- Each story small enough to implement in one focused AI agent session
-- Stories should be independently completable when possible
-- Use US-001, US-002 numbering format
-- Include "Implements" field referencing FR numbers (eg, F1.1, F2.3) to show traceability
-- Acceptance criteria must be verifiable, not vague
-  - Bad: "Works correctly"
-  - Good: "Button shows confirmation dialog before deleting"
-- Bundle tests with each story in acceptance criteria — don't create separate "write tests" story
-- Test cases should be verifiable checkboxes: `- [ ] Test: X happens when Y`
-- Stories may not cover all FRs (edge cases, system behavior) - they're execution units, not complete spec
+- **Slice vertically (by feature), not horizontally (by technical layer).**
+  - Bad: "Ticket 1: Create HTML", "Ticket 2: Create CSS", "Ticket 3: DB Schema"
+  - Good: "Ticket 1: Header (HTML+CSS)", "Ticket 2: Save User (API+DB)"
+- **Bias towards foundational/iterative tickets.**
+    - Favour making iterative progress per ticket
+  - Start with "walking skeleton" (end-to-end "Hello World").
+  - Iterate to add logic/complexity later.
+  - Better to have working skeleton than perfect, isolated fragment.
+- **Acceptance criteria:**
+  - Ensure each ticket contains verifyable progress (eg: tests, types) as much as possible
+  - Test cases should be verifiable checkboxes: `- [ ] Test: X happens when Y`
+  - Acceptance criteria must be verifiable, not vague
+    - Good: "Button shows confirmation dialog before deleting", Bad: "Works correctly"
+- **Also:**
+  - Each ticket small enough to implement in one focused AI agent session
+  - Tickets should be independently completable when possible
+  - Use T-001, T-002 numbering format
+  - Include "Implements" field referencing FR numbers (eg, F1.1, F2.3) to show traceability
+  - Bundle tests with each ticket in acceptance criteria — don't create separate "write tests" ticket
+  - Tickets may not cover all FRs (edge cases, system behavior) - they're execution units, not complete spec
 
-See "Story dependencies" for visualizing dependencies.
+See "Ticket dependencies" for visualizing dependencies.
 
-### Story dependencies
+### Ticket dependencies
 
-When user stories have dependencies, visualize with Mermaid graph.
+When tickets have dependencies, visualize with Mermaid graph.
 
-**Purpose:** Show execution order and dependencies between stories.
+**Purpose:** Show execution order and dependencies between tickets.
 
 **Format:**
 
 ```markdown
-## Story dependencies
+## Ticket dependencies
 
 ```mermaid
 graph TD
-    US001["US-001: Add theme configuration"]
-    US002["US-002: Create dark theme palette"]
-    US003["US-003: Apply theme to components"]
-    US004["US-004: Add theme toggle"]
+    T001["T-001: Add theme configuration"]
+    T002["T-002: Create dark theme palette"]
+    T003["T-003: Apply theme to components"]
+    T004["T-004: Add theme toggle"]
     
-    US001 --> US003
-    US002 --> US003
-    US003 --> US004
+    T001 --> T003
+    T002 --> T003
+    T003 --> T004
 ```
 ```
 
 **Guidelines:**
 
-- Only include if stories have dependencies
-- Do NOT add "Dependencies" field to individual user stories — express all dependencies in this Mermaid graph
-- Use node IDs matching story numbers (US001, US002)
-- Include story titles in quoted labels
+- Only include if tickets have dependencies
+- Do NOT add "Dependencies" field to individual tickets — express all dependencies in this Mermaid graph
+- Use node IDs matching ticket numbers (T001, T002)
+- Include ticket titles in quoted labels
 - Arrows show "must complete before" relationship
 - Keep graph simple - avoid complex branching if possible
 
@@ -433,17 +443,17 @@ Notification delivery channels:
 
 ## Quality gates
 
-These commands must pass for every user story:
+These commands must pass for every ticket:
 - `pnpm typecheck` - Type checking
 - `pnpm lint` - Linting
 - `pnpm test` - Unit tests
 
-For UI stories, also include:
+For UI tickets, also include:
 - Verify in browser using devtools via http://localhost:3000/notifications
 
-## User stories
+## Tickets
 
-### US-001: Create notification data model
+### T-001: Create notification data model
 **Description:** As a developer, I want a notification data model so that I can store notification events.
 
 **Implements:** F1.1, F1.2, F1.3, F1.4
@@ -455,31 +465,31 @@ For UI stories, also include:
 - [ ] Test: Prisma schema validates correctly
 - [ ] Test: EventType enum includes all four types
 
-### US-002: Implement notification service
+### T-002: Implement notification service
 [snip]
 
-### US-003: Add real-time notification delivery
+### T-003: Add real-time notification delivery
 [snip]
 
 **Implements:** F2.1
 
 [snip]
 
-## Story dependencies
+## Ticket dependencies
 
 ```mermaid
 graph TD
-    US001["US-001: Create notification data model"]
-    US002["US-002: Implement notification service"]
-    US003["US-003: Add real-time notification delivery"]
-    US004["US-004: Add email notification delivery"]
-    US005["US-005: Create notification center UI"]
-    US006["US-006: Add notification preferences"]
+    T001["T-001: Create notification data model"]
+    T002["T-002: Implement notification service"]
+    T003["T-003: Add real-time notification delivery"]
+    T004["T-004: Add email notification delivery"]
+    T005["T-005: Create notification center UI"]
+    T006["T-006: Add notification preferences"]
     
-    US001 --> US002
-    US002 --> US003
-    US002 --> US004
-    US003 --> US005
+    T001 --> T002
+    T002 --> T003
+    T002 --> T004
+    T003 --> T005
 ```
 
 ## Design considerations

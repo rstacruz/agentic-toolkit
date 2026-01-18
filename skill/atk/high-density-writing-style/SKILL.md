@@ -1,6 +1,9 @@
 ---
 name: high-density-writing-style
-description: Guidelines for a writing style that's concise and direct. Use for writing/editing prompts, artefact documents, TDD, PRD, discovery documents, research, AGENTS.md, and more.
+description: >
+  Guidelines for a writing style that's concise and direct.
+  aka High density language, HD style
+  Use for writing/editing prompts, artefact documents, TDD, PRD, discovery documents, research, AGENTS.md, and more.
 ---
 
 # High-density writing style
