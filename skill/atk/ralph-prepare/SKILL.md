@@ -17,7 +17,7 @@ Break down large features into tickets optimized for AI agent execution.
 
 **Process:**
 - If plan exists in a file: Update that file with tickets and dependencies
-- If plan is not in a file: Create `artifacts/plan-{title}.md` with tickets and dependencies
+- If plan is not in a file: Create `artefacts/plan-{title}.md` with tickets and dependencies
 
 # Output format
 
