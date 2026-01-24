@@ -5,27 +5,36 @@ description: A "ralph loop" iterates through a plan in a ticket-by-ticket basis.
 
 ## Ralph loop
 
-**Pre-requisites:**
-
-1. Ensure there is a PRD as a Markdown file (`artefacts/prd.md` by default)
-2. Ensure the PRD has tickets
-3. Ensure tickets have acceptance criteria
-4. Ensure there is a progress file (`artefacts/progress.md`) - create an empty one if not
-
 **Workflow:**
 
-1. Spawn an agent:
-   - Spawn a @general agent to do the instructions in `<skill_dir>/once.md`
-   - Use its instructions in verbatim, but change the file paths if needed
-   - Include additional instructions / preamble if given by user
-   - Ensure all plan files are included (eg, PRD, TDD)
-2. Verify commit:
+1. Verify prerequisites and gather context:
+   - Ensure there is a plan file as a Markdown file (`artefacts/plan.md` by default)
+   - Ensure the plan file has tickets
+   - Ensure tickets have acceptance criteria
+   - Ensure there is a progress file (`artefacts/progress.md`) - create an empty one if not
+
+2. Spawn an agent:
+   - Read `<skill_dir>/once.md` file contents as template string
+   - Perform text replacements in template string:
+     - If custom paths provided: replace all `artefacts/progress.md` → custom progress path, replace all `artefacts/plan.md` → custom plan path(s)
+     - If additional instructions provided: prepend them to the prompt
+     - If multiple plan files: ensure all are listed in step 1 (add "Read *{filename}*" for each)
+   - Spawn @general agent with modified template string as prompt
+
+3. Verify commit:
    - Verify that the agent created a git commit, create one if it didn't
-3. Assess completeness:
-   - If the agent reports all PRD tasks are done ("PRD_COMPLETE"), stop
-   - Otherwise, repeat step 1 (up to 10 times max iterations)
+
+4. Assess completeness:
+   - If agent outputs `<progress>PLAN_FINISHED</progress>`, stop successfully
+   - If agent outputs `<progress>PLAN_IN_PROGRESS</progress>`, repeat step 2
+   - If 10 iterations reached, create summary in progress.md and notify user
+
+5. Error handling:
+   - If agent fails: check for partial work, verify any commits, update progress with error state
+   - Critical failures (file not found, corrupted plan): stop and notify user
+   - Non-critical failures: document in progress.md and continue next iteration
 
 **Guidelines:**
 
 - Only 1 iteration per agent. Do not ask agent to do more than 1
-- Use new agent sessions (eg, don't reuse session_id) - unless otherwise specified
+- Use new agent sessions (eg, don't reuse session_id) unless otherwise specified
