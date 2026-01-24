@@ -24,7 +24,7 @@ Break down large features into tickets optimized for AI agent execution.
 ## Tickets
 
 ```markdown
-### T-001: [Title]
+### T-01: [Title]
 **Description:** As a [user], I want [feature] so that [benefit].
 
 **Acceptance Criteria:**
@@ -36,16 +36,16 @@ Break down large features into tickets optimized for AI agent execution.
 
 ```mermaid
 graph TD
-    T001["T-001: Title"]
-    T002["T-002: Title"]
+    T001["T-01: Title"]
+    T002["T-02: Title"]
     T001 --> T002
 ```
 
 # Guidelines
 
 ## Vertical slicing (by feature, not layer)
-- ❌ Bad: "T-001: HTML", "T-002: CSS", "T-003: DB Schema"
-- ✅ Good: "T-001: Header (HTML+CSS)", "T-002: Save User (API+DB)"
+- ❌ Bad: "T-01: HTML", "T-002: CSS", "T-003: DB Schema"
+- ✅ Good: "T-01: Header (HTML+CSS)", "T-002: Save User (API+DB)"
 
 ## Walking skeleton (simplest working path first)
 - Start with minimal end-to-end implementation that works but does almost nothing
@@ -64,7 +64,7 @@ graph TD
 ## Ticket scope
 - Small enough for one focused AI agent session
 - Independently completable when possible
-- Use T-001, T-002 numbering
+- Use T-01, T-002 numbering
 - Focus on core functionality, defer edge cases to later iterations
 
 ## Dependencies
@@ -89,28 +89,28 @@ graph TD
 
 ## Tickets
 
-### T-001: Theme config structure
+### T-01: Theme config structure
 **Description:** As a developer, I want theme config foundation so that components can consume theme values.
 
 **Acceptance Criteria:**
 - [ ] Config returns hardcoded default theme
 - [ ] Test: Config exports valid theme object
 
-### T-002: Dark theme palette
+### T-02: Dark theme palette
 **Description:** (snip)
 
 **Acceptance Criteria:**
 - [ ] Define dark mode color values
 - [ ] (snip)
 
-### T-003: Apply theme to Button
+### T-03: Apply theme to Button
 **Description:** (snip)
 
 **Acceptance Criteria:**
 - [ ] Button consumes theme config
 - [ ] (snip)
 
-### T-004: Final verification
+### T-04: Final verification
 **Description:** As a developer, I want all quality gates to pass so that the feature is production-ready.
 
 **Acceptance Criteria:**
@@ -126,13 +126,11 @@ graph TD
 
 ```mermaid
 graph TD
-    T001["T-001: Theme config"]
-    T002["T-002: Dark palette"]
-    T003["T-003: Apply to Button"]
-    T004["T-004: Final verification"]
+    T01["T-01: Theme config"]
+    T02["T-02: Dark palette"]
+    T03["T-03: Apply to Button"]
+    T04["T-04: Final verification"]
     
-    T001 --> T002
-    T001 --> T003
-    T002 --> T003
-    T003 --> T004
+    T01 --> T02 & T03
+    T02 & T03 --> T04
 ```
