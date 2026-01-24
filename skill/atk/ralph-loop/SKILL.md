@@ -13,13 +13,14 @@ description: A "ralph loop" iterates through a plan in a ticket-by-ticket basis.
    - Ensure tickets have acceptance criteria
    - Ensure there is a progress file (`artefacts/progress.md`) - create an empty one if not
 
-2. Spawn an agent:
-   - Read `<skill_dir>/once.md` file contents as template string
-   - Perform text replacements in template string:
-     - If custom paths provided: replace all `artefacts/progress.md` → custom progress path, replace all `artefacts/plan.md` → custom plan path(s)
-     - If additional instructions provided: prepend them to the prompt
-     - If multiple plan files: ensure all are listed in step 1 (add "Read *{filename}*" for each)
-   - Spawn @general agent with modified template string as prompt
+ 2. Spawn an agent:
+    - Read `<skill_dir>/once.md` file contents as template string
+    - Perform text replacements in template string:
+      - Replace `artefacts/progress.md` → custom progress path (if provided)
+      - Replace `artefacts/plan.md` → custom plan path(s) (if provided)
+      - Prepend additional instructions (if provided)
+      - Ensure all plan files listed (add "Read *{filename}*" for each)
+    - Spawn @general agent with modified template string as prompt
 
 3. Verify commit:
    - Verify that the agent created a git commit, create one if it didn't
