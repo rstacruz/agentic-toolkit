@@ -266,24 +266,6 @@ When tickets have dependencies, visualize with Mermaid graph.
 
 **Purpose:** Show execution order and dependencies between tickets.
 
-**Format:**
-
-```markdown
-## Ticket dependencies
-
-```mermaid
-graph TD
-    T001["T-001: Add theme configuration"]
-    T002["T-002: Create dark theme palette"]
-    T003["T-003: Apply theme to components"]
-    T004["T-004: Add theme toggle"]
-    
-    T001 --> T003
-    T002 --> T003
-    T003 --> T004
-```
-```
-
 **Guidelines:**
 
 - Only include if tickets have dependencies
@@ -479,17 +461,12 @@ For UI tickets, also include:
 
 ```mermaid
 graph TD
-    T001["T-001: Create notification data model"]
-    T002["T-002: Implement notification service"]
-    T003["T-003: Add real-time notification delivery"]
-    T004["T-004: Add email notification delivery"]
-    T005["T-005: Create notification center UI"]
-    T006["T-006: Add notification preferences"]
+    T001["T-001: Add theme configuration"]
+    T002["T-002: ..."]
+    T003["T-003: ..."]
     
-    T001 --> T002
-    T002 --> T003
-    T002 --> T004
-    T003 --> T005
+    T001 & T002 --> T003
+    T003 --> T004 & T005
 ```
 
 ## Design considerations
@@ -631,6 +608,7 @@ Keep concise:
 
 - Omit sections that don't add value
 - List items rather than define when appropriate (eg, CSS classes)
+- Limit to 700 words (unless otherwise specified) - make judgement call on most important parts
 
 ### Call graph
 
@@ -719,6 +697,7 @@ List unit, integration, other tests needed. Include test commands to run individ
 - List dependencies needing mocks and why (external APIs, databases, time-dependent functions)
 - Be EXTREMELY conservative: plan minimum tests (eg, single smoke test)
 - Include exact command to run relevant tests
+- Use 1 line per test (just the test name). Do not show full test implementation. If any key info is needed, add as 1-line comment after
 
 ### Example TDD
 

@@ -1,6 +1,6 @@
 0. Gather context
    - Read *progress file* (default: `artefacts/progress.md`)
-   - Read *plan file* (default: `artefacts/prd.md`)
+   - Read *plan file(s)* (default: `artefacts/prd.md`)
 
 2. Identify ticket
    - Pick one ticket - the most important one that's not blocked. It may not be the top-most ticket
@@ -19,7 +19,8 @@
    - update *plan file* to mark ticket as done
 
 6. Document learnings
-   - assess the conversation, identify roadblocks, summarise work done, include assumptions flagged
+   - assess the conversation summarise work done, include assumptions flagged
+   - identify potential roadblocks that future dev work might encounter (eg, errors, wrong descisions)
    - append them to *progress file* (create if it doesn't exist) - this is to assist future work
 
 7. Commit changes
