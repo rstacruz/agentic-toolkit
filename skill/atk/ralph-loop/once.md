@@ -43,3 +43,4 @@ Code writing guidelines:
 Other guidelines:
 
 - Do not make a pull request
+- Only do ONE ticket, do not proceed to others
