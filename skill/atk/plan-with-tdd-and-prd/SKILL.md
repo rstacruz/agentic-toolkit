@@ -143,7 +143,7 @@ Typical sections (include if applicable):
 - **Non-functional requirements** — Performance, accessibility, scalability (NF1, NF2...). Compact bullets.
 - **Technical constraints** — Tech stack, integration, implementation constraints (TC1, TC2...). Compact bullets.
 - **Quality gates** — Commands that must pass for every ticket (typecheck, lint, tests, etc). See "Quality gates" section.
-- **Tickets** — Feature broken into independently completable execution subtasks (T-001, T-002). See "Tickets" section.
+- **Tickets** — Feature broken into independently completable execution subtasks (T-01, T-02). See "Tickets" section.
 - **Ticket dependencies** — Mermaid graph showing dependencies between tickets. See "Ticket dependencies" section.
 - **Design considerations** — Important design decisions/implementation notes (DC1, DC2...). Compact bullets.
 - **Screen interactions** — Mermaid diagram: UI structure, components, navigation flows. Include "Key entities" subsection (pages/URLs, UI components, API endpoints).
@@ -206,13 +206,14 @@ These commands must pass for every ticket:
 - `pnpm test` - Unit tests
 
 For UI tickets, also include:
-- Verify in browser using dev-browser skill
+- Verify in browser using devtools
 ```
 
 **Guidelines:**
 
 - Include UI verification requirements if applicable
-- Individual tickets should NOT include quality gate commands in their acceptance criteria - they're defined once here and applied automatically.
+- Individual tickets should NOT include quality gate commands in their acceptance criteria - they're defined once here and applied automatically
+- The final verification ticket ensures all quality gates pass end-to-end and handles cleanup
 
 ### Tickets
 
@@ -225,7 +226,7 @@ Tickets are actionable subtasks that implement functional requirements. **Purpos
 ```markdown
 ## Tickets
 
-### T-001: [Title]
+### T-01: [Title]
 **Description:** As a [user], I want [feature] so that [benefit].
 
 **Implements:** F1.1, F1.2
@@ -238,25 +239,41 @@ Tickets are actionable subtasks that implement functional requirements. **Purpos
 **Guidelines:**
 
 - **Slice vertically (by feature), not horizontally (by technical layer).**
-  - Bad: "Ticket 1: Create HTML", "Ticket 2: Create CSS", "Ticket 3: DB Schema"
-  - Good: "Ticket 1: Header (HTML+CSS)", "Ticket 2: Save User (API+DB)"
-- **Bias towards foundational/iterative tickets.**
-    - Favour making iterative progress per ticket
-  - Start with "walking skeleton" (end-to-end "Hello World").
-  - Iterate to add logic/complexity later.
-  - Better to have working skeleton than perfect, isolated fragment.
+  - ❌ Bad: "T-01: HTML", "T-02: CSS", "T-03: DB Schema"
+  - ✅ Good: "T-01: Header (HTML+CSS)", "T-02: Save User (API+DB)"
+- **Walking skeleton (simplest working path first).**
+  - Start with minimal end-to-end implementation that works but does almost nothing
+    - Example: Button → API endpoint → hardcoded response → UI update
+    - Proves integration before adding logic
+  - Later tickets add real logic, validation, error handling
+  - Better: working trivial implementation than perfect isolated component
 - **Acceptance criteria:**
-  - Ensure each ticket contains verifyable progress (eg: tests, types) as much as possible
-  - Test cases should be verifiable checkboxes: `- [ ] Test: X happens when Y`
-  - Acceptance criteria must be verifiable, not vague
-    - Good: "Button shows confirmation dialog before deleting", Bad: "Works correctly"
-- **Also:**
-  - Each ticket small enough to implement in one focused AI agent session
-  - Tickets should be independently completable when possible
-  - Use T-001, T-002 numbering format
+  - Must be verifiable, not vague
+    - ✅ Good: "Button shows confirmation dialog before deleting"
+    - ❌ Bad: "Works correctly"
+  - Include test cases as checkboxes: `- [ ] Test: X happens when Y`
+  - Bundle tests with each ticket — avoid separate "write tests" tickets
+  - Each ticket should verify work: run relevant tests, type checks during implementation
+- **Final verification ticket:**
+  - Always include final verification ticket as last ticket
+  - Runs all quality gates: tests, type checks, lint
+  - Manual verification via devtools/UI
+  - Cleanup implementation artifacts:
+    - Remove extraneous comments (TODO, debug notes, exploratory comments)
+    - Limit JSDoc to 2 lines max unless specifically required or significant
+    - Remove redundant tests — goal: highest coverage for least tests
+    - Keep essential tests, remove exploratory/debugging tests
+  - Ensures deliverable is production-ready
+- **Ticket scope:**
+  - Small enough for one focused AI agent session
+  - Independently completable when possible
+  - Use T-01, T-02 numbering format
   - Include "Implements" field referencing FR numbers (eg, F1.1, F2.3) to show traceability
-  - Bundle tests with each ticket in acceptance criteria — don't create separate "write tests" ticket
+  - Focus on core functionality, defer edge cases to later iterations
   - Tickets may not cover all FRs (edge cases, system behavior) - they're execution units, not complete spec
+- **Dependencies:**
+  - Do NOT add "Dependencies" field to individual tickets
+  - Express all dependencies in Mermaid graph (see "Ticket dependencies" section)
 
 See "Ticket dependencies" for visualizing dependencies.
 
@@ -270,7 +287,7 @@ When tickets have dependencies, visualize with Mermaid graph.
 
 - Only include if tickets have dependencies
 - Do NOT add "Dependencies" field to individual tickets — express all dependencies in this Mermaid graph
-- Use node IDs matching ticket numbers (T001, T002)
+- Use node IDs matching ticket numbers (T01, T02)
 - Include ticket titles in quoted labels
 - Arrows show "must complete before" relationship
 - Keep graph simple - avoid complex branching if possible
@@ -435,7 +452,7 @@ For UI tickets, also include:
 
 ## Tickets
 
-### T-001: Create notification data model
+### T-01: Create notification data model
 **Description:** As a developer, I want a notification data model so that I can store notification events.
 
 **Implements:** F1.1, F1.2, F1.3, F1.4
@@ -447,26 +464,40 @@ For UI tickets, also include:
 - [ ] Test: Prisma schema validates correctly
 - [ ] Test: EventType enum includes all four types
 
-### T-002: Implement notification service
+### T-02: Implement notification service
 [snip]
 
-### T-003: Add real-time notification delivery
+### T-03: Add real-time notification delivery
 [snip]
 
 **Implements:** F2.1
 
 [snip]
 
+### T-04: Final verification
+**Description:** As a developer, I want all quality gates to pass so that the feature is production-ready.
+
+**Acceptance Criteria:**
+- [ ] All tests pass
+- [ ] Type checks pass
+- [ ] Lint passes
+- [ ] Manual verification: notification system works correctly via devtools at http://localhost:3000/notifications
+- [ ] Remove extraneous comments (TODO, debug notes, exploratory comments)
+- [ ] Limit JSDoc to 2 lines max unless specifically required
+- [ ] Remove redundant tests — keep essential tests only
+
 ## Ticket dependencies
 
 ```mermaid
 graph TD
-    T001["T-001: Add theme configuration"]
-    T002["T-002: ..."]
-    T003["T-003: ..."]
+    T01["T-01: Notification data model"]
+    T02["T-02: Notification service"]
+    T03["T-03: Real-time delivery"]
+    T04["T-04: Final verification"]
     
-    T001 & T002 --> T003
-    T003 --> T004 & T005
+    T01 --> T02
+    T02 --> T03
+    T03 --> T04
 ```
 
 ## Design considerations
