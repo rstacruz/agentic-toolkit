@@ -21,6 +21,7 @@ description: Use when initiating new features, complex code changes, or technica
 - "Draft a TDD for [feature]" → [Write a TDD](#write-a-tdd)
 - "Plan a code change" → [Write a TDD](#write-a-tdd)
 - "Research [topic/technology/approach]" → [Research a topic](#research-a-topic)
+- "create combined tdd-prd for [feature]" → [Combined PRD-TDD](#combined-prd-tdd)
 
 ### Draft or write a PRD
 
@@ -49,6 +50,19 @@ Steps:
 ### Research a topic
 
 Write findings to Discovery Document (`artefacts/discovery-<title>.md`).
+
+### Combined PRD-TDD
+
+For small to medium features where both product requirements and technical implementation can be covered together:
+
+Steps:
+
+0. Acknowledge: **Now writing a combined PRD-TDD.**
+1. **Research:** Find existing patterns, constraints. Write to `artefacts/discovery-<title>.md` if findings are non-obvious.
+2. **Check context:** Read `artefacts/discovery-<title>.md` if exists.
+3. **Clarify:** Ask ambiguities before drafting.
+4. **Draft:** Combine PRD and TDD sections in single document. Use PRD structure for requirements, TDD structure for implementation. Skip duplicate sections (Initial ask, Open questions).
+5. **Save:** Write to `artefacts/plan-<feature>.md`.
 
 ## Planning artefacts
 
@@ -142,9 +156,7 @@ Typical sections (include if applicable):
 - **Functional requirements** — Complete technical specification of what system does (F1, F1.1, F1.2). Compact bullet format with em-dashes. See "Functional requirements" section.
 - **Non-functional requirements** — Performance, accessibility, scalability (NF1, NF2...). Compact bullets.
 - **Technical constraints** — Tech stack, integration, implementation constraints (TC1, TC2...). Compact bullets.
-- **Quality gates** — Commands that must pass for every ticket (typecheck, lint, tests, etc). See "Quality gates" section.
-- **Tickets** — Feature broken into independently completable execution subtasks (T-01, T-02). See "Tickets" section.
-- **Ticket dependencies** — Mermaid graph showing dependencies between tickets. See "Ticket dependencies" section.
+- **Quality gates** — Commands that must pass for every piece of work (typecheck, lint, tests, etc). See "Quality gates" section.
 - **Design considerations** — Important design decisions/implementation notes (DC1, DC2...). Compact bullets.
 - **Screen interactions** — Mermaid diagram: UI structure, components, navigation flows. Include "Key entities" subsection (pages/URLs, UI components, API endpoints).
 - **User flow** — Mermaid diagram: end-to-end user journey through feature.
@@ -191,106 +203,27 @@ See "PRD example".
 
 ### Quality gates
 
-List commands that must pass for every ticket. Applied automatically during task orchestration.
+List commands that must pass for every piece of work. Applied automatically during task orchestration.
 
-**Purpose:** Define project-specific verification commands that ensure quality for every ticket.
+**Purpose:** Define project-specific verification commands that ensure quality for every piece of work.
 
 **Format:**
 
 ```markdown
 ## Quality gates
 
-These commands must pass for every ticket:
+These commands must pass for every piece of work:
 - `pnpm typecheck` - Type checking
 - `pnpm lint` - Linting
 - `pnpm test` - Unit tests
 
-For UI tickets, also include:
+For UI work, also include:
 - Verify in browser using devtools
 ```
 
 **Guidelines:**
 
 - Include UI verification requirements if applicable
-- Individual tickets should NOT include quality gate commands in their acceptance criteria - they're defined once here and applied automatically
-- The final verification ticket ensures all quality gates pass end-to-end and handles cleanup
-
-### Tickets
-
-Break feature into small, independently completable execution subtasks optimized for AI agent execution.
-
-Tickets are actionable subtasks that implement functional requirements. **Purpose:** Enable task orchestration by defining discrete units of work.
-
-**Format:**
-
-```markdown
-## Tickets
-
-### T-01: [Title]
-**Description:** As a [user], I want [feature] so that [benefit].
-
-**Implements:** F1.1, F1.2
-
-**Acceptance Criteria:**
-- [ ] Specific verifiable criterion
-- [ ] Another criterion
-```
-
-**Guidelines:**
-
-- **Slice vertically (by feature), not horizontally (by technical layer).**
-  - ❌ Bad: "T-01: HTML", "T-02: CSS", "T-03: DB Schema"
-  - ✅ Good: "T-01: Header (HTML+CSS)", "T-02: Save User (API+DB)"
-- **Walking skeleton (simplest working path first).**
-  - Start with minimal end-to-end implementation that works but does almost nothing
-    - Example: Button → API endpoint → hardcoded response → UI update
-    - Proves integration before adding logic
-  - Later tickets add real logic, validation, error handling
-  - Better: working trivial implementation than perfect isolated component
-- **Acceptance criteria:**
-  - Must be verifiable, not vague
-    - ✅ Good: "Button shows confirmation dialog before deleting"
-    - ❌ Bad: "Works correctly"
-  - Include test cases as checkboxes: `- [ ] Test: X happens when Y`
-  - Bundle tests with each ticket — avoid separate "write tests" tickets
-  - Each ticket should verify work: run relevant tests, type checks during implementation
-- **Final verification ticket:**
-  - Always include final verification ticket as last ticket
-  - Runs all quality gates: tests, type checks, lint
-  - Manual verification via devtools/UI
-  - Cleanup implementation artifacts:
-    - Remove extraneous comments (TODO, debug notes, exploratory comments)
-    - Limit JSDoc to 2 lines max unless specifically required or significant
-    - Remove redundant tests — goal: highest coverage for least tests
-    - Keep essential tests, remove exploratory/debugging tests
-  - Ensures deliverable is production-ready
-- **Ticket scope:**
-  - Small enough for one focused AI agent session
-  - Independently completable when possible
-  - Use T-01, T-02 numbering format
-  - Include "Implements" field referencing FR numbers (eg, F1.1, F2.3) to show traceability
-  - Focus on core functionality, defer edge cases to later iterations
-  - Tickets may not cover all FRs (edge cases, system behavior) - they're execution units, not complete spec
-- **Dependencies:**
-  - Do NOT add "Dependencies" field to individual tickets
-  - Express all dependencies in Mermaid graph (see "Ticket dependencies" section)
-
-See "Ticket dependencies" for visualizing dependencies.
-
-### Ticket dependencies
-
-When tickets have dependencies, visualize with Mermaid graph.
-
-**Purpose:** Show execution order and dependencies between tickets.
-
-**Guidelines:**
-
-- Only include if tickets have dependencies
-- Do NOT add "Dependencies" field to individual tickets — express all dependencies in this Mermaid graph
-- Use node IDs matching ticket numbers (T01, T02)
-- Include ticket titles in quoted labels
-- Arrows show "must complete before" relationship
-- Keep graph simple - avoid complex branching if possible
 
 ### Design considerations
 
@@ -442,63 +375,13 @@ Notification delivery channels:
 
 ## Quality gates
 
-These commands must pass for every ticket:
+These commands must pass for every piece of work:
 - `pnpm typecheck` - Type checking
 - `pnpm lint` - Linting
 - `pnpm test` - Unit tests
 
-For UI tickets, also include:
+For UI work, also include:
 - Verify in browser using devtools via http://localhost:3000/notifications
-
-## Tickets
-
-### T-01: Create notification data model
-**Description:** As a developer, I want a notification data model so that I can store notification events.
-
-**Implements:** F1.1, F1.2, F1.3, F1.4
-
-**Acceptance Criteria:**
-- [ ] Add Notification model to Prisma schema with fields: id, userId, taskId, eventType, triggeredBy, createdAt, readAt
-- [ ] Run database migration
-- [ ] EventType enum supports: COMMENT, STATUS_CHANGE, MENTION, ASSIGNMENT
-- [ ] Test: Prisma schema validates correctly
-- [ ] Test: EventType enum includes all four types
-
-### T-02: Implement notification service
-[snip]
-
-### T-03: Add real-time notification delivery
-[snip]
-
-**Implements:** F2.1
-
-[snip]
-
-### T-04: Final verification
-**Description:** As a developer, I want all quality gates to pass so that the feature is production-ready.
-
-**Acceptance Criteria:**
-- [ ] All tests pass
-- [ ] Type checks pass
-- [ ] Lint passes
-- [ ] Manual verification: notification system works correctly via devtools at http://localhost:3000/notifications
-- [ ] Remove extraneous comments (TODO, debug notes, exploratory comments)
-- [ ] Limit JSDoc to 2 lines max unless specifically required
-- [ ] Remove redundant tests — keep essential tests only
-
-## Ticket dependencies
-
-```mermaid
-graph TD
-    T01["T-01: Notification data model"]
-    T02["T-02: Notification service"]
-    T03["T-03: Real-time delivery"]
-    T04["T-04: Final verification"]
-    
-    T01 --> T02
-    T02 --> T03
-    T03 --> T04
-```
 
 ## Design considerations
 
@@ -640,6 +523,7 @@ Keep concise:
 - Omit sections that don't add value
 - List items rather than define when appropriate (eg, CSS classes)
 - Limit to 700 words (unless otherwise specified) - make judgement call on most important parts
+- Maximum 7 lines per code block. Show structure and key logic only — let implementer fill in implementation details. Prefer concise outlines over complete functions.
 
 ### Call graph
 
@@ -776,16 +660,6 @@ completeTask(taskId) # [🟢 NEW]
     })
   → return { ok: true, task }
 ```
-
-## Files
-
-**New files:**
-
-- `src/tasks/complete.ts`
-
-**Modified files:**
-
-- `prisma/schema.prisma` - Add Task model
 
 ## Files
 
