@@ -41,6 +41,8 @@ description: A "ralph loop" iterates through a plan in a ticket-by-ticket basis.
 - Only 1 ticket per agent. Do not ask agent to do more than 1 ticket
 - Use new agent sessions every iteration (eg, don't reuse session_id)
 
+---
+
 <prompt-template>
 
 1. Gather context
