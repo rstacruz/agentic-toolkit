@@ -20,7 +20,7 @@ description: A "ralph loop" iterates through a plan in a ticket-by-ticket basis.
      - Replace `artefacts/plan.md` → custom plan path(s) (if provided)
      - Prepend additional instructions (if provided)
      - Ensure all plan files listed (add "Read *{filename}*" for each)
-   - Spawn @general agent with the prompt template as prompt
+   - Spawn a NEW @general agent with the prompt template as prompt
 
 3. Verify commit:
    - Verify that the agent created a git commit, create one if it didn't
@@ -38,8 +38,8 @@ description: A "ralph loop" iterates through a plan in a ticket-by-ticket basis.
 
 **Guidelines:**
 
-- Only 1 ticket per agent. Do not ask agent to do more than 1 ticket.
-- Use new agent sessions (eg, don't reuse session_id) unless otherwise specified
+- Only 1 ticket per agent. Do not ask agent to do more than 1 ticket
+- Use new agent sessions every iteration (eg, don't reuse session_id)
 
 <prompt-template>
 

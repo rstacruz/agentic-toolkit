@@ -3,16 +3,44 @@ name: plan-with-tdd-and-prd
 description: Use when initiating new features, complex code changes, or technical research tasks that require structured planning and documentation before implementation.
 ---
 
-<guidelines>
+# Planning with PRD, TDD, and Discovery documents
 
-## Document writing style
+This skill guides structured planning before implementation using three document types:
 
-**Documents must follow:**
+- **Discovery documents** (`discovery-<title>.md`) — Environmental context, constraints, existing architecture
+- **PRD** (`prd-{slug}.md`) — Product requirements, functional specs, what system should do
+- **TDD** (`tdd-<feature>.md`) — Technical design, implementation plan, how to build it
 
-- Optimize for conciseness, brevity, scannability
-- Use lists, sentence fragments, broken grammar OK
-- Remove unnecessary articles, verbose phrasing
-- Direct, high-density language
+**Core workflow:** Research → Clarify ambiguities → Draft plan → Save to `artefacts/`
+
+Document choice depends on task complexity: trivial changes need no planning; small tasks need TDD only; complex features benefit from full Discovery + PRD + TDD workflow.
+
+## Formatting standards
+
+**All documents:**
+
+- High-density language: lists, fragments, no unnecessary articles
+- Scannability: short sections, bullet points, clear headings
+- IDs: F1, F1.1 for requirements; NF1, TC1, DC1 for other lists
+- Em-dashes: **Name** — Description (for all requirement lists)
+- Active voice: "System validates" not "System must validate"
+- Inline constraints: timing/limits directly in descriptions
+
+**Code blocks:**
+
+- Max 7 lines - show structure only, not full implementation
+- Use "sh" syntax for pseudocode
+- Minimal JSX: `→ render <Component>` over full markup
+- Reference letters `[A]`, `[B]` to correlate with diagrams
+- Status markers: `[🟢 NEW]` `[🟡 UPDATED]` `[🔴 REMOVED]`
+
+**Mermaid diagrams:**
+
+- Quote all labels: `["Button"]`
+- Descriptive subgraphs: `subgraph MainView["Main view"]`
+- Screen interactions: dashed arrows (`-.->`) for user actions
+- User flow: solid arrows (`-->`) for sequential flow
+- Keep nodes concise (5-8 words max)
 
 ## User actions
 
@@ -27,7 +55,6 @@ description: Use when initiating new features, complex code changes, or technica
 
 Steps:
 
-0. Acknowledge: **Now writing a PRD.**
 1. **Research:** Understand existing systems/constraints. Write to `artefacts/discovery-<title>.md` if non-obvious findings.
 2. **Check context:** Read `artefacts/discovery-<title>.md` if exists.
 3. **Clarify:** Ask ambiguities before drafting. See *Open questions guidelines*.
@@ -39,7 +66,6 @@ Steps:
 
 Steps:
 
-0. Acknowledge: **Now writing a TDD.**
 1. **Research:** Find code patterns, data models, integration points. Write to `artefacts/discovery-<title>.md` if non-obvious findings.
 2. **Check context:** Read `artefacts/prd-{slug}.md` and `artefacts/discovery-<title>.md`.
 3. **Clarify:** Ask technical ambiguities with recommended solutions.
@@ -57,7 +83,6 @@ For small to medium features where both product requirements and technical imple
 
 Steps:
 
-0. Acknowledge: **Now writing a combined PRD-TDD.**
 1. **Research:** Find existing patterns, constraints. Write to `artefacts/discovery-<title>.md` if findings are non-obvious.
 2. **Check context:** Read `artefacts/discovery-<title>.md` if exists.
 3. **Clarify:** Ask ambiguities before drafting.
@@ -91,6 +116,29 @@ When user requests work outside current scope:
 - New feature/scope → new TDD (`tdd-another-feature.md`)
 - New research → new discovery (`discovery-api-quirks.md`)
 
+## Open questions guidelines
+
+Ask clarifying questions for ambiguity/missing requirements.
+
+If points for clarification will significantly change plan depending on answer, ask *before* creating plans.
+
+**In chat conversation:**
+
+For each question:
+- Clear recommended solution with reasoning
+- Alternative approaches when applicable
+- Relevant considerations (technical, business, UX)
+
+**In the document:**
+
+Add questions to document's "Open questions" section using minimal format:
+- Question title only
+- Lettered options (a, b, c)
+- Mark recommended with _(recommended)_
+- No explanations or reasoning
+
+**When user answers:** Update **Initial ask** section with clarification. Keeps it as single source of truth for refined requirements.
+
 ## Discovery document guidelines
 
 **Purpose:** Capture environmental constraints/context for planning. NOT implementation details or obvious info.
@@ -120,19 +168,9 @@ Not: "How will I implement this?" (that's TDD)
 
 ### Condensed summary
 
-Include "condensed summary" H2 at beginning of discovery docs.
+Include "condensed summary" H2 at beginning. Write condensed prompt guiding future agents to research independently and reach same conclusions. Prefer code citations over examples.
 
-Write condensed prompt to guide future LLM agents to research codebase independently and reach same conclusions. Aim for minimum tokens.
-
-Prefer citations to code over examples/long explanations. Goal: empower agents to find info independently.
-
-Consider including:
-
-- Context (required) - short summary of ask
-- Function/symbol names (with code locations)
-- Glossary
-- Issues found
-- Key insights
+Include: context (required), function/symbol names with locations, glossary, issues, key insights.
 
 ### Discovery vs TDD
 
@@ -172,58 +210,30 @@ Typical sections (include if applicable):
 
 ### Functional requirements
 
-Complete technical specification of what the system does.
+Complete technical specification of what system does. See [Formatting standards](#formatting-standards) for format rules.
 
-**Purpose:** Document all system behavior - foundation for implementation.
+Example structure:
 
-**Format:**
+### F1: Notification events
 
-Concise bullet format:
+- **F1.1. Task comments** — Someone comments on watched task
+- **F1.2. Status changes** — Task status changes
 
-- Give IDs to requirements (F1, F1.1, F1.2)
-- Use em-dashes (—) to separate name from description
-- Brief, action-oriented descriptions
-- Group related requirements under descriptive headings
-- Add context after bullet list if needed
-
-See "PRD example".
-
-**Formatting guidelines:**
-
-- Avoid wordy phrases ("Users must be able to", "System must support")
-- Active, direct language
-- Include timing/constraints inline
-- Keep additional context separate from main list
-
-**Apply same format to:**
-
-- Non-functional requirements (NF1, NF2...)
-- Technical constraints (TC1, TC2...)
-- Any other requirement lists
+Each notification includes: event type, task title (linked), who triggered it, timestamp.
 
 ### Quality gates
 
-List commands that must pass for every piece of work. Applied automatically during task orchestration.
-
-**Purpose:** Define project-specific verification commands that ensure quality for every piece of work.
-
-**Format:**
+Commands that must pass for every piece of work. Example format:
 
 ```markdown
 ## Quality gates
 
-These commands must pass for every piece of work:
 - `pnpm typecheck` - Type checking
 - `pnpm lint` - Linting
 - `pnpm test` - Unit tests
 
-For UI work, also include:
-- Verify in browser using devtools
+For UI work: Verify in browser using devtools
 ```
-
-**Guidelines:**
-
-- Include UI verification requirements if applicable
 
 ### Design considerations
 
@@ -231,388 +241,152 @@ Document important design decisions that don't fit into functional requirements.
 
 ### Screen interactions diagram
 
-For PRDs with UI components, include screen interactions diagram showing navigation/UI interactions.
+Visualize UI structure, component hierarchy, interactive flows. Include when feature has multiple screens/views or complex user interactions.
 
-**Purpose:** Visualize UI structure, component hierarchy, interactive flows for frontend implementation scope.
+**Structure:**
 
-**When to include:**
+1. Top-level subgraphs: Screens/pages with URL paths
+2. Nested subgraphs: Group related UI elements
+3. Nodes: Individual UI elements (buttons, links, inputs)
+4. Dashed arrows (`-.->`) with labels for user actions
+5. Include "Key entities" subsection listing pages/URLs, UI components, API endpoints
 
-- Multiple screens/views
-- Complex user interactions
-- Features requiring UI component design
+**Include:** Screens/URLs, interactive elements, navigation flows, modal/drawer interactions  
+**Exclude:** Non-interactive elements, internal component hierarchy, styling, data flow
 
-**Structure rules:**
-
-1. **Top-level subgraphs:** Screens/pages/views with URL paths in label
-2. **Nested subgraphs:** Group related UI elements ("Panel header", "Form actions", "Navigation bar")
-3. **Nodes:** Individual UI elements (buttons, links, inputs, indicators)
-4. **Dashed arrows (`-.->`)**: User interactions/navigation between screens/elements
-5. **Arrow labels:** Describe action ("Click", "Opens", "Navigates to", "Closes")
-
-**What to include:**
-
-- Screens and URLs
-- Interactive elements (buttons, links, dropdowns, toggles)
-- Component groupings (headers, forms, navigation)
-- Navigation flows between screens
-- Modal/drawer/panel open/close interactions
-
-**What to exclude:**
-
-- Non-interactive elements (static text, images, decorations)
-- Internal component hierarchy (keep flat within subgraphs)
-- Detailed styling info
-- Data flow (this is for UI interaction, not data)
-
-**Best practices:**
-
-- Use quoted labels: `["Element name"]`
-- Descriptive subgraph identifiers: `subgraph MainView["Main view"]`
-- Keep nesting to 2-3 levels max
-- Focus on user-facing interactions, not technical implementation
-- Consistent naming for similar interaction types
-- Group related elements in nested subgraphs
-
-**After diagram, include "Key entities" subsection:**
-
-List relevant pages/URLs, UI components, API endpoints related to screen interactions.
+See [Formatting standards](#formatting-standards) for diagram rules.
 
 ### User flow diagram
 
-For PRDs with multi-step processes or cross-user interactions, include user flow diagram showing end-to-end journey.
+Show end-to-end user journey for multi-step processes or cross-user interactions.
 
-**Purpose:** Illustrate sequential flow of actions, system responses, state changes from user perspective. Shows user actions + system behavior.
+**Structure:**
 
-**When to include:**
+1. Nodes: States, actions, events in user journey
+2. Solid arrows (`-->`) with trigger/condition labels
+3. Include system responses when relevant to flow
 
-- Multi-step processes
-- Multiple users/roles
-- Asynchronous operations (notifications, background jobs)
-- Complex conditional logic/branching paths
+**Include:** User actions, system responses, conditional branches  
+**Exclude:** Implementation details, error handling (unless critical), UI component specifics
 
-**Structure rules:**
-
-1. **Nodes:** States, actions, events in user journey
-2. **Solid arrows (`-->`)**: Sequential flow/causality
-3. **Arrow labels:** Describe trigger/condition/action
-4. **System nodes:** Include backend/system processes when relevant to flow
-
-**What to include:**
-
-- User actions (clicks, inputs, navigation)
-- System responses (notifications, data updates, state changes)
-- Different user perspectives when feature involves collaboration
-- Conditional branches for important decision points
-
-**What to exclude:**
-
-- Implementation details (API endpoints, function names)
-- Error handling flows (unless critical to understanding)
-- UI component specifics (→ Screen interactions)
-- Technical architecture (→ TDD)
-
-**Best practices:**
-
-- Keep nodes concise (5-8 words max)
-- Highlight async operations/parallel flows
-- Consistent verb tenses (present tense for actions)
+See [Formatting standards](#formatting-standards) for diagram rules.
 
 ### PRD example
+
+Shows structure - see guidelines above for section details.
 
 ````markdown
 # PRD: Task notification system
 
 ## Initial ask
-
 Add notification system for task updates (real-time + email).
 
 ## Problem statement
-
-Users have no notification of task updates. Must manually check task list, leading to:
-
-- Missed important updates
-- Delayed responses to status changes
-- No awareness of comments/mentions
-- Difficulty staying synchronized with team
+Users miss updates by manually checking task list.
 
 ## Functional requirements
 
 ### F1: Notification events
-
-Users receive notifications for:
-
 - **F1.1. Task comments** — Someone comments on watched task
 - **F1.2. Status changes** — Task status changes
 - **F1.3. Mentions** — Mentioned in comments/descriptions
-- **F1.4. Task assignments** — Task assigned to them
 
-Each notification: event type, task title (linked), who triggered it, change info, timestamp.
+Each notification: event type, task title (linked), who triggered it, timestamp.
 
 ### F2: Notification delivery
-
-Notification delivery channels:
-
-- **F2.1. Real-time notifications** — In-app within 2 seconds of event
-- **F2.2. Email notifications** — Email within 5 minutes of event
-- **F2.3. Notification center** — View all in dedicated panel
-- **F2.4. Unread indicator** — Show unread count on notification bell icon
-
-### F3: Notification preferences
-
-[snip]
+- **F2.1. Real-time** — In-app within 2 seconds
+- **F2.2. Email** — Within 5 minutes
+- **F2.3. Notification center** — View all in panel
 
 ## Non-functional requirements
-
-- **NF1. Performance** — Real-time notifications delivered within 2 seconds
-- **NF2. Scalability** — Email queue handles 1000+ notifications per minute
-- **NF3. Reliability** — Email delivery retries 3 times on failure
-
-## Technical constraints
-
-- **TC1. Database** — Use existing PostgreSQL database with Prisma ORM
-- **TC2. Authentication** — Integrate with current NextAuth session management
-[snip]
+- **NF1. Performance** — Real-time within 2 seconds
+- **NF2. Scalability** — Email queue handles 1000+/min
 
 ## Quality gates
+- `pnpm typecheck`, `pnpm lint`, `pnpm test`
 
-These commands must pass for every piece of work:
-- `pnpm typecheck` - Type checking
-- `pnpm lint` - Linting
-- `pnpm test` - Unit tests
-
-For UI work, also include:
-- Verify in browser using devtools via http://localhost:3000/notifications
-
-## Design considerations
-
-- **DC1. No backward compatibility** — New implementation replaces legacy system entirely
-- **DC2. Separate personal and business contacts** — Keep distinct data models for each type
+For UI work: Verify in browser via http://localhost:3000/notifications
 
 ## Screen interactions
-
-```mermaid
-graph TB
-    subgraph MainView["Main task view - /workspace/[id]/tasks"]
-        A1["Notification bell icon"]
-        A2["Unread count badge"]
-    end
-
-    subgraph NotificationPanel["Notification panel"]
-        subgraph PanelHeader["Panel header"]
-            B1["Notifications title"]
-            B2["Mark all as read button"]
-            B3["Close button"]
-        end
-
-        subgraph NotificationList["Notification list"]
-            C1["Notification item"]
-            C2["Task title link"]
-            C3["Event description"]
-            C4["Timestamp"]
-            C5["Unread indicator"]
-        end
-    end
-
-    subgraph NotificationPrefs["Notification settings - /settings/notifications"]
-        subgraph Channels["Notification channels"]
-            D1["In-app toggle"]
-            D2["Email toggle"]
-            D3["Digest mode toggle"]
-        end
-
-        subgraph EventTypes["Event types"]
-            E1["Task comments checkbox"]
-            E2["Status changes checkbox"]
-            E3["Mentions checkbox"]
-            E4["Assignments checkbox"]
-        end
-    end
-
-    subgraph TaskDetail["Task detail page - /workspace/[id]/tasks/[taskId]"]
-        F1["Task content"]
-    end
-
-    %% Interactions
-    A1 -.->|"Click"| NotificationPanel
-    B3 -.->|"Close"| MainView
-    C2 -.->|"Click link"| TaskDetail
-    B2 -.->|"Marks all read"| NotificationList
-```
+[Mermaid diagram: bell icon → notification panel → task detail]
 
 ### Key entities
-
-**Pages and URLs:**
-
-- `/workspace/[id]/tasks` - Main tasks view w/ notification bell
-- `/workspace/[id]/tasks/[taskId]` - Task detail
-- `/settings/notifications` - Notification preferences
-
-**UI components:**
-
-- Notification bell icon (top nav)
-- Notification panel (slide-out drawer)
-- Notification item (list item)
-- Unread badge (count indicator)
-
-**API endpoints:**
-
-- `GET /api/notifications`
-- `PATCH /api/notifications/[id]/read`
-- `PATCH /api/notifications/mark-all-read`
-- `GET /api/user/notification-preferences`
-- `PATCH /api/user/notification-preferences`
-
-## User flow
-
-```mermaid
-graph TD
-    A["User Alice comments on task"] -->|"Triggers event"| B["Notification service"]
-
-    B -->|"Real-time < 2s"| C["Bob: In-app notification"]
-    B -->|"Delayed 5 min"| D["Bob: Email notification"]
-
-    C -->|"Click bell icon"| E["Bob: Opens notification panel"]
-    E -->|"Click notification"| F["Bob: Task detail page"]
-
-    D -->|"Click email link"| F
-
-    F -->|"Views update"| G["Bob reads comment"]
-    G -->|"Notification marked read"| H["Unread count decrements"]
-```
-
-## Out of scope
-
-Deferred for future:
-
-- Slack/Discord integration
-- Mobile push notifications
-- Browser push notifications (desktop)
-- Notification analytics/reporting
+**Pages:** `/workspace/[id]/tasks`, `/settings/notifications`  
+**Components:** Notification bell, panel, item  
+**API:** `GET /api/notifications`, `PATCH /api/notifications/[id]/read`
 
 ## Open questions
-
-1. **Root page:** Should root `/` redirect to default language (eg, `/es`), or remain separate?
-
-   - a. Redirect to `/es` based on browser language detection _(recommended)_
-   - b. Show language selection landing page
-
-2. **Default role:** What should be default user role upon registration?
-
-   - a. Basic user with limited permissions _(recommended)_
-   - b. Trial user with time-limited premium features
+1. **Root page:** Redirect to `/es` or show language selection?
+   - a. Redirect based on browser detection _(recommended)_
+   - b. Show selection page
 ````
 
 ## TDD guidelines
 
 ### TDD structure
 
-Use single `tdd-<feature>.md` file for all projects.
+Use single `tdd-<feature>.md` file. Include if applicable: Call graph, Pseudocode, Data models, Files, CSS classes, Testing strategy, Open questions.
 
-Include if applicable:
+**Keep concise:**
+- Omit sections without value
+- Limit to 700 words (unless specified)
+- Max 7 lines per code block - show structure only
 
-- **Call graph:** (if applicable) See "### Call graph" below
-- **Pseudocode breakdown:** (if applicable) See "### Pseudocode breakdown" below
-- **Data models:** (if any) Types, interfaces, schemas, data structures
-- **Files:** (if applicable) New, modified, removed files. Include reference/context files for LLM agents to understand existing patterns
-- **CSS classes:** (if any) Styling/layout classes needed. List class names only - no definitions, no Tailwind utilities, no CSS code.
-- **Testing strategy:** (if applicable, if user asked) see "### Testing strategy" below
-- **Open questions:** (if applicable) Clarifying questions for ambiguous implementation details. See "Open questions guidelines"
-
-Keep concise:
-
-- Omit sections that don't add value
-- List items rather than define when appropriate (eg, CSS classes)
-- Limit to 700 words (unless otherwise specified) - make judgement call on most important parts
-- Maximum 7 lines per code block. Show structure and key logic only — let implementer fill in implementation details. Prefer concise outlines over complete functions.
+See [Example TDD](#example-tdd) below for complete demonstration.
 
 ### Call graph
 
-Visualizes how functions, modules, systems interconnect. Use to explain complex multi-component implementations.
+Visualizes how functions, modules, systems interconnect.
 
-**When to include:**
+**When to include:** Multiple interconnected functions, complex dependencies, system integration points, architectural changes
 
-- Multiple inter-connected functions across files
-- Complex module dependencies
-- System integration points
-- Architectural changes affecting multiple components
+**Structure:** Subgraphs (by file/module), nodes (functions/components), reference letters [A][B], status markers (🟢🟡🔴), arrows with descriptive labels ("uses", "calls", "renders via")
 
-**Structure rules:**
+**Include:** Changed functions/components, what uses them, integration points, data flow direction  
+**Exclude:** Internal implementation details, trivial helpers, standard library/framework functions, tests
 
-1. **Subgraphs:** Group related components by file/module
-2. **Nodes:** Individual functions/components/modules
-3. **Reference letters:** Add `[A]`, `[B]`, etc. to correlate with pseudocode
-4. **Status markers:** Highlight changes with color-coded classes:
-   - Green (`.new`): New components
-   - Yellow (`.updated`): Modified components
-   - Red (`.removed`): Removed components
-5. **Arrows:** Show relationships (uses, calls, renders, configured with)
-6. **Quote all labels:** Use `["label"]` syntax to avoid special character issues
+**Best practices:** Focus on changed components + immediate dependencies, search codebase for usage, trace to entry points (API calls, CLI actions), correlate nodes to pseudocode using reference letters
 
-**What to include:**
+**Example:**
 
-- New, modified, removed functions/components
-- References to what uses new/updated components (search repo if needed)
-- Key integration points between components
-- Data flow direction when relevant
+```mermaid
+flowchart TD
+    subgraph api["api/tasks/[id]/complete.ts"]
+        POST["POST handler [🟡 UPDATED]"]
+    end
+    
+    subgraph tasks["tasks/complete.ts"]
+        A["completeTask(taskId) [🟢 NEW] [A]"]
+    end
+    
+    subgraph db["@/lib/prisma"]
+        Prisma["prisma.task"]
+    end
+    
+    POST -->|"calls"| A
+    A -->|"queries & updates"| Prisma
+```
 
-**What to exclude:**
-
-- Internal implementation details (→ pseudocode)
-- Trivial helper functions unless central to understanding
-- Standard library/framework functions
-- Tests
-
-**Best practices:**
-
-- Focus graph on changed components + immediate dependencies
-- Descriptive arrow labels ("uses", "calls", "renders via", "configured with")
-- Search codebase to find what uses new/updated components, not just current changes. Trace to entry points if possible (eg, API calls, CLI actions) - search repo as needed
-- Correlate graph nodes to pseudocode sections using reference letters
+Key elements shown:
+- **Subgraphs** for each file/module
+- **Reference letters** `[A]` to correlate with pseudocode
+- **Status markers** `[🟢 NEW]` `[🟡 UPDATED]`
+- **Descriptive arrows** showing relationships
+- **Entry points** (API route) and **integration points** (Prisma)
 
 ### Pseudocode breakdown
 
-Break down core logic into pseudocode showing flow/key components. See [Example TDD](#example-tdd) for format.
+Show logic flow with reference letters [A][B]. Mark status: 🟢 NEW, 🟡 UPDATED, 🔴 REMOVED. Use "sh" syntax. Keep JSX minimal.
 
-- Add reference letters `[A]`, `[B]` to find connections easily
-- Mark `[🟢 NEW]` or `[🟡 UPDATED]` or `[🔴 REMOVED]` where necessary
-- Use "sh" for syntax highlighting, even if not shell syntax
-- If function/file not updated/removed, leave it out
-- Include descriptive comments: logic flow, business rules
-- Keep JSX/markup minimal: high-level component references, not full JSX trees
-- Focus on logic flow, not rendering details
-- Use `→ render <Component>` rather than showing JSX structure
-
-**Example: Avoid verbose JSX**
-
-```sh
-# AVOID: Too verbose
-renderNotificationPanel()
-  → notifications = getUnreadNotifications()
-  → return (
-      <div className="fixed right-0 w-96 shadow-lg">
-        <div className="border-b p-4">
-          <h2>Notifications</h2>
-            ... [skip]
-
-# PREFER: Concise, logic-focused
-renderNotificationPanel()
-  → notifications = getUnreadNotifications()
-  → render <NotificationPanel notifications={notifications}>
-      <h2>Notifications</h2>
-      {/* for each notification: */}
-        <Notification ...>
-    </>
-```
+**Key guidelines:** Include descriptive comments (logic flow, business rules), use `→ render <Component>` not full JSX trees, focus on logic not rendering details
 
 ### Testing strategy
 
-List unit, integration, other tests needed. Include test commands to run individual test files. See [Example TDD](#example-tdd) for format.
+List tests needed with run commands.
 
-- List test data/fixtures to be used. Allows reviewers to gauge test file complexity
-- List dependencies needing mocks and why (external APIs, databases, time-dependent functions)
-- Be EXTREMELY conservative: plan minimum tests (eg, single smoke test)
-- Include exact command to run relevant tests
-- Use 1 line per test (just the test name). Do not show full test implementation. If any key info is needed, add as 1-line comment after
+**Include:** Test data/fixtures used, dependencies needing mocks + why (external APIs, databases, time-dependent), exact command to run tests
+
+**Format:** 1 line per test (name only). Add 1-line comment after if key info needed.
 
 ### Example TDD
 
@@ -644,96 +418,76 @@ interface Task {
 completeTask(taskId) # [🟢 NEW]
   # Validate task exists
   → task = prisma.task.findUnique({ where: { id: taskId } })
-  if !task:
-    → log "Task not found"
-    → return { ok: false, error: "NOT_FOUND" }
-
-  # Check if already completed
-  if task.status == 'completed':
-    → log "Already completed"
-    → return { ok: true, task }
-
+  if !task: return { ok: false, error: "NOT_FOUND" }
+  if task.status == 'completed': return { ok: true, task }
+  
   # Mark complete and persist
-  → prisma.task.update({
-      where: { id: taskId },
-      data: { status: 'completed', completedAt: new Date() }
-    })
+  → prisma.task.update({ ... })
   → return { ok: true, task }
 ```
 
 ## Files
 
-**New files:**
-
-- `src/tasks/complete.ts`
-
-**Modified files:**
-
-- `prisma/schema.prisma` - Add Task model
+**New:** `src/tasks/complete.ts`  
+**Modified:** `prisma/schema.prisma` - Add Task model
 
 ## CSS classes
 
-- `.task-item`
-- `.task-checkbox`
-- `.task-completed`
+- `.task-item`, `.task-checkbox`, `.task-completed`
 
 ## Testing strategy
 
-### Running tests
+**Run:** `npx vitest src/tasks/complete.test.ts`
 
-- `npx vitest src/tasks/complete.test.ts`
+**Mocks:** `@/lib/prisma`  
+**Fixtures:** `PENDING_TASK`, `COMPLETED_TASK`
 
-### complete.test.ts
-
-```typescript
-// Mocks
-vi.mock("@/lib/prisma");
-
-// Test data
-const PENDING_TASK = { id: "1", title: "Test", status: "pending", completedAt: null };
-const COMPLETED_TASK = { id: "2", title: "Done", status: "completed", completedAt: new Date() };
-
-describe("completeTask", () => {
-  test("marks task complete w/ timestamp");
-  test("returns error if task not found");
-  test("idempotent if already completed");
-});
-```
+**Tests:**
+- marks task complete w/ timestamp
+- returns error if task not found
+- idempotent if already completed
 
 ## Open questions
 
-1. **Undo completion:** Should users be able to mark a completed task as incomplete again?
-
-   a. Allow unmarking with completedAt set to null _(recommended)_
-   b. No undo - completion is final
-
-2. **UI feedback:** What should happen after clicking the complete button?
-
-   a. Show success toast notification _(recommended)_
-   b. Silently update with visual state change only
+1. **Undo completion:** Should users be able to mark completed task as incomplete?
+   - a. Allow unmarking with completedAt set to null _(recommended)_
+   - b. No undo - completion is final
 ````
 
-## Open questions guidelines
+## Quick reference
 
-Ask clarifying questions for ambiguity/missing requirements.
+### Document decision tree
 
-If points for clarification will significantly change plan depending on answer, ask *before* creating plans.
+```mermaid
+flowchart TD
+    Start["Task to plan"] --> Trivial{"Trivial change?"}
+    Trivial -->|"Yes: One-line fix,<br>docs only, obvious"| Skip["Skip planning.<br>Implement directly"]
+    Trivial -->|"No"| Complex{"Complex feature?"}
+    
+    Complex -->|"No: Simple task,<br>single file"| TDD["TDD only<br>(artefacts/tdd-feature.md)"]
+    Complex -->|"Yes: Multi-component,<br>requires specs"| Research{"Non-obvious<br>constraints?"}
+    
+    Research -->|"Yes: New tech,<br>quirky APIs"| Disco["1. Discovery doc<br>(artefacts/discovery-title.md)"]
+    Research -->|"No"| PRD["2. PRD<br>(artefacts/prd-slug.md)"]
+    
+    Disco --> PRD
+    PRD --> TDDFull["3. TDD<br>(artefacts/tdd-feature.md)"]
+```
 
-**In chat conversation:**
+### Key reminders
 
-For each question:
-- Clear recommended solution with reasoning
-- Alternative approaches when applicable
-- Relevant considerations (technical, business, UX)
+**Before drafting:**
+- Research existing patterns, constraints, architecture
+- Ask clarifying questions if ambiguity will significantly change plan
+- Check for existing discovery/PRD documents
 
-**In the document:**
+**During drafting:**
+- Use high-density language: lists, fragments, no fluff
+- Add IDs to requirements: F1, F1.1, NF1, TC1
+- Include reference letters `[A]` in call graphs to correlate with pseudocode
+- Mark status: `[🟢 NEW]` `[🟡 UPDATED]` `[🔴 REMOVED]`
 
-Add questions to document's "Open questions" section using minimal format:
-- Question title only
-- Lettered options (a, b, c)
-- Mark recommended with _(recommended)_
-- No explanations or reasoning
-
-**When user answers:** Update **Initial ask** section with clarification. Keeps it as single source of truth for refined requirements.
-
-</guidelines>
+**Document boundaries:**
+- **Discovery:** Environmental facts true regardless of implementation choice
+- **PRD:** What system should do, not how
+- **TDD:** How to implement, code structure, testing approach
