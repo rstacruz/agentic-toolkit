@@ -3,17 +3,16 @@ name: plan-with-tdd-and-prd
 description: Use when initiating new features, complex code changes, or technical research tasks that require structured planning and documentation before implementation.
 ---
 
-# Planning with PRD, TDD, and Discovery documents
+# Planning with PRD and TDD
 
-This skill guides structured planning before implementation using three document types:
+This skill guides structured planning before implementation using two document types:
 
-- **Discovery documents** (`discovery-<title>.md`) — Environmental context, constraints, existing architecture
 - **PRD** (`prd-{slug}.md`) — Product requirements, functional specs, what system should do
 - **TDD** (`tdd-<feature>.md`) — Technical design, implementation plan, how to build it
 
 **Core workflow:** Research → Clarify ambiguities → Draft plan → Save to `artefacts/`
 
-Document choice depends on task complexity: trivial changes need no planning; small tasks need TDD only; complex features benefit from full Discovery + PRD + TDD workflow.
+Document choice depends on task complexity: trivial changes need no planning; small tasks need TDD only; complex features benefit from full PRD + TDD workflow.
 
 ## Formatting standards
 
@@ -21,7 +20,7 @@ Document choice depends on task complexity: trivial changes need no planning; sm
 
 - High-density language: lists, fragments, no unnecessary articles
 - Scannability: short sections, bullet points, clear headings
-- IDs: F1, F1.1 for requirements; NF1, TC1, DC1 for other lists
+- IDs: F1, F1.1 for functional requirements; TR1, NF1, TC1, DC1 for other lists
 - Em-dashes: **Name** — Description (for all requirement lists)
 - Active voice: "System validates" not "System must validate"
 - Inline constraints: timing/limits directly in descriptions
@@ -55,27 +54,22 @@ Document choice depends on task complexity: trivial changes need no planning; sm
 
 Steps:
 
-1. **Research:** Understand existing systems/constraints. Write to `artefacts/discovery-<title>.md` if non-obvious findings.
-2. **Check context:** Read `artefacts/discovery-<title>.md` if exists.
-3. **Clarify:** Ask ambiguities before drafting. See *Open questions guidelines*.
-4. **Draft:** Follow PRD structure below.
-5. **Add questions:** Unresolved items → PRD's "Open questions".
-6. **Save:** Write to `artefacts/prd-{slug}.md`.
+1. **Research:** Understand existing systems/constraints.
+2. **Clarify:** Ask ambiguities before drafting. See *Open questions guidelines*.
+3. **Draft:** Follow PRD structure below.
+4. **Add questions:** Unresolved items → PRD's "Open questions".
+5. **Save:** Write to `artefacts/prd-{slug}.md`.
 
 ### Write a TDD
 
 Steps:
 
-1. **Research:** Find code patterns, data models, integration points. Write to `artefacts/discovery-<title>.md` if non-obvious findings.
-2. **Check context:** Read `artefacts/prd-{slug}.md` and `artefacts/discovery-<title>.md`.
+1. **Research:** Find code patterns, data models, integration points.
+2. **Check context:** Read `artefacts/prd-{slug}.md`.
 3. **Clarify:** Ask technical ambiguities with recommended solutions.
 4. **Draft:** Follow TDD structure below.
 5. **Add questions:** Unresolved implementation items → TDD's "Open questions".
 6. **Save:** Write to `artefacts/tdd-<feature>.md`.
-
-### Research a topic
-
-Write findings to Discovery Document (`artefacts/discovery-<title>.md`).
 
 ### Combined PRD-TDD
 
@@ -83,11 +77,10 @@ For small to medium features where both product requirements and technical imple
 
 Steps:
 
-1. **Research:** Find existing patterns, constraints. Write to `artefacts/discovery-<title>.md` if findings are non-obvious.
-2. **Check context:** Read `artefacts/discovery-<title>.md` if exists.
-3. **Clarify:** Ask ambiguities before drafting.
-4. **Draft:** Combine PRD and TDD sections in single document. Use PRD structure for requirements, TDD structure for implementation. Skip duplicate sections (Initial ask, Open questions).
-5. **Save:** Write to `artefacts/plan-<feature>.md`.
+1. **Research:** Find existing patterns, constraints.
+2. **Clarify:** Ask ambiguities before drafting.
+3. **Draft:** Combine PRD and TDD sections in single document. Use PRD structure for requirements, TDD structure for implementation. Skip duplicate sections (Initial ask, Open questions).
+4. **Save:** Write to `artefacts/plan-<feature>.md`.
 
 ## Planning artefacts
 
@@ -95,9 +88,10 @@ Steps:
 
 Planning artefacts in `artefacts/` (local, git-ignored):
 
-- `discovery-<title>.md` - environmental context/constraints
 - `prd-{slug}.md` - product requirements
 - `tdd-<feature>.md` - implementation plans
+
+For research-heavy tasks with complex constraints, see `discovery.md` for discovery document guidelines.
 
 Notes persist in `notes/` across branches. Users may specify custom locations.
 
@@ -105,7 +99,7 @@ Notes persist in `notes/` across branches. Users may specify custom locations.
 
 - Write to `artefacts/` (eg, `artefacts/prd-{slug}.md`)
 - Scope decisions:
-  - Large projects: discovery, PRD, TDD
+  - Large projects: PRD, TDD
   - Small tasks: TDD only
 - Confirm with user before PRD → TDD
 
@@ -114,7 +108,6 @@ Notes persist in `notes/` across branches. Users may specify custom locations.
 When user requests work outside current scope:
 
 - New feature/scope → new TDD (`tdd-another-feature.md`)
-- New research → new discovery (`discovery-api-quirks.md`)
 
 ## Open questions guidelines
 
@@ -139,51 +132,6 @@ Add questions to document's "Open questions" section using minimal format:
 
 **When user answers:** Update **Initial ask** section with clarification. Keeps it as single source of truth for refined requirements.
 
-## Discovery document guidelines
-
-**Purpose:** Capture environmental constraints/context for planning. NOT implementation details or obvious info.
-
-Answers: "What's needed about the environment for good planning decisions?"
-Not: "How will I implement this?" (that's TDD)
-
-**Typical inclusions:**
-
-- Current system architecture/patterns
-- Existing code structures to follow
-- Technical constraints/limitations
-- Database schemas/data formats
-- Third-party APIs and quirks
-- Non-obvious edge cases with business impact
-- Library research (capabilities, usage, tradeoffs)
-
-**Typical exclusions:**
-
-- Implementation pseudocode/code samples (→ TDD)
-- Obvious edge cases (eg, "React handles HTML escaping")
-- Migration strategies/rollback plans (→ TDD)
-- Backwards compatibility solutions (→ TDD)
-- "Next steps" or implementation order (→ TDD)
-- Test cases/testing strategy (→ TDD)
-- Effort estimates/timelines (→ PRD roadmap)
-
-### Condensed summary
-
-Include "condensed summary" H2 at beginning. Write condensed prompt guiding future agents to research independently and reach same conclusions. Prefer code citations over examples.
-
-Include: context (required), function/symbol names with locations, glossary, issues, key insights.
-
-### Discovery vs TDD
-
-Test: "Would this info still be true if we chose completely different implementation?"
-
-- YES → Discovery (eg, "Database uses SQLite", "Tailwind v4 has no config file")
-- NO → TDD (eg, "Use buildPrompt() function", "Handle errors with try/catch")
-
-### Patterns to avoid
-
-- Don't document obvious behaviors ("React handles HTML escaping", "UTF-8 works in database")
-- Don't include implementation details ("Use try/catch for errors")
-
 ## PRD guidelines
 
 Typical sections (include if applicable):
@@ -191,9 +139,10 @@ Typical sections (include if applicable):
 - **Initial ask** (required) — Restatement of original request. Update with clarifications.
 - **Problem statement** — Current pain points/issues feature addresses.
 - **Solution overview** — High-level summary (numbered list of key capabilities).
-- **Functional requirements** — Complete technical specification of what system does (F1, F1.1, F1.2). Compact bullet format with em-dashes. See "Functional requirements" section.
+- **Functional requirements** — Product-focused specification of user-observable behavior (F1, F1.1, F1.2). Compact bullet format with em-dashes. See "Functional requirements" section.
+- **Technical requirements** — System-level technical contracts, integration points, API specifications (TR1, TR2...). Compact bullets with em-dashes. See "Technical requirements" section.
 - **Non-functional requirements** — Performance, accessibility, scalability (NF1, NF2...). Compact bullets.
-- **Technical constraints** — Tech stack, integration, implementation constraints (TC1, TC2...). Compact bullets.
+- **Technical constraints** — Technology limitations, tech stack constraints, platform requirements (TC1, TC2...). Compact bullets. See "Technical constraints" section.
 - **Quality gates** — Commands that must pass for every piece of work (typecheck, lint, tests, etc). See "Quality gates" section.
 - **Design considerations** — Important design decisions/implementation notes (DC1, DC2...). Compact bullets.
 - **Screen interactions** — Mermaid diagram: UI structure, components, navigation flows. Include "Key entities" subsection (pages/URLs, UI components, API endpoints).
@@ -210,16 +159,72 @@ Typical sections (include if applicable):
 
 ### Functional requirements
 
-Complete technical specification of what system does. See [Formatting standards](#formatting-standards) for format rules.
+Product-focused specification of user-observable behavior. Describe **what** users can do and what system does, not **how** it's implemented. See [Formatting standards](#formatting-standards) for format rules.
 
-Example structure:
+**Good (product-focused):**
+- **F1.1. Contact sync** — Changes to contacts sync to mirror workspace within 2 seconds
+- **F1.2. Status tracking** — System tracks when contacts were last viewed by user
+- **F1.3. Task notifications** — User receives notification when someone comments on watched task
+
+**Bad (implementation details):**
+- **F1.1** `updateContact()` calls mirror function with `touchUpdatedAt: true`
+- **F1.2** Uses Redis cache with 5-minute TTL
+- **F1.3** WebSocket connection emits 'notification' event
+
+**Test:** If it mentions function names, parameters, cache layers, or data structures → move to "Technical requirements" or TDD.
+
+**Example structure:**
 
 ### F1: Notification events
 
-- **F1.1. Task comments** — Someone comments on watched task
-- **F1.2. Status changes** — Task status changes
+- **F1.1. Task comments** — User receives notification when someone comments on watched task
+- **F1.2. Status changes** — User receives notification when task status changes
+- **F1.3. Mentions** — User receives notification when mentioned in comments/descriptions
 
 Each notification includes: event type, task title (linked), who triggered it, timestamp.
+
+### Technical requirements
+
+System-level technical contracts, integration points, API specifications. Describes technical **what** (contracts, interfaces, data flows) without implementation **how** (error handling, function design). See [Formatting standards](#formatting-standards) for format rules.
+
+**Include:** API contracts, integration behaviors, WebSocket events, database triggers, third-party service calls, data sync specifications
+
+**Exclude:** Implementation approach (→ TDD), error handling strategies (→ TDD), function internal logic (→ TDD)
+
+**Example structure:**
+
+### TR1: Contact sync integration
+
+- **TR1.1. Update API** — `updateContact()` accepts `touchUpdatedAt: boolean` parameter to control timestamp updates
+- **TR1.2. Status tracking** — `updateContactViewedStatus()` triggers mirror workspace sync via mirror function
+- **TR1.3. Tag operations** — `setTagsForContact()` and `deleteWorkspaceContactTag()` call mirror functions
+
+### TR2: Real-time notification delivery
+
+- **TR2.1. WebSocket events** — Server emits `notification` event with payload: `{userId, eventType, taskId, timestamp}`
+- **TR2.2. Email queue contract** — Accepts notification events via `queue.add('email', payload)` with same schema
+
+**Functional vs Technical requirements:**
+- **Functional** → User-observable behavior, product features, UI interactions ("User receives notification when...")
+- **Technical** → System contracts, API specifications, integration points, data flows ("`updateContact()` accepts `touchUpdatedAt` parameter...")
+- **TDD** → Implementation approach, function design, error handling strategies ("Use try/catch for database errors...")
+
+### Technical constraints
+
+Technology limitations and platform requirements that constrain implementation choices. Describes what technologies **must** or **cannot** be used. See [Formatting standards](#formatting-standards) for format rules.
+
+**Include:** Tech stack requirements, platform limitations, browser support, library versions, infrastructure constraints, performance budgets
+
+**Exclude:** System integration contracts (→ Technical requirements), implementation approach (→ TDD)
+
+**Example structure:**
+
+### Technical constraints
+
+- **TC1. Tech stack** — Must use existing Prisma ORM, cannot add new database
+- **TC2. Browser support** — Must support Safari 15+, Chrome 90+
+- **TC3. Performance budget** — Initial bundle size cannot exceed 200KB
+- **TC4. Infrastructure** — Must deploy on existing Node.js 18 servers
 
 ### Quality gates
 
@@ -287,20 +292,34 @@ Users miss updates by manually checking task list.
 ## Functional requirements
 
 ### F1: Notification events
-- **F1.1. Task comments** — Someone comments on watched task
-- **F1.2. Status changes** — Task status changes
-- **F1.3. Mentions** — Mentioned in comments/descriptions
+- **F1.1. Task comments** — User receives notification when someone comments on watched task
+- **F1.2. Status changes** — User receives notification when task status changes
+- **F1.3. Mentions** — User receives notification when mentioned in comments/descriptions
 
 Each notification: event type, task title (linked), who triggered it, timestamp.
 
 ### F2: Notification delivery
-- **F2.1. Real-time** — In-app within 2 seconds
-- **F2.2. Email** — Within 5 minutes
-- **F2.3. Notification center** — View all in panel
+- **F2.1. Real-time** — Notifications appear in-app within 2 seconds of event
+- **F2.2. Email** — Email notifications sent within 5 minutes for unwatched in-app notifications
+- **F2.3. Notification center** — User can view all notifications in dedicated panel
+
+## Technical requirements
+
+### TR1: Real-time delivery
+- **TR1.1. WebSocket events** — Server emits `notification` event: `{userId, eventType, taskId, timestamp, triggeredBy}`
+- **TR1.2. Connection handling** — Client reconnects automatically on disconnect, fetches missed notifications
+
+### TR2: Email queue
+- **TR2.1. Queue contract** — Accepts events via `emailQueue.add('notification', payload)` with notification schema
+- **TR2.2. Batch processing** — Groups notifications by user, sends max 1 email per 5 minutes per user
 
 ## Non-functional requirements
-- **NF1. Performance** — Real-time within 2 seconds
-- **NF2. Scalability** — Email queue handles 1000+/min
+- **NF1. Performance** — Real-time notifications delivered within 2 seconds
+- **NF2. Scalability** — Email queue handles 1000+ notifications/min
+
+## Technical constraints
+- **TC1. WebSocket library** — Must use existing Socket.io v4 installation
+- **TC2. Email service** — Must use existing SendGrid integration
 
 ## Quality gates
 - `pnpm typecheck`, `pnpm lint`, `pnpm test`
@@ -465,13 +484,9 @@ flowchart TD
     Trivial -->|"No"| Complex{"Complex feature?"}
     
     Complex -->|"No: Simple task,<br>single file"| TDD["TDD only<br>(artefacts/tdd-feature.md)"]
-    Complex -->|"Yes: Multi-component,<br>requires specs"| Research{"Non-obvious<br>constraints?"}
+    Complex -->|"Yes: Multi-component,<br>requires specs"| PRD["PRD<br>(artefacts/prd-slug.md)"]
     
-    Research -->|"Yes: New tech,<br>quirky APIs"| Disco["1. Discovery doc<br>(artefacts/discovery-title.md)"]
-    Research -->|"No"| PRD["2. PRD<br>(artefacts/prd-slug.md)"]
-    
-    Disco --> PRD
-    PRD --> TDDFull["3. TDD<br>(artefacts/tdd-feature.md)"]
+    PRD --> TDDFull["TDD<br>(artefacts/tdd-feature.md)"]
 ```
 
 ### Key reminders
@@ -479,7 +494,7 @@ flowchart TD
 **Before drafting:**
 - Research existing patterns, constraints, architecture
 - Ask clarifying questions if ambiguity will significantly change plan
-- Check for existing discovery/PRD documents
+- Check for existing PRD documents
 
 **During drafting:**
 - Use high-density language: lists, fragments, no fluff
@@ -488,6 +503,5 @@ flowchart TD
 - Mark status: `[🟢 NEW]` `[🟡 UPDATED]` `[🔴 REMOVED]`
 
 **Document boundaries:**
-- **Discovery:** Environmental facts true regardless of implementation choice
-- **PRD:** What system should do, not how
+- **PRD:** What system should do (functional + technical requirements), not how (implementation)
 - **TDD:** How to implement, code structure, testing approach
