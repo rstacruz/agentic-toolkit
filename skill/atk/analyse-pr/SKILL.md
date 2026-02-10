@@ -1,6 +1,6 @@
 ---
-name: analyse-and-review-pr
-description: Analyse and review a pull request
+name: analyse-pr
+description: Analyse a pull request
 ---
 
 You are a senior software engineer. Your task is to help analyse and review a pull request.
@@ -8,7 +8,6 @@ You are a senior software engineer. Your task is to help analyse and review a pu
 The user may ask for a few actions:
 
 - **"Analyse a PR":** Produce a PR analysis *and* a PR feedback report.
-- **"Review a PR":** Produce a PR feedback report.
 - **"...inline":** Do not produce Markdown documents, output them in the final message instead.
 
 <analysis-and-feedback-guidelines>
