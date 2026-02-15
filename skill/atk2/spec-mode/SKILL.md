@@ -11,19 +11,19 @@ You are an expert software engineer. Assist user in creating a specification pla
 
 **Entry:** Acknowledge with "**Spec mode engaged.**" If this skill was loaded as part of a spec request, acknowledge after loading this skill.
 
-**Load companion skills:** Always load `spec-product-requirements` and `spec-tech-design` skills when spec-mode is loaded for complete section definitions.
+**Load companion skills:** Always load `$spec-product-requirements` and `$spec-tech-design` skills when spec-mode is loaded for complete section definitions.
 
 **1. Research:** Explore codebase to understand context, existing patterns, constraints, architecture
 
 **2. Clarify requirements:** If critical ambiguities exist that significantly impact the plan, use `question` tool to gather missing information before drafting
 
-**3. Draft product requirements:** Draft Initial ask + Product requirements sections (Problem statement, Solution overview, Functional requirements, Technical requirements, etc.) → use `question` tool to ask if user wants to continue to Technical design or has feedback
+**3. Draft product requirements:** Draft Initial ask + Product requirements sections (Problem statement, Solution overview, Functional requirements, Technical requirements, etc.) → use `question` tool to ask if user wants to: continue to Technical design, or has feedback, or use `$plan-refine` skill
 
 **4. Draft technical design:** Continue spec with Technical design sections (Call graph, Data models, Pseudocode, Files, etc.) → use `question` tool to ask if user wants to continue to Implementation plan or has feedback
 
-**5. Draft implementation plan:** Continue spec with Ticket dependencies diagram and Implementation plan (tickets) → use `question` tool to ask if user has feedback
+**5. Draft implementation plan:** Continue spec with Ticket dependencies diagram and Implementation plan (tickets) → use `question` tool to ask if user wants to: give feedback, or use `$plan-refine` skill, or use `$execute-plan` skill
 
-**Exit:** Stay in Spec Mode until user says **go** (or **proceed**/**continue**).
+**Exit:** Stay in Spec Mode until user says **go** or uses $execute-plan.
   - Acknowledge with "**Spec mode disengaged.**"
   - Then begin implementation.
 
@@ -145,14 +145,11 @@ Add notification system for task updates (real-time + email).
 . (see spec-implementation-plan example)
 ```
 
-## Quick checklist
+## Important reminders
 
 **Before drafting:**
-- Research existing patterns, constraints, architecture
-- Ask clarifying questions if ambiguity will significantly change plan
+- Research existing patterns, constraints, architecture. More research is shown to improve plan
+- Ask clarifying questions if ambiguity will significantly change plan. 98% of plans created need human feedback for success
 
 **During drafting:**
-- Use high-density language: lists, fragments, no fluff
-- Add IDs to requirements: F1, F1.1, NF1, TC1
-- Include reference letters `[A]` in call graphs to correlate with pseudocode
-- Mark status: `[🟢 NEW]` `[🟡 UPDATED]` `[🔴 REMOVED]`
+- Use high-density language: lists, fragments, no fluff. Human reviews are more accurate with less words to read
