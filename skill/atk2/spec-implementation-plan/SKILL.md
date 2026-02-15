@@ -1,23 +1,19 @@
 ---
-name: ralph-prepare
-description: |
-  Break down large features into tickets for focused execution.
-  
-  Common user requests:
-  - "Break down [feature/plan] into tickets"
+name: spec-implementation-plan
+description: Gives important guidelines to break down large features into smaller tickets. Companion to spec-mode.
 ---
 
-# Purpose
+# Implementation plan
 
-Break down large features into tickets optimized for AI agent execution.
+Update a plan to break down large features into tickets optimized for AI agent execution.
 
 **Output:**
 - Tickets: Vertical slices implementing functional requirements
 - Dependencies: Mermaid graph showing execution order (optional)
 
 **Process:**
-- If plan exists in a file: Update that file with tickets and dependencies
-- If plan is not in a file: Create `artefacts/plan-{title}.md` with tickets and dependencies
+- If plan exists in a file: Update that file with sections below
+- If plan is not in a file: Create `artefacts/plan-{title}.md` with sections below
 
 # Output format
 
@@ -109,6 +105,7 @@ Recommend T-01 as a "structure" ticket that establishes contracts before logic:
 
 # Example
 
+````markdown
 ## Tickets
 
 ### T-01: Theme config structure (stubs)
@@ -162,3 +159,4 @@ graph TD
     T01 --> T02 & T03
     T02 & T03 --> T04
 ```
+````
