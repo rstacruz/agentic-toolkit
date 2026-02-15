@@ -1,5 +1,5 @@
 ---
-name: ralph-loop
+name: ralph-execute-via-subagent
 description: A "ralph loop" iterates through a plan in a ticket-by-ticket basis. Use this when use *specifically* asks for a "ralph loop".
 ---
 
@@ -94,6 +94,7 @@ Code writing guidelines:
 Other guidelines:
 
 - Do not make a pull request
-- Only do ONE ticket, do not proceed to others
+- IMPORTANT: Only do ONE ticket. stop after finishing one ticket. do not proceed to others
+- IMPORTANT: Never commit artefaacts/ files
 
 </prompt-template>

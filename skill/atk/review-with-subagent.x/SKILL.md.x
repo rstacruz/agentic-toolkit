@@ -1,6 +1,6 @@
 ---
 name: review-with-subagent
-description: Instructions for reviewing changes using subagents. Use after implementation and verification are complete
+description: Instructions for reviewing changes using subagents. Use after implementation and verification are complete.
 ---
 
 # Review with Subagent
