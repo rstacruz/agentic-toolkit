@@ -15,3 +15,4 @@ fi
 
 rsync -av --delete "$SOURCE_DIR/skill/atk/" "$REPO_ROOT/skill/atk/"
 rsync -av --delete "$SOURCE_DIR/skill/atk-extras/" "$REPO_ROOT/skill/atk-extras/"
+rsync -av "$SOURCE_DIR/agent/" "$REPO_ROOT/agent/" --include "general-opus.md" --include "general-gpt-5-3-codex.md" --exclude "*"
