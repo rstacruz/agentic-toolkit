@@ -19,3 +19,13 @@ Not an OpenCode user? These are pretty tool-agnostic, it should work with Claude
 ## Contents
 
 See [skill/atk/](skill/atk/) for the skills.
+
+## Quick start
+
+Spec mode will do plan:
+
+> Use spec mode to plan: migrate from useState to Zustand
+
+Execute plans in Ralph-style loop:
+
+> /execute-plan @artefacts/plan-zustand-migration.md

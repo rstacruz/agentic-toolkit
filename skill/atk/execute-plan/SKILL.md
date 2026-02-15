@@ -8,7 +8,11 @@ description: "Execute a plan"
 
 2. Evaluate and clarify:
    - Evaluate if plan makes sense.
-   - If plan has ambiguities, open questions, ask the user for clarifications first.
+   - Check if the plan has structured Tickets:
+     - If no tickets exist, use the `question` tool to ask the user:
+       - Do they want to use `$spec-implementation-plan` to break work into tickets?
+       - Or do they have feedback on the plan?
+   - If plan has other ambiguities or open questions, ask the user for clarifications first.
 
 3. Prepare:
    - Create an empty *progress file* (`artefacts/progress.md`)
@@ -17,7 +21,7 @@ description: "Execute a plan"
    - Proceed with implementing the plan.
    - Do one ticket.
    - Before starting each ticket:
-     - Read the *plan file* and *progress file* again. This ensures we're workingwith updated copies.
+     - Read the *plan file* and *progress file* again. This ensures we're working with updated copies.
    - After finishing each ticket:
      - Ask a @general-opus agent to use $review-changes skill. Ask it to review the uncommitted changes.
      - Assess feedback. Address any P1 issues that makes sense to do.

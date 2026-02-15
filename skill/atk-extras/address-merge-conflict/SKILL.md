@@ -1,5 +1,6 @@
 ---
-description: "Address a Git merge conflict"
+name: address-merge-conflict
+description: "Gives guidelines for addressing a Git merge conflict with user intervention. Do not invoke unless user asks."
 ---
 
 Help address a merge conflict.
@@ -8,11 +9,9 @@ Help address a merge conflict.
   - `git grep "^<<<<<<<"` (find merge conflict markers)
   - `git status --porcelain` (show changed files)
 2. Read the code changes to understand what's happening.
-3. If there are decisions to be made, ask the user first. Provide suggested answers and a recommendation.
+3. If there are decisions to be made, ask the user first using `question` tool. Provide suggested answers and a recommendation.
 4. After addressing the conflict, test that it works. Run related automated tests.
 5. Summarise the merge conflict resolutions and give abbreviated code overviews.
-
-$ARGUMENTS
 
 Guidelines:
 
@@ -36,16 +35,4 @@ setup() {
   }
 }
 ```
-`````
-
-## Additional context
-
-`````
-<output command='git grep "^<<<<<<<"' description="Merge conflict markers">
-!`git grep "^<<<<<<<"`
-</output>
-
-<output command="git status --porcelain">
-!`git status --porcelain`
-</output>
 `````

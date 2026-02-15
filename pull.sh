@@ -13,7 +13,5 @@ if [[ ! -d "${SOURCE_DIR}" ]]; then
 fi
 
 
-rsync -av --delete "$SOURCE_DIR/command/atk/" "$REPO_ROOT/command/atk/"
 rsync -av --delete "$SOURCE_DIR/skill/atk/" "$REPO_ROOT/skill/atk/"
-rsync -av --delete "$SOURCE_DIR/skill/atk2/" "$REPO_ROOT/skill/atk2/"
 rsync -av --delete "$SOURCE_DIR/skill/atk-extras/" "$REPO_ROOT/skill/atk-extras/"

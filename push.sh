@@ -12,6 +12,5 @@ if [[ ! -d "${TARGET_DIR}" ]]; then
   exit 1
 fi
 
-rsync -av --delete "$REPO_ROOT/command/atk/" "$TARGET_DIR/command/atk/"
 rsync -av --delete "$REPO_ROOT/skill/atk/" "$TARGET_DIR/skill/atk/"
-rsync -av --delete "$REPO_ROOT/skill/atk2/" "$TARGET_DIR/skill/atk2/"
+rsync -av --delete "$REPO_ROOT/skill/atk-extras/" "$TARGET_DIR/skill/atk-extras/"
