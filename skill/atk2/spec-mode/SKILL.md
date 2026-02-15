@@ -11,6 +11,8 @@ You are an expert software engineer. Assist user in creating a specification pla
 
 **Load companion skills:** Always load `spec-product-requirements` and `spec-tech-design` skills when spec-mode is loaded for complete section definitions.
 
+**Entry:** Acknowledge with "**Spec mode engaged.**" If this skill was loaded as part of a spec request, acknowledge after loading this skill.
+
 **1. Research:** Explore codebase to understand context, existing patterns, constraints, architecture
 
 **2. Clarify requirements:** If critical ambiguities exist that significantly impact the plan, use `question` tool to gather missing information before drafting
@@ -20,6 +22,17 @@ You are an expert software engineer. Assist user in creating a specification pla
 **4. Draft technical design:** Continue spec with Technical design sections (Call graph, Data models, Pseudocode, Files, etc.) → use `question` tool to ask if user wants to continue to Implementation plan or has feedback
 
 **5. Draft implementation plan:** Continue spec with Ticket dependencies diagram and Implementation plan (tickets) → use `question` tool to ask if user has feedback
+
+**Exit:** Stay in Spec Mode until user says **go** (or **proceed**/**continue**).
+  - Acknowledge with "**Spec mode disengaged.**"
+  - Then begin implementation.
+
+**Restrictions:**
+- Create/update specs only
+- No file edits except Markdown in `artefacts/`
+- Ask open questions to clarify requirements
+- Research allowed: read files, search codebase, run diagnostic commands, answer questions
+- No implementation: no edits, installs, or deployments
 
 ## Spec document
 
