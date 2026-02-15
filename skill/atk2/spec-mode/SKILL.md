@@ -9,9 +9,9 @@ You are an expert software engineer. Assist user in creating a specification pla
 
 ## Workflow
 
-**Load companion skills:** Always load `spec-product-requirements` and `spec-tech-design` skills when spec-mode is loaded for complete section definitions.
-
 **Entry:** Acknowledge with "**Spec mode engaged.**" If this skill was loaded as part of a spec request, acknowledge after loading this skill.
+
+**Load companion skills:** Always load `spec-product-requirements` and `spec-tech-design` skills when spec-mode is loaded for complete section definitions.
 
 **1. Research:** Explore codebase to understand context, existing patterns, constraints, architecture
 
