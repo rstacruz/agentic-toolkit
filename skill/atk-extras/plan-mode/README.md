@@ -2,11 +2,13 @@
 
 Focus on planning and design before implementation.
 
-**Use when:** Before starting implementation, need to clarify requirements, design solutions, gather user input
+**Use when:** Doing something that may take a human 15 mins to do
+
+**Don't use when:** Longer and more complex tasks; use spec-mode instead
 
 ## Example: Simple feature
 
-> **User:** /plan add dark mode
+> **User:** /plan-mode add dark mode
 >
 > **Agent:** **Plan mode engaged.**
 >
@@ -61,4 +63,3 @@ Focus on planning and design before implementation.
 - Research allowed (read files, search codebase, diagnostics)
 - No implementation (no edits, installs, deployments)
 
-**Related:** [`plan-with-tdd-and-prd`](../plan-with-tdd-and-prd/), [`plan-feature-roadmap`](../plan-feature-roadmap/)

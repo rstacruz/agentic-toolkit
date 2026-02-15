@@ -18,7 +18,8 @@ Not an OpenCode user? These are [Agent Skills](https://https://agentskills.io/ho
 
 ## Contents
 
-See [skill/atk/](skill/atk/) for the skills.
+- [skill/atk/](skill/atk/) - the main skills
+- [skill/atk-extras/](skill/atk-extras/) - skills that aren't really part of the plan-and-execute loop, but still useful nonetheless
 
 ## Quick start
 

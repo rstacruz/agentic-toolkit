@@ -1,6 +1,6 @@
 ---
 name: plan-mode
-description: "Guidelines for Plan Mode - focus on planning before implementation"
+description: "Guidelines for Plan Mode. Use for simple tasks only"
 ---
 
 # Plan Mode
@@ -96,4 +96,4 @@ Example:
 
 ## Related
 
-- `plan-with-tdd-and-prd` - Comprehensive planning with PRDs/TDDs
+- `spec-mode` - for more complex work
