@@ -1,6 +1,6 @@
 ---
 name: refine-tests
-description: "Guidelines for identifying redundant tests, coverage gaps, opportunities for imp=oving tests"
+description: "Guidelines for identifying redundant tests, coverage gaps, opportunities for improving tests"
 ---
 
 Plan mode.
@@ -11,13 +11,19 @@ Analyse the tests added in this branch and produce a comprehensive test analysis
 
 Minimum tests with maximum coverage. High-value tests that catch regressions. Improve readability and maintainability.
 
+**The value/cost test:** For every test, ask: *"If this test fails in six months, will it tell me exactly what broke — or will it just tell me that I changed a line of code?"* Tests that only answer the latter are low-value candidates for removal.
+
+**High-value tests** (keep): focus on requirements/behavior, survive internal refactors, document domain rules, cover edge cases and boundary conditions, run fast and deterministically.
+
+**Low-value tests** (remove): pin implementation details, duplicate coverage already provided by a higher-level test, verify trivial/obvious behavior, or exist only as TDD scaffolding that was never cleaned up.
+
 ## How to analyse
 
 ### Analysis approach
 
 Systematically examine tests across 4 dimensions:
 
-- **Redundancy** — duplicate code paths, layers, entry points (§2 criteria)
+- **Low-value** — redundant, brittle, or trivial tests to remove (§2 criteria)
 - **Gaps** — missing branches, errors, edge cases, integration coverage (§3 criteria)
 - **Quality** — weak assertions, missing negative cases (§4)
 - **Readability** — apply testing-practices guidelines TP1-TP3 (§5)
@@ -36,13 +42,22 @@ Group by file type (unit/integration/e2e). For each file:
 - Numbered list of test descriptions
 - Running total
 
-### 2. Redundancy analysis
-Identify redundant tests with confidence levels:
+### 2. Low-value test analysis
+Identify tests that should be removed. For each, state the category and confidence:
 
-**Redundancy criteria:**
+**Redundancy** — duplicate coverage of the same code path:
 - **HIGH:** Identical logic, same code path → recommend removal
 - **MEDIUM:** Same behavior at different layers → consider consolidation
 - **LOW:** Similar setup but different concerns → keep both
+
+**Brittle** — pins implementation details rather than behavior:
+- Tests that break when a private variable is renamed, a method is extracted, or internal call order changes — without any change to observable behavior
+- Ask: would this test still pass after a pure refactor? If no, it's brittle → recommend removal
+
+**Trivial** — tests obvious or boilerplate behavior with no regression value:
+- Simple getters/setters, standard library behavior (e.g., array appends an item), class instantiation checks ("can this be constructed?")
+- TDD scaffolding left over from the red phase that no longer documents anything meaningful
+- → recommend removal
 
 ### 3. Coverage gaps
 Identify missing tests with priority levels:
@@ -94,13 +109,20 @@ Provide actionable summary with quantifiable impact:
 3. Throws on missing user
 **Total: 3 tests**
 
-## Redundancy analysis
-### HIGH redundancy - Recommend removal
+## Low-value test analysis
+### Redundancy (HIGH) - Recommend removal
 **R1: Password validation tested twice**
 - `auth.test.ts` test #1 and integration test both verify bcrypt comparison
 - **Why redundant:** Integration test covers the full flow including unit behavior
 - **Recommendation:** Keep integration test, remove unit test #1
 - **Confidence:** HIGH - no unique value in unit test
+
+### Brittle (HIGH) - Recommend removal
+**R2: Test pins internal call order, not behavior**
+- `auth.test.ts` test #3 "Throws on missing user" asserts `db.findUser` was called before `bcrypt.compare`
+- **Why brittle:** Verifies internal implementation order, not the observable outcome (the thrown error); breaks on any refactor that reorders calls
+- **Recommendation:** Remove call-order assertion; the thrown error is already verified by the `toThrow` assertion
+- **Confidence:** HIGH - tells you a line of code changed, not that logic broke
 
 ## Coverage gaps
 ### HIGH gaps - Must address
@@ -131,8 +153,9 @@ Provide actionable summary with quantifiable impact:
 - **Recommendation:** Extract `const TEST_USER = { email: 'test@example.com', password: 'pass123' }`
 
 ## Recommendations summary
-### Remove (1 test → save ~15 lines)
+### Remove (2 tests → save ~25 lines)
 1. Remove `auth.test.ts` - "validates correct password" (R1)
+2. Remove `auth.test.ts` - call-order assertion in "Throws on missing user" (R2)
 ### Add (1 critical test → ~20 lines)
 1. Add session token generation test (G1)
 ### Fix assertions (2 improvements)

@@ -33,7 +33,7 @@ description: "Execute a plan"
        - Append them to *progress file* (create if it doesn't exist) - this is to assist future work
 
 5. Post-implementation review, when done:
-   - Ask @general-opus and @general-openai-gpt-5-3-codex-high agents to use $review-changes skill. Ask it to review all changes, starting with the first commit.
+   - Ask @general-opus and @general-gpt-5-3-codex agents to use $review-changes skill. Ask it to review all changes, starting with the first commit.
    - Assess feedback. Address any P1 issues that makes sense to do.
    - If there was feedback, ask reviews again, then address again. Keep looping until there are no more changes to do.
    - Ask a @general-opus agent to use $refine-tests skill.

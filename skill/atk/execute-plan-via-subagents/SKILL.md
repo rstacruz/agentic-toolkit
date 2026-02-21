@@ -1,5 +1,5 @@
 ---
-name: ralph-execute-via-subagent
+name: execute-plan-via-subagents
 description: A "ralph loop" iterates through a plan in a ticket-by-ticket basis. Use this when use *specifically* asks for a "ralph loop".
 ---
 
@@ -18,25 +18,32 @@ description: A "ralph loop" iterates through a plan in a ticket-by-ticket basis.
 3. Prepare:
    - Create an empty *progress file* (`artefacts/progress.md`)
 
-4. Spawn an agent:
+4. Identify ticket:
+   - Read the plan file(s) and progress file
+   - Pick one ticket — the most important one that's not blocked. It may not be the top-most ticket
+   - Pick only one ticket, never pick more than one
+
+5. Spawn an agent:
    - Read the `<prompt-template>` below
    - **Critical:** Use prompt template exactly as written. Do not paraphrase. Only perform these text replacements:
+     - Replace `{{TICKET}}` → the identified ticket (ID and title)
      - Replace `artefacts/progress.md` → custom progress path (if provided)
      - Replace `artefacts/plan.md` → custom plan path(s) (if provided)
      - Prepend additional instructions (if provided)
      - Ensure all plan files listed (add "Read *{filename}*" for each)
    - Spawn a NEW @general-opus agent with the prompt template as prompt
 
-5. Verify commit:
+6. Verify commit:
    - Verify that the agent created a git commit, create one if it didn't
    - Verify that commit message references exactly one ticket ID (e.g., T01, T-02). If multiple found, stop and notify user
 
-6. Assess completeness:
-   - If agent outputs `<progress>PLAN_FINISHED</progress>`, stop successfully
-   - If agent outputs `<progress>PLAN_IN_PROGRESS</progress>`, repeat step 4
-   - If 10 iterations reached, create summary in progress.md and notify user
+7. Assess completeness:
+   - Check if there are any tickets requiring action after this
+   - If there are none, stop successfully
+   - If work remains, repeat step 4
+   - If 20 iterations reached, create summary in progress.md and notify user
 
-7. Error handling:
+8. Error handling:
    - If agent fails: check for partial work, verify any commits, update progress with error state
    - Critical failures (file not found, corrupted plan): stop and notify user
    - Non-critical failures: document in progress.md and continue next iteration
@@ -55,40 +62,28 @@ Important reminders:
    - Read *progress file* (`artefacts/progress.md`)
    - Read *plan file(s)* (`artefacts/plan.md`)
 
-2. Identify ticket
-   - Pick one ticket - the most important one that's not blocked. It may not be the top-most ticket
-   - Pick only one ticket, never pick more than one
-
-3. Do task
-   - Do the identified ticket
+2. Do ticket
+   - Ticket: {{TICKET}}
    - See guidelines below
-   - Proceed to next step as soon as the ticket is done, don't proceed to other tickets
+   - Proceed to step 3 as soon as the ticket is done, don't proceed to other tickets
 
-4. Verify work
-   - If available, use *review-with-subagent* skill with @general agent
-   - Make judgement call on which of its feedback to address
+3. Verify work
+   - Stage updates in Git (git add)
+   - Ask @general-opus agent to use $review-changes skill. Ask it to review staged changes (git diff --cached).
+   - Assess feedback. Address any P1 issues that makes sense to do.
+   - If there was feedback, ask reviews again, then address again. Keep looping until there are no more changes to do.
 
-5. Mark progress
-   - Update *plan file* to mark ticket as done:
-     - eg, Change `### T-01: Title` to `### ✓ T-01: Title (Done)`
-   - Ensure all acceptance criteria checkboxes are checked: `- [x]`
-
-6. Verify single ticket scope
+4. Verify single ticket scope
    - Confirm you only modified files related to ONE ticket
    - If you touched multiple tickets, undo changes and redo with single ticket focus
 
-7. Document learnings
+5. Document learnings
    - Assess the conversation, summarise work done, include assumptions flagged
    - Identify potential roadblocks that future dev work might encounter (eg, errors, wrong decisions)
    - Append them to *progress file* (create if it doesn't exist) - this is to assist future work
 
-8. Commit changes
+6. Commit changes
    - Include ticket ID in commit title
-
-9. Assess completeness
-   - Check if there are any tickets requiring action after this
-   - If there are none, output: `<progress>PLAN_FINISHED</progress>`
-   - If work remains, output: `<progress>PLAN_IN_PROGRESS</progress>`
 
 Code writing guidelines:
 

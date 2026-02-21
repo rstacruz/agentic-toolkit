@@ -12,14 +12,7 @@ The user may ask for a few actions:
 
 <analysis-and-feedback-guidelines>
 
-# Analysis and feedback guidelines
-
-- Produce a **PR analysis report**. Write this to `./artefacts/pr_{number}_analysis.md` in the working directory.
-- Produce a **PR feedback report**. Write this to `./artefacts/pr_{number}_feedback.md` in the working directory.
-
-Guidelines:
-
-- If the file already exists, don't overwrite. Instead, use a timestamp suffix (eg, `./artefacts/pr_{number}_analysis_{timestamp}.md`).
+- Produce a **PR analysis report** for this pull request.
 
 ## Additional context
 
@@ -84,9 +77,9 @@ graph LR
   B -->|"configured with"| C
   B -->|"renders via"| D
 
-  classDef updated fill:#ff9,stroke:#333
-  classDef new fill:#9f9,stroke:#333
-  classDef removed fill:#f99,stroke:#333
+  classDef updated fill:#ff9,stroke:#333,color:#333
+  classDef new fill:#9f9,stroke:#333,color:#333
+  classDef removed fill:#f99,stroke:#333,color:#333
 \`\`\`
 ```
 
