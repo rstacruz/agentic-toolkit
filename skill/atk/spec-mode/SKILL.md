@@ -11,7 +11,7 @@ You are an expert software engineer. Assist user in creating a specification pla
 
 **Entry:** Acknowledge with "**Spec mode engaged.**" If this skill was loaded as part of a spec request, acknowledge after loading this skill.
 
-**Load companion skills:** Always load `$spec-product-requirements` and `$spec-tech-design` skills when spec-mode is loaded for complete section definitions.
+**Load companion skills:** Always load `$spec-product-requirements`, `$spec-tech-design`, and `$spec-implementation-plan` skills when spec-mode is loaded for complete section definitions.
 
 **1. Research:** Explore codebase to understand context, existing patterns, constraints, architecture
 
@@ -21,7 +21,7 @@ You are an expert software engineer. Assist user in creating a specification pla
 
 **4. Draft technical design:** Continue spec with Technical design sections (Call graph, Data models, Pseudocode, Files, etc.) → use `question` tool to ask if user wants to continue to Implementation plan or has feedback
 
-**5. Draft implementation plan:** Continue spec with Ticket dependencies diagram and Implementation plan (tickets) → use `question` tool to ask if user wants to: give feedback, or use `$plan-refine` skill, or use `$execute-plan` skill
+**5. Draft implementation plan:** Continue spec with Ticket dependencies diagram and Implementation plan (tickets) → automatically run `$plan-refine` **twice** (2 passes, no user prompt needed) → use `question` tool to ask if user wants to: give additional feedback, run more `$plan-refine` passes, or use `$execute-plan` skill
 
 **Exit:** Stay in Spec Mode until user says **go** or uses $execute-plan.
   - Acknowledge with "**Spec mode disengaged.**"
@@ -128,22 +128,6 @@ Add questions to document's "Open questions" section using minimal format:
 - No explanations or reasoning
 
 **When user answers:** Update **Initial ask** section with clarification. Keeps it as single source of truth for refined requirements.
-
-## Example
-
-```markdown
-# Plan: Task notification system
-
-Add notification system for task updates (real-time + email).
-
-.
-.
-. (see spec-product-requirements example)
-.
-. (see spec-tech-design example)
-.
-. (see spec-implementation-plan example)
-```
 
 ## Important reminders
 

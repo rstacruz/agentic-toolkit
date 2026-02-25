@@ -1,6 +1,6 @@
 ---
 name: execute-plan
-description: "Execute a plan"
+description: Executes a plan in a ticket-by-ticket basis.
 ---
 
 1. Find the plan:
@@ -18,28 +18,43 @@ description: "Execute a plan"
 3. Prepare:
    - Create an empty *progress file* (`artefacts/progress.md`)
 
-4. Proceed:
-   - Proceed with implementing the plan.
-   - Do one ticket.
-   - Before starting each ticket:
-     - Read the *plan file* and *progress file* again. This ensures we're working with updated copies.
-   - After finishing each ticket:
-     - Ask a @general-opus agent to use $review-changes skill. Ask it to review the uncommitted changes.
-     - Assess feedback. Address any P1 issues that makes sense to do.
-     - Commit your work. Include the ticket ID in the commit message.
-     - Document learnings:
-       - Assess the conversation, summarise work done, include assumptions flagged
-       - Identify potential roadblocks that future dev work might encounter (eg, errors, wrong decisions)
-       - Append them to *progress file* (create if it doesn't exist) - this is to assist future work
+4. Identify ticket:
+   - Read the plan file(s) and progress file
+   - Pick one ticket — the most important one that's not blocked. It may not be the top-most ticket
+   - Pick only one ticket, never pick more than one
 
-5. Post-implementation review, when done:
-   - Ask @general-opus and @general-gpt-5-3-codex agents to use $review-changes skill. Ask it to review all changes, starting with the first commit.
-   - Assess feedback. Address any P1 issues that makes sense to do.
-   - If there was feedback, ask reviews again, then address again. Keep looping until there are no more changes to do.
-   - Ask a @general-opus agent to use $refine-tests skill.
-   - Apply recommendations from $refine-tests using @general-opus agent.
+5. Spawn an agent:
+    - Prepare the ticket input: the identified ticket (ID and title)
+    - Prepare the plan path: `artefacts/plan.md` (or custom path if provided)
+    - Prepare the progress path: `artefacts/progress.md` (or custom path if provided)
+    - Spawn a NEW @general-opus agent with this prompt:
+      ```
+      Load the $execute-plan-subagent skill. Pass these inputs:
+      - {{TICKET}}: [ticket ID and title]
+      - {{PLAN_FILE}}: [plan file path]
+      - {{PROGRESS_FILE}}: [progress file path]
+      ```
+    - The subagent will validate inputs and execute the ticket workflow
+
+6. Verify commit:
+   - Verify that the agent created a git commit, create one if it didn't
+   - Verify that commit message references exactly one ticket ID (e.g., T01, T-02). If multiple found, stop and notify user
+
+7. Assess completeness:
+   - Check if there are any tickets requiring action after this
+   - If there are none, stop successfully
+   - If work remains, repeat step 4
+   - If 20 iterations reached, create summary in progress.md and notify user
+
+8. Error handling:
+   - If agent fails: check for partial work, verify any commits, update progress with error state
+   - Critical failures (file not found, corrupted plan): stop and notify user
+   - Non-critical failures: document in progress.md and continue next iteration
 
 Important reminders:
 
 - Always ask for review after ticket - this greatly impacts build quality
-- Always re-read plan and progress files before every ticket - changes from external sources are expected
+- Only 1 ticket per agent. Do not ask agent to do more than 1 ticket
+- Use new agent sessions every iteration (eg, don't reuse session_id)
+- Let the $execute-plan-subagent skill handle all execution details
+

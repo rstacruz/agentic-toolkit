@@ -1,6 +1,7 @@
 ---
 name: review-changes
-description: > Reviews code changes. When using this skill, provide: plan document (eg, PRD, TDD); changed file and locations; git range (if available, eg, "branch...HEAD"). Return recommendations (P1 critical, P2, P3).
+description: >
+  Reviews code changes. When using this skill, provide: plan document (eg, PRD, TDD); changed file and locations; git range (if available, eg, "branch...HEAD"). Return recommendations (P1 critical, P2, P3).
 ---
 
 Review changes and provide feedback on:
