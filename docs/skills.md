@@ -6,39 +6,39 @@ Visual overview of the `skill/atk/` library.
 
 ```mermaid
 graph LR
-  "brainstorm" --> "spec-mode"
-  "spec-mode" --> "spec-product-requirements"
-  "spec-mode" --> "spec-tech-design"
-  "spec-mode" --> "spec-implementation-plan"
-  "spec-mode" --> "plan-refine"
-  "spec-mode" --> "execute-plan"
-  "execute-plan" --> "execute-plan-subagent"
-  "execute-plan-subagent" --> "review-changes"
-  "refine-implementation" --> "review-changes"
+  brainstorm --> specmode["spec-mode"]
+  specmode --> specprod["spec-product-requirements"]
+  specmode --> spectech["spec-tech-design"]
+  specmode --> specimpl["spec-implementation-plan"]
+  specmode --> planrefine["plan-refine"]
+  specmode --> execplan["execute-plan"]
+  execplan --> execsubagent["execute-plan-subagent"]
+  execsubagent --> reviewchanges["review-changes"]
+  refineimpl["refine-implementation"] --> reviewchanges
 
-  subgraph "Brainstorm"
-    "brainstorm"
+  subgraph Brainstorm
+    brainstorm
   end
-  subgraph "Spec"
-    "spec-mode"
-    "spec-product-requirements"
-    "spec-tech-design"
-    "spec-implementation-plan"
-    "plan-refine"
+  subgraph Spec
+    specmode
+    specprod
+    spectech
+    specimpl
+    planrefine
   end
-  subgraph "Execution"
-    "execute-plan"
-    "execute-plan-subagent"
-    "refine-implementation"
+  subgraph Execution
+    execplan
+    execsubagent
+    refineimpl
   end
-  subgraph "Review"
-    "review-changes"
-    "analyse-pr"
-    "refine-tests"
+  subgraph Review
+    reviewchanges
+    analysepr["analyse-pr"]
+    refinetests["refine-tests"]
   end
-  subgraph "Foundation"
-    "coding-practices"
-    "testing-practices"
+  subgraph Foundation
+    codingpractices["coding-practices"]
+    testingpractices["testing-practices"]
   end
 ```
 

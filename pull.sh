@@ -20,5 +20,4 @@ if [[ -d "$SOURCE_DIR/command/atk" ]]; then
 else
   echo "Note: $SOURCE_DIR/command/atk not found, skipping (run push.sh first)"
 fi
-rm -f "$REPO_ROOT/agent/general-opus.md" "$REPO_ROOT/agent/general-gpt-5-3-codex.md"
 rsync -av "$SOURCE_DIR/agent/" "$REPO_ROOT/agent/" --include "general-alpha.md" --include "general-beta.md" --exclude "*"
