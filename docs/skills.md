@@ -57,7 +57,7 @@ graph LR
 
 ### Execution
 
-- [`$execute-plan`](../skill/atk/execute-plan/README.md) — Execute a plan ticket-by-ticket using subagents
+- [`$execute-plan`](../skill/atk/execute-plan/SKILL.md) — Execute a plan ticket-by-ticket using subagents
 - [`$execute-plan-subagent`](../skill/atk/execute-plan-subagent/SKILL.md) — Execute a single ticket; used by `$execute-plan` subagents
 - [`$refine-implementation`](../skill/atk/refine-implementation/SKILL.md) — Review and improve an implementation
 
