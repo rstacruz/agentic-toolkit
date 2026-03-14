@@ -4,7 +4,7 @@ Focus on planning and design before implementation.
 
 **Use when:** Doing something that may take a human 15 mins to do
 
-**Don't use when:** Longer and more complex tasks; use spec-mode instead
+**Don't use when:** Longer and more complex tasks; use `$spec-mode` instead
 
 ## Example: Simple feature
 

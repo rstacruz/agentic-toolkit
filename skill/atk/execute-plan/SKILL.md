@@ -56,5 +56,5 @@ Important reminders:
 - Always ask for review after ticket - this greatly impacts build quality
 - Only 1 ticket per agent. Do not ask agent to do more than 1 ticket
 - Use new agent sessions every iteration (eg, don't reuse session_id)
-- Let the $execute-plan-subagent skill handle all execution details
+- Let the `$execute-plan-subagent` skill handle all execution details
 

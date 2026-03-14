@@ -96,4 +96,4 @@ Example:
 
 ## Related
 
-- `spec-mode` - for more complex work
+- `$spec-mode` - for more complex work

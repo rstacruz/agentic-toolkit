@@ -78,4 +78,4 @@ publishPost(post) # [🟢 NEW]
   if post.content.length < 100: throw error
 ```
 
-**Related:** [`analyse-and-review-pr`](../analyse-and-review-pr/), [`mermaid-diagrams`](../mermaid-diagrams/)
+**Related:** [`analyse-pr`](../../atk/analyse-pr/), [`mermaid-diagrams`](../mermaid-diagrams/)

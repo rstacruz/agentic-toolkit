@@ -26,7 +26,7 @@ Systematically examine tests across 4 dimensions:
 - **Low-value** — redundant, brittle, or trivial tests to remove (§2 criteria)
 - **Gaps** — missing branches, errors, edge cases, integration coverage (§3 criteria)
 - **Quality** — weak assertions, missing negative cases (§4)
-- **Readability** — apply testing-practices guidelines TP1-TP3 (§5)
+- **Readability** — apply `$testing-practices` guidelines TP1-TP3 (§5)
 
 ## Output format
 
@@ -94,7 +94,7 @@ Provide actionable summary with quantifiable impact:
 ## Notes
 
 - Use git commands to identify test files: `git diff origin/main...HEAD --name-only | grep -E '\.(test|spec)\.'`
-- Reference testing-practices skill for detailed TP guidelines
+- Reference `$testing-practices` skill for detailed TP guidelines
 
 ## Example output
 

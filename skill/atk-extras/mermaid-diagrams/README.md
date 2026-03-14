@@ -48,4 +48,4 @@ Guidelines for creating valid Mermaid diagrams and avoiding syntax errors.
 
 **Shapes:** Consider different shapes for clarity — `(Rounded)`, `([Pill])`, `[(Database)]`, `@{ shape: cloud }`
 
-**Related:** [`explain-code`](../explain-code/), [`analyse-and-review-pr`](../analyse-and-review-pr/)
+**Related:** [`explain-code`](../explain-code/), [`analyse-pr`](../../atk/analyse-pr/)
