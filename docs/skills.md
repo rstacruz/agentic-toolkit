@@ -33,7 +33,6 @@ graph LR
   end
   subgraph Review
     reviewchanges
-    analysepr["analyse-pr"]
     refinetests["refine-tests"]
   end
   subgraph Foundation
@@ -65,7 +64,6 @@ graph LR
 ### Review
 
 - [`$review-changes`](../skill/atk/review-changes/SKILL.md) — Review code changes against a plan (P1/P2/P3 recommendations)
-- [`$analyse-pr`](../skill/atk/analyse-pr/README.md) — Analyse a pull request
 - [`$refine-tests`](../skill/atk/refine-tests/SKILL.md) — Identify redundant tests, coverage gaps, improvement opportunities
 
 ### Foundation
