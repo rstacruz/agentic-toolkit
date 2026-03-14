@@ -17,4 +17,4 @@ use $execute-plan skill with @artefacts/plan-my-feature.md
 3. Verifies the commit references the ticket ID
 4. Repeats until all tickets are done
 
-**Related:** [`execute-plan-subagent`](../execute-plan-subagent/), [`plan-refine`](../plan-refine/)
+**Related:** [`execute-plan-subagent`](../execute-plan-subagent/), [`refine-plan`](../refine-plan/)

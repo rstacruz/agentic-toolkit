@@ -10,7 +10,7 @@ graph LR
   specmode --> specprod["spec-product-requirements"]
   specmode --> spectech["spec-tech-design"]
   specmode --> specimpl["spec-implementation-plan"]
-  specmode --> planrefine["plan-refine"]
+  specmode --> refineplan["refine-plan"]
   specmode --> execplan["execute-plan"]
   execplan --> execsubagent["execute-plan-subagent"]
   execsubagent --> reviewchanges["review-changes"]
@@ -24,7 +24,7 @@ graph LR
     specprod
     spectech
     specimpl
-    planrefine
+    refineplan
   end
   subgraph Execution
     execplan
@@ -54,7 +54,7 @@ graph LR
 - [`$spec-product-requirements`](../skill/atk/spec-product-requirements/SKILL.md) — Define functional/technical requirements sections
 - [`$spec-tech-design`](../skill/atk/spec-tech-design/SKILL.md) — Define technical design — call graphs, data models, pseudocode
 - [`$spec-implementation-plan`](../skill/atk/spec-implementation-plan/SKILL.md) — Break features into smaller, reviewable tickets
-- [`$plan-refine`](../skill/atk/plan-refine/SKILL.md) — Refine a plan with subagents
+- [`$refine-plan`](../skill/atk/refine-plan/SKILL.md) — Refine a plan with subagents
 
 ### Execution
 

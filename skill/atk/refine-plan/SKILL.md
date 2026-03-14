@@ -1,5 +1,5 @@
 ---
-name: plan-refine
+name: refine-plan
 description: "Refine a plan with subagents"
 ---
 
