@@ -23,7 +23,7 @@ Ready when you have clarity on:
 **When done:** after giving the full plan seed:
 
 - Write to `artefacts/seed-<title>.md`
-- use the *question* tool to ask if the user wants to:
+- use the `question` tool to ask if the user wants to:
   - Start `$spec-mode` to make a full implementation plan, or
   - Give their own feedback
 
@@ -31,4 +31,4 @@ Ready when you have clarity on:
 
 Guidelines:
 - Do not implement the change. Instead, see "when done" above.
-- Always use the *question* tool when requiring user input.
+- Always use the `question` tool when requiring user input.
