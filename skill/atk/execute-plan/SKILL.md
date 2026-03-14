@@ -27,7 +27,7 @@ description: Executes a plan in a ticket-by-ticket basis.
     - Prepare the ticket input: the identified ticket (ID and title)
     - Prepare the plan path: `artefacts/plan.md` (or custom path if provided)
     - Prepare the progress path: `artefacts/progress.md` (or custom path if provided)
-    - Spawn a NEW @general-opus agent with this prompt:
+    - Spawn a NEW @general-alpha agent with this prompt:
       ```
       Load the $execute-plan-subagent skill. Pass these inputs:
       - {{TICKET}}: [ticket ID and title]
