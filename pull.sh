@@ -15,6 +15,10 @@ fi
 rsync -av --delete "$SOURCE_DIR/skill/atk/" "$REPO_ROOT/skill/atk/"
 rsync -av --delete "$SOURCE_DIR/skill/atk-extras/" "$REPO_ROOT/skill/atk-extras/"
 mkdir -p "$REPO_ROOT/command/atk"
-rsync -av --delete "$SOURCE_DIR/command/atk/" "$REPO_ROOT/command/atk/"
+if [[ -d "$SOURCE_DIR/command/atk" ]]; then
+  rsync -av --delete "$SOURCE_DIR/command/atk/" "$REPO_ROOT/command/atk/"
+else
+  echo "Note: $SOURCE_DIR/command/atk not found, skipping (run push.sh first)"
+fi
 rm -f "$REPO_ROOT/agent/general-opus.md" "$REPO_ROOT/agent/general-gpt-5-3-codex.md"
 rsync -av "$SOURCE_DIR/agent/" "$REPO_ROOT/agent/" --include "general-alpha.md" --include "general-beta.md" --exclude "*"

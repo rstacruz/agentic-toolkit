@@ -1,6 +1,5 @@
 ---
 mode: subagent
-# model: github-copilot/gpt-5.3-codex
 model: openai/gpt-5.3-codex
 reasoningEffort: high
 description: >-
