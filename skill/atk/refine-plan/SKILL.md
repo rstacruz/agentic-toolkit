@@ -1,5 +1,5 @@
 ---
-name: plan-refine
+name: refine-plan
 description: "Refine a plan with subagents"
 ---
 
@@ -7,7 +7,7 @@ description: "Refine a plan with subagents"
    - Find the plan file. It may be mentioned previously in the conversation, or ask the user if it can't be found.
    - Ensure that the plan file is on the disk as an .md file. If not, write it to artefacts/<title>.md first.
 
-1. Ask both @general-opus and @general-openai-gpt-5-3-codex-high to review the plan.
+1. Ask both @general-alpha and @general-beta to review the plan.
 
 3. Make a judgment call on what advice to address.
 

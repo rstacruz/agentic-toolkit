@@ -47,4 +47,4 @@ Maximize information density. Remove fluff.
 
 **After:** Dashboard: name, email, last_login per user. Empty state if none.
 
-**Related:** [`plan-mode`](../plan-mode/), [`plan-with-tdd-and-prd`](../plan-with-tdd-and-prd/)
+**Related:** [`plan-mode`](../plan-mode/)

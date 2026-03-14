@@ -1,6 +1,6 @@
 ---
 name: spec-implementation-plan
-description: Gives important guidelines to break down large features into smaller tickets. Companion to spec-mode.
+description: Gives important guidelines to break down large features into smaller tickets. Companion to $spec-mode.
 ---
 
 # Implementation plan

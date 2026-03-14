@@ -12,6 +12,18 @@ if [[ ! -d "${TARGET_DIR}" ]]; then
   exit 1
 fi
 
+# Ensure required subdirectories exist before syncing
+mkdir -p \
+  "${TARGET_DIR}/skill/atk" \
+  "${TARGET_DIR}/skill/atk-extras" \
+  "${TARGET_DIR}/command/atk" \
+  "${TARGET_DIR}/command/atk-extras" \
+  "${TARGET_DIR}/agent"
+
 rsync -av --delete "$REPO_ROOT/skill/atk/" "$TARGET_DIR/skill/atk/"
 rsync -av --delete "$REPO_ROOT/skill/atk-extras/" "$TARGET_DIR/skill/atk-extras/"
-rsync -av "$REPO_ROOT/agent/" "$TARGET_DIR/agent/" --include "general-opus.md" --include "general-gpt-5-3-codex.md" --exclude "*"
+rsync -av --delete "$REPO_ROOT/command/atk/" "$TARGET_DIR/command/atk/"
+rsync -av --delete "$REPO_ROOT/command/atk-extras/" "$TARGET_DIR/command/atk-extras/"
+
+# Don't --delete here to not overwrite user's custom agents
+rsync -av "$REPO_ROOT/agent/" "$TARGET_DIR/agent/" --include "general-alpha.md" --include "general-beta.md" --exclude "*"

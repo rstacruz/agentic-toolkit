@@ -1,6 +1,6 @@
 ---
 name: spec-product-requirements
-description: Gives important guidelines to define product requirements sections (functional requirements, technical requirements, constraints, design considerations, diagrams). Companion to spec-mode.
+description: Gives important guidelines to define product requirements sections (functional requirements, technical requirements, constraints, design considerations, diagrams). Companion to $spec-mode.
 ---
 
 # Product requirements

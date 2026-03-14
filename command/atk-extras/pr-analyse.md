@@ -2,7 +2,7 @@
 description: "Analyse and review a PR"
 ---
 
-Use the *analyse-and-review-pr* skill. Analyse and review the current pull request.
+Use the $analyse-pr skill. Analyse and review the current pull request.
 
 $ARGUMENTS
 

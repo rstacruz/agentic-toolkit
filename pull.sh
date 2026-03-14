@@ -12,7 +12,13 @@ if [[ ! -d "${SOURCE_DIR}" ]]; then
   exit 1
 fi
 
-
 rsync -av --delete "$SOURCE_DIR/skill/atk/" "$REPO_ROOT/skill/atk/"
 rsync -av --delete "$SOURCE_DIR/skill/atk-extras/" "$REPO_ROOT/skill/atk-extras/"
-rsync -av "$SOURCE_DIR/agent/" "$REPO_ROOT/agent/" --include "general-opus.md" --include "general-gpt-5-3-codex.md" --exclude "*"
+
+mkdir -p \
+  "$REPO_ROOT/command/atk" \
+  "$REPO_ROOT/command/atk-extras"
+
+rsync -av --delete "$SOURCE_DIR/command/atk/" "$REPO_ROOT/command/atk/"
+rsync -av --delete "$SOURCE_DIR/command/atk-extras/" "$REPO_ROOT/command/atk-extras/"
+rsync -av --delete "$SOURCE_DIR/agent/" "$REPO_ROOT/agent/" --include "general-alpha.md" --include "general-beta.md" --exclude "*"
