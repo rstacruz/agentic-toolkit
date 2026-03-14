@@ -23,10 +23,4 @@ Not an OpenCode user? These are [Agent Skills](https://https://agentskills.io/ho
 
 ## Quick start
 
-Spec mode will do plan with PRD, technical implementation, tickets, and automatically refine continuously.
-
-> Use spec mode to plan: migrate from useState to Zustand
-
-Execute plans in Ralph-style loop.
-
-> /execute-plan @artefacts/plan-zustand-migration.md
+See [docs/skills.md](./docs/skills.md).

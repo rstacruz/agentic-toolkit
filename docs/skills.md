@@ -1,7 +1,5 @@
 # Skills
 
-Visual overview of the `skill/atk/` library.
-
 ## Skill map
 
 ```mermaid
@@ -70,3 +68,11 @@ graph LR
 
 - [`$coding-practices`](../skill/atk/coding-practices/SKILL.md) — Core coding guidelines (functional core, result patterns, components)
 - [`$testing-practices`](../skill/atk/testing-practices/SKILL.md) — Core testing guidelines (readability, quality, constants)
+
+## Quick start 
+
+Start with the brainstorm skill or command.
+
+```
+/brainstorm i want to implement config via c12 npm package
+```
