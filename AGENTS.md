@@ -4,3 +4,17 @@
 - [Specification](https://agentskills.io/specification.md): The complete format specification for Agent Skills.
 - [What are skills?](https://agentskills.io/what-are-skills.md): Agent Skills are a lightweight, open format for extending AI agent capabilities with specialized knowledge and workflows.
 
+## Conventions
+
+### Skill references
+
+Use `` `$skill-name` `` format when referencing skills in prose:
+
+- `` `$brainstorm` ``, `` `$spec-mode` ``, `` `$execute-plan` ``
+
+### Agent references
+
+Use `@agent-name` format when referencing agents:
+
+- `@general-alpha`, `@general-beta`
+
