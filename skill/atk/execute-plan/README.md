@@ -1,22 +1,20 @@
-# Ralph loop
+# execute-plan
 
-Iteratively implement features from a PRD using a ticket-by-ticket feedback loop.
+Execute a plan in a ticket-by-ticket loop using subagents.
 
-See: <https://ghuntley.com/ralph/>
+## Usage
 
-1. Create a PRD with tickets ([`plan-with-tdd-and-prd`](../plan-with-tdd-and-prd/) ca help)
-2. Say `proceed with plan using *ralph-loop*`
-
-Examples:
+Start with a plan file (e.g. from `$spec-mode`):
 
 ```
-# simple:
-proceed with @artefacts/prd-my-feature.md using *ralph-loop*
-
-# advanced with preamble
-proceed with @artefacts/prd-my-feature.md using *ralph-loop*, max 5 iterations
-
-include preamble: use design-guidelines skill, use devtools on localhost:3000 on browser verification
+use $execute-plan skill with @artefacts/plan-my-feature.md
 ```
 
-**Related:** [`plan-with-tdd-and-prd`](../plan-with-tdd-and-prd/), [`verify-implementation`](../verify-implementation/)
+## How it works
+
+1. Reads the plan and picks the next unblocked ticket
+2. Spawns `@general-alpha` agent loaded with `$execute-plan-subagent`
+3. Verifies the commit references the ticket ID
+4. Repeats until all tickets are done
+
+**Related:** [`execute-plan-subagent`](../execute-plan-subagent/), [`plan-refine`](../plan-refine/)
