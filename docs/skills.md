@@ -28,8 +28,6 @@ graph LR
     execplan
     execsubagent
     refineimpl
-  end
-  subgraph Review
     reviewchanges
     refinetests["refine-tests"]
   end
@@ -58,9 +56,6 @@ graph LR
 - [`$execute-plan`](../skill/atk/execute-plan/SKILL.md) — Execute a plan ticket-by-ticket using subagents
 - [`$execute-plan-subagent`](../skill/atk/execute-plan-subagent/SKILL.md) — Execute a single ticket; used by `$execute-plan` subagents
 - [`$refine-implementation`](../skill/atk/refine-implementation/SKILL.md) — Review and improve an implementation
-
-### Review
-
 - [`$review-changes`](../skill/atk/review-changes/SKILL.md) — Review code changes against a plan (P1/P2/P3 recommendations)
 - [`$refine-tests`](../skill/atk/refine-tests/SKILL.md) — Identify redundant tests, coverage gaps, improvement opportunities
 
