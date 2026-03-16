@@ -17,9 +17,10 @@ Ask clarifying questions, point out blind spots, suggest changes.
 
 Ready for planning when you have clarity on:
 
-- What problem is being solved (for whom, why it matters)
+- What problem is being solved (for whom)
 - What success looks like (measurable or demonstrable outcomes)
 - What is in/out of scope (explicit boundaries)
+- Why this problem is important to solve — always ask the user using the `question` tool; suggest reasons for the user to pick from or refine; never infer or fill this in yourself
 
 Ready for execution (all planning criteria, plus):
 
