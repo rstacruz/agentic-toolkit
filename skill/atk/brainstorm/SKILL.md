@@ -34,8 +34,14 @@ Ready for execution (all planning criteria, plus):
 
 - Write to `artefacts/seed-<title>.md`
 - use the `question` tool to ask if the user wants to:
-  - (`READY_FOR_PLANNING`) Start `$spec-mode` to make a full implementation plan
-  - (`READY_FOR_EXECUTION`) Start `$implement-spec` directly, start `$spec-mode` instead, use `$refine-spec` to refine it here, `$spec-implementation-plan` to break it into smaller tasks
+  - when `READY_FOR_PLANNING`:
+    - Create a spec (via `$spec-mode`), or 
+    - Refine the seed using subagents (via `$refine-spec`)
+  - when `READY_FOR_EXECUTION`:
+    - Implement right away (via `$implement-spec`), or 
+    - Create a spec (via `$spec-mode`), or 
+    - Refine the seed using subagents (via `$refine-spec`), or 
+    - Break into tasks (via  `$spec-implementation-plan`)
 
 **Plan seed definition:** A concise document that communicates intent clearly enough to hand off to a planner — without being a plan itself.
 
