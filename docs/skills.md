@@ -8,11 +8,11 @@ graph LR
   specmode --> specprod["spec-product-requirements"]
   specmode --> spectech["spec-tech-design"]
   specmode --> specimpl["spec-implementation-plan"]
-  specmode --> refineplan["refine-plan"]
-  specmode --> execplan["execute-plan"]
-  execplan --> execsubagent["execute-plan-subagent"]
-  execplan --> refineimpl
-  execsubagent --> reviewchanges["review-changes"]
+  specmode --> refinespec["refine-spec"]
+  specmode --> implspec["implement-spec"]
+  implspec --> implsubagent["implement-spec-subagent"]
+  implspec --> refineimpl
+  implsubagent --> reviewchanges["review-changes"]
   refineimpl["refine-implementation"] --> reviewchanges
   refineimpl --> simplify["simplify"]
 
@@ -24,11 +24,11 @@ graph LR
     specprod
     spectech
     specimpl
-    refineplan
+    refinespec
   end
   subgraph Execution
-    execplan
-    execsubagent
+    implspec
+    implsubagent
     refineimpl
     reviewchanges
     refinetests["refine-tests"]
@@ -51,14 +51,14 @@ graph LR
 - [`$spec-product-requirements`](../skill/atk/spec-product-requirements/SKILL.md) — Define functional/technical requirements sections
 - [`$spec-tech-design`](../skill/atk/spec-tech-design/SKILL.md) — Define technical design — call graphs, data models, pseudocode
 - [`$spec-implementation-plan`](../skill/atk/spec-implementation-plan/SKILL.md) — Break features into smaller, reviewable tickets
-- [`$refine-plan`](../skill/atk/refine-plan/SKILL.md) — Refine a plan with subagents
+- [`$refine-spec`](../skill/atk/refine-spec/SKILL.md) — Refine a spec with subagents
 
 ### Execution
 
-- [`$execute-plan`](../skill/atk/execute-plan/SKILL.md) — Execute a plan ticket-by-ticket using subagents
-- [`$execute-plan-subagent`](../skill/atk/execute-plan-subagent/SKILL.md) — Execute a single ticket; used by `$execute-plan` subagents
+- [`$implement-spec`](../skill/atk/implement-spec/SKILL.md) — Implement a spec ticket-by-ticket using subagents
+- [`$implement-spec-subagent`](../skill/atk/implement-spec-subagent/SKILL.md) — Implement a single ticket; used by `$implement-spec` subagents
 - [`$refine-implementation`](../skill/atk/refine-implementation/SKILL.md) — Review and improve an implementation
-- [`$review-changes`](../skill/atk/review-changes/SKILL.md) — Review code changes against a plan (P1/P2/P3 recommendations)
+- [`$review-changes`](../skill/atk/review-changes/SKILL.md) — Review code changes against the spec (P1/P2/P3 recommendations)
 - [`$refine-tests`](../skill/atk/refine-tests/SKILL.md) — Identify redundant tests, coverage gaps, improvement opportunities
 
 ### Foundation

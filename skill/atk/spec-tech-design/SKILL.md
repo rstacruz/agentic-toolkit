@@ -6,8 +6,8 @@ description: Gives important guidelines to define technical design sections (cal
 # Tech design
 
 **Process:**
-- If plan exists in a file: Update that file with sections below
-- If plan is not in a file: Create `artefacts/plan-{title}.md` with sections below
+- If spec exists in a file: Update that file with sections below
+- If spec is not in a file: Create `artefacts/spec-{title}.md` with sections below
 
 ## Sections
 
