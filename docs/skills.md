@@ -58,7 +58,7 @@ graph LR
 - [`$implement-spec`](../skill/atk/implement-spec/SKILL.md) — Implement a spec ticket-by-ticket using subagents
 - [`$implement-spec-subagent`](../skill/atk/implement-spec-subagent/SKILL.md) — Implement a single ticket; used by `$implement-spec` subagents
 - [`$refine-implementation`](../skill/atk/refine-implementation/SKILL.md) — Review and improve an implementation
-- [`$review-changes`](../skill/atk/review-changes/SKILL.md) — Review code changes against a plan (P1/P2/P3 recommendations)
+- [`$review-changes`](../skill/atk/review-changes/SKILL.md) — Review code changes against the spec (P1/P2/P3 recommendations)
 - [`$refine-tests`](../skill/atk/refine-tests/SKILL.md) — Identify redundant tests, coverage gaps, improvement opportunities
 
 ### Foundation
