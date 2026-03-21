@@ -27,4 +27,4 @@ Rate readiness after each exchange:
 
 **Plan seed:** A concise document communicating intent clearly enough to hand off to a planner — not a plan itself.
 
-Always use the `question` tool when needing user input. Never end a message without it — responses via this tool don't count against request quotas.
+Always use the `question` tool whenever you need user input.
