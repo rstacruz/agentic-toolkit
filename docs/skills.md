@@ -73,3 +73,10 @@ Start with the brainstorm skill or command.
 ```
 /brainstorm i want to implement config via c12 npm package
 ```
+
+## Examples
+
+Concrete examples of skill outputs using a rate-limiting middleware scenario:
+
+- [`example-seed.md`](./example-seed.md) — example plan seed produced by `$brainstorm`
+- [`example-spec.md`](./example-spec.md) — example full spec (PRD + TDD + tickets) produced by `$spec-mode`
