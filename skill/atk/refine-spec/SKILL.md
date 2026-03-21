@@ -1,6 +1,6 @@
 ---
 name: refine-spec
-description: "Refine a spec with subagents"
+description: "Refine a spec or plan seed with subagents"
 ---
 
 1. Find the spec:

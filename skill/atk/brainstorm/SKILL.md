@@ -30,9 +30,7 @@ Ready for execution (all planning criteria, plus):
 - **Single deliverable** — expressible as one concrete task, not a breakdown of sub-tasks
 - **Low risk / reversible** — no side effects on other systems or components
 
-**When done:** after giving the full plan seed:
-
-- Write to `artefacts/seed-<title>.md`
+**When done:** write the full plan seed to `artefacts/seed-<title>.md`. Do not repeat the seed content in the reply — respond with only the filename.
 - use the `question` tool to ask if the user wants to:
   - when `READY_FOR_PLANNING`:
     - Create a spec (via `$spec-mode`), or 
