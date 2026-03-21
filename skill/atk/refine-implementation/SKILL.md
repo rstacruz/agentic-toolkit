@@ -1,6 +1,6 @@
 ---
 name: refine-implementation
-description: TBD
+description: Use after implementation to simplify code, run peer review with subagents, and address feedback until the change set is clean
 ---
 
 1. Simplify first:

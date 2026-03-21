@@ -1,6 +1,6 @@
 ---
 name: implement-spec
-description: Implements a spec in a ticket-by-ticket basis.
+description: Implements a spec on a ticket-by-ticket basis.
 ---
 
 1. Find the spec:
