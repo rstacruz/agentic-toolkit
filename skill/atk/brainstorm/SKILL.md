@@ -3,46 +3,28 @@ name: brainstorm
 description: Help the user develop a vague idea into a "plan seed" — a scoped, handoff-ready statement of intent
 ---
 
-The user shares a rough idea. Your job: guide them to a **plan seed** through targeted questioning.
+The user shares a rough idea. Guide them to a **plan seed** through targeted questioning — ask about intent, scope, and success criteria; point out blind spots; suggest alternative framings.
 
-Ask clarifying questions, point out blind spots, suggest changes.
+Rate readiness after each exchange:
+- `NEEDS_REFINEMENT` — critical gaps remain. State which gaps and ask 1-2 follow-up questions.
+- `READY_FOR_PLANNING` — all planning criteria met. Produce the plan seed immediately.
+- `READY_FOR_EXECUTION` — all planning + execution criteria met. Produce the plan seed immediately.
 
-- Ask clarifying questions about intent, scope, and success criteria
-- Point out blind spots or unstated assumptions
-- Suggest changes or alternative framings
-- Rate readiness after each exchange:
-   - `NEEDS_REFINEMENT` — critical gaps remain. State which gaps and ask 1-2 follow-up questions
-   - `READY_FOR_PLANNING` — criteria below are met. Confirm with user before producing the plan seed.
-   - `READY_FOR_EXECUTION` — all planning criteria met AND execution criteria below are met. Confirm with user before producing the plan seed.
-
-Ready for planning when you have clarity on:
-
+**Planning criteria:**
 - What problem is being solved (for whom)
 - What success looks like (measurable or demonstrable outcomes)
 - What is in/out of scope (explicit boundaries)
-- Why this problem is important to solve — always ask the user using the `question` tool; suggest reasons for the user to pick from or refine; never infer or fill this in yourself
+- Why this problem is important — always ask the user via the `question` tool; suggest reasons to pick from; never infer it yourself
 
-Ready for execution (all planning criteria, plus):
-
+**Execution criteria** (all planning criteria, plus):
 - **Implementation path is obvious** — no design decisions remain; a competent engineer could start immediately
-- **Scope is narrow** — touches a single file or a tightly bounded area; no cross-cutting concerns
-- **No new abstractions** — no new data models, APIs, or architectural patterns needed
-- **Single deliverable** — expressible as one concrete task, not a breakdown of sub-tasks
-- **Low risk / reversible** — no side effects on other systems or components
+- **Scope is narrow** — touches a single file or tightly bounded area; no cross-cutting concerns
+- **Single deliverable** — one concrete task, not a breakdown of sub-tasks
 
-**When done:** write the full plan seed to `artefacts/seed-<title>.md`. Do not repeat the seed content in the reply — respond with only the filename.
-- use the `question` tool to ask if the user wants to:
-  - when `READY_FOR_PLANNING`:
-    - Create a spec (via `$spec-mode`), or 
-    - Refine the seed using subagents (via `$refine-spec`)
-  - when `READY_FOR_EXECUTION`:
-    - Implement right away (via `$implement-spec`), or 
-    - Create a spec (via `$spec-mode`), or 
-    - Refine the seed using subagents (via `$refine-spec`), or 
-    - Break into tasks (via  `$spec-implementation-plan`)
+**When done:** Write the plan seed to `artefacts/seed-<title>.md`. Reply with only the filename, then use the `question` tool to ask what's next:
+- `READY_FOR_PLANNING`: create a spec (`$spec-mode`) or refine with subagents (`$refine-spec`)
+- `READY_FOR_EXECUTION`: implement now (`$implement-spec`), create a spec (`$spec-mode`), refine spec (`$refine-spec`), or break into tasks (`$spec-implementation-plan`)
 
-**Plan seed definition:** A concise document that communicates intent clearly enough to hand off to a planner — without being a plan itself.
+**Plan seed:** A concise document communicating intent clearly enough to hand off to a planner — not a plan itself.
 
-Guidelines:
-- Do not implement the change. Instead, see "when done" above.
-- Always use the `question` tool when requiring user input.
+Always use the `question` tool when needing user input. Never end a message without it — responses via this tool don't count against request quotas.
