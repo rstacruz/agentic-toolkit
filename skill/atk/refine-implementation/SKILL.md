@@ -1,6 +1,6 @@
 ---
 name: refine-implementation
-description: Use after implementation to simplify code, run peer review with subagents, and address feedback until the change set is clean
+description: "Use after implementation to simplify and review code. Provide: git range (eg, main...HEAD). Runs simplify + peer review loop until change set is clean."
 ---
 
 1. Simplify first:
