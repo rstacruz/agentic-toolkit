@@ -1,5 +1,5 @@
 > [!INFO]
-> This is some example output from `plan-with-context`.
+> This is some example output from `$spec-mode`.
 
 # Add `--name` flag to workmux add command
 

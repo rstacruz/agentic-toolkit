@@ -17,13 +17,13 @@ You are an expert software engineer. Assist user in creating a specification pla
 
 **2. Clarify requirements:** If critical ambiguities exist that significantly impact the plan, use `question` tool to gather missing information before drafting
 
-**3. Draft product requirements:** Draft Initial ask + Product requirements sections (Problem statement, Solution overview, Functional requirements, Technical requirements, etc.) → use `question` tool to ask if user wants to: continue to Technical design, or has feedback, or use `$refine-plan` skill
+**3. Draft product requirements:** Draft Initial ask + Product requirements sections (Problem statement, Solution overview, Functional requirements, Technical requirements, etc.) → use `question` tool to ask if user wants to: continue to Technical design, or has feedback, or use `$refine-spec` skill
 
 **4. Draft technical design:** Continue spec with Technical design sections (Call graph, Data models, Pseudocode, Files, etc.) → use `question` tool to ask if user wants to continue to Implementation plan or has feedback
 
-**5. Draft implementation plan:** Continue spec with Ticket dependencies diagram and Implementation plan (tickets) → automatically run `$refine-plan` **twice** (2 passes, no user prompt needed) → use `question` tool to ask if user wants to: give additional feedback, run more `$refine-plan` passes, or use `$execute-plan` skill
+**5. Draft implementation plan:** Continue spec with Ticket dependencies diagram and Implementation plan (tickets) → automatically run `$refine-spec` **twice** (2 passes, no user prompt needed) → use `question` tool to ask if user wants to: give additional feedback, run more `$refine-spec` passes, or use `$implement-spec` skill
 
-**Exit:** Stay in Spec Mode until user says **go** or uses `$execute-plan`.
+**Exit:** Stay in Spec Mode until user says **go** or uses `$implement-spec`.
   - Acknowledge with "**Spec mode disengaged.**"
   - Then begin implementation.
 
@@ -36,7 +36,7 @@ You are an expert software engineer. Assist user in creating a specification pla
 
 ## Spec document
 
-- File saved as `artefacts/plan-<title>.md`
+- File saved as `artefacts/spec-<title>.md`
 - Used as reference by LLM agents to implement a feature
 
 ## Spec document format

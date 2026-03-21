@@ -10,7 +10,7 @@
 
 Use `` `$skill-name` `` format when referencing skills in prose:
 
-- `` `$brainstorm` ``, `` `$spec-mode` ``, `` `$execute-plan` ``
+- `` `$brainstorm` ``, `` `$spec-mode` ``, `` `$implement-spec` ``
 
 ### Agent references
 

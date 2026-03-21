@@ -13,7 +13,7 @@ Update a plan to break down large features into tickets optimized for AI agent e
 
 **Process:**
 - If plan exists in a file: Update that file with sections below
-- If plan is not in a file: Create `artefacts/plan-{title}.md` with sections below
+- If plan is not in a file: Create `artefacts/spec-{title}.md` with sections below
 
 # Output format
 
