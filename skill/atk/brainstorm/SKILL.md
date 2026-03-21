@@ -21,7 +21,7 @@ Rate readiness after each exchange:
 - **Scope is narrow** — touches a single file or tightly bounded area; no cross-cutting concerns
 - **Single deliverable** — one concrete task, not a breakdown of sub-tasks
 
-**When done:** Write the plan seed to `artefacts/seed-<title>.md`. Reply with only the filename, then use the `question` tool to ask what's next:
+**When done:** Write the plan seed to `artefacts/seed-<title>.md`. Reply with the filename, then use the `question` tool to ask what's next:
 - `READY_FOR_PLANNING`: create a spec (`$spec-mode`) or refine with subagents (`$refine-spec`)
 - `READY_FOR_EXECUTION`: implement now (`$implement-spec`), create a spec (`$spec-mode`), refine spec (`$refine-spec`), or break into tasks (`$spec-implementation-plan`)
 
