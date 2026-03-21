@@ -1,11 +1,7 @@
 ---
 name: review-changes
-description: Use when reviewing code changes against a plan — returns P1/P2/P3 recommendations on alignment, quality, bugs, and security
+description: "Use when reviewing code changes against a plan. Provide: plan/spec doc; git range or changed files (eg, branch...HEAD). Returns P1/P2/P3 on alignment, quality, bugs, security."
 ---
-
-**When invoking, provide:**
-- Plan/spec document (PRD, TDD, or spec file)
-- Changed files and locations, or git range (e.g. `branch...HEAD`, `git diff --cached`)
 
 Review changes and provide feedback on:
 
