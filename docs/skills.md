@@ -11,8 +11,10 @@ graph LR
   specmode --> refineplan["refine-plan"]
   specmode --> execplan["execute-plan"]
   execplan --> execsubagent["execute-plan-subagent"]
+  execplan --> refineimpl
   execsubagent --> reviewchanges["review-changes"]
   refineimpl["refine-implementation"] --> reviewchanges
+  refineimpl --> simplify["simplify"]
 
   subgraph Brainstorm
     brainstorm

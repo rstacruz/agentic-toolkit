@@ -42,14 +42,19 @@ description: Executes a plan in a ticket-by-ticket basis.
 
 7. Assess completeness:
    - Check if there are any tickets requiring action after this
-   - If there are none, stop successfully
    - If work remains, repeat step 4
    - If 20 iterations reached, create summary in progress.md and notify user
+   - If there are none, continue to step 9
 
 8. Error handling:
    - If agent fails: check for partial work, verify any commits, update progress with error state
    - Critical failures (file not found, corrupted plan): stop and notify user
    - Non-critical failures: document in progress.md and continue next iteration
+
+9. Post-execution polish:
+   - Load and run the `$refine-implementation` skill
+   - Pass the git range as context (e.g., `main...HEAD`) — let the skill use git commands to retrieve the diff; do not pass the diff directly
+   - This step runs once, after all tickets are complete
 
 Important reminders:
 
