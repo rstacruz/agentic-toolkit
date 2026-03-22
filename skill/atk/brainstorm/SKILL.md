@@ -31,6 +31,8 @@ READY_FOR_EXECUTION criteria: All planning criteria, plus the ones below:
 - add code blocks to explain changes (`$spec-tech-design`) or
 - implement now (`$implement-spec`)
 
+**Important:** do NOT modify files other than Markdown files until the user specifically asks to start implementing. The goal is to assist the user in building a seed and a spec.
+
 **Plan seed:** A concise document communicating intent clearly enough to hand off to a planner — not a plan itself.
 
 Always use the `question` tool whenever you need user input.
