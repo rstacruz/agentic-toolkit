@@ -28,10 +28,8 @@ READY_FOR_EXECUTION criteria: All planning criteria, plus the ones below:
 
 - create a spec (`$spec-mode`) or 
 - refine the seed (`$refine-spec`) or
-- implement now (`$implement-spec`) or
-- create a spec (`$spec-mode`) or
-- refine spec (`$refine-spec`) or 
-- add code blocks to explain changes (`$spec-tech-design`)
+- add code blocks to explain changes (`$spec-tech-design`) or
+- implement now (`$implement-spec`)
 
 **Plan seed:** A concise document communicating intent clearly enough to hand off to a planner — not a plan itself.
 
