@@ -43,44 +43,8 @@ LOOP:
   status=failing →
     unchanged_count = 0
     CHANGED_FILES=$(gh pr view {{PR_NUM}} --json files --jq '.files[].path')
-    Spawn ONE @general subagent with ALL failing_run_ids and CHANGED_FILES:
-      """
-      Analyse CI failures for PR #{{PR_NUM}}.
-
-      Files changed by this PR:
-      {{CHANGED_FILES}}
-
-      For each run ID in {{FAILING_RUN_IDS}}, run:
-        gh run view <id> --log-failed
-        gh run view <id> --json jobs,workflowName,headSha,url --jq '{workflowName,headSha,url,jobs:[.jobs[]|{name,conclusion,steps:[.steps[]|select(.conclusion=="failure")|{name,conclusion}]}]}'
-
-      Classify the overall failure set as: branch-related, flaky/infra, OR uncertain.
-
-      CLASSIFICATION SIGNALS
-
-      Strong branch-related signals (if any present → classify branch-related):
-      - Compile, type, build, or lint errors (regardless of which file is reported — errors surface in downstream files too)
-      - Stack traces or error messages referencing files from CHANGED_FILES
-      - New logical assertion failures in code introduced by this PR
-
-      Strong flaky/transient signals: transient infra errors (timeouts, connection refused, resource exhaustion, runner startup failures)
-
-      Weak/ambiguous signals (supporting evidence only — not sufficient alone):
-      - UNKNOWN STEP in logs (can be a gh CLI log-association limitation)
-      - No step logs (can be a gh fetch artifact, not necessarily infra failure)
-      - Test file not in CHANGED_FILES (most real regressions break untouched tests)
-
-      DECISION RULE (conservative — bias toward caution):
-        Any strong branch-related signal present?
-          → branch-related: describe exactly what to fix and in which file(s)
-        Strong flaky/transient signals only, no strong branch-related signals?
-          → flaky/infra: confirm no changed code is implicated
-        Mixed signals or ambiguous?
-          → uncertain: summarise what was found and why it's unclear
-
-      Note: gh run view --log-failed output can be lossy (truncated logs, misattributed steps).
-      If evidence is insufficient for confidence, classify as uncertain.
-      """
+    Spawn ONE @general subagent with {{FAILING_RUN_IDS}} and {{CHANGED_FILES}}.
+    Use the prompt from ## CI failure analysis.
 
     Read classification:
       branch-related →
@@ -106,3 +70,45 @@ LOOP:
 - Emit a progress update only on status changes (pending → failing → pushing, etc.)
 - Emit a heartbeat every 5 unchanged pending polls ("still pending, next check in Xs…")
 - On stop: output a final summary — PR number, final status, commits pushed, retries used
+
+## CI failure analysis
+
+Send this prompt to the subagent, substituting `{{PR_NUM}}`, `{{CHANGED_FILES}}`, and `{{FAILING_RUN_IDS}}`:
+
+```
+Analyse CI failures for PR #{{PR_NUM}}.
+
+Files changed by this PR:
+{{CHANGED_FILES}}
+
+For each run ID in {{FAILING_RUN_IDS}}, run:
+  gh run view <id> --log-failed
+  gh run view <id> --json jobs,workflowName,headSha,url --jq '{workflowName,headSha,url,jobs:[.jobs[]|{name,conclusion,steps:[.steps[]|select(.conclusion=="failure")|{name,conclusion}]}]}'
+
+Classify the overall failure set as: branch-related, flaky/infra, OR uncertain.
+
+CLASSIFICATION SIGNALS
+
+Strong branch-related signals (if any present → classify branch-related):
+- Compile, type, build, or lint errors (regardless of which file is reported — errors surface in downstream files too)
+- Stack traces or error messages referencing files from CHANGED_FILES
+- New logical assertion failures in code introduced by this PR
+
+Strong flaky/transient signals: transient infra errors (timeouts, connection refused, resource exhaustion, runner startup failures)
+
+Weak/ambiguous signals (supporting evidence only — not sufficient alone):
+- UNKNOWN STEP in logs (can be a gh CLI log-association limitation)
+- No step logs (can be a gh fetch artifact, not necessarily infra failure)
+- Test file not in CHANGED_FILES (most real regressions break untouched tests)
+
+DECISION RULE (conservative — bias toward caution):
+  Any strong branch-related signal present?
+    → branch-related: describe exactly what to fix and in which file(s)
+  Strong flaky/transient signals only, no strong branch-related signals?
+    → flaky/infra: confirm no changed code is implicated
+  Mixed signals or ambiguous?
+    → uncertain: summarise what was found and why it's unclear
+
+Note: gh run view --log-failed output can be lossy (truncated logs, misattributed steps).
+If evidence is insufficient for confidence, classify as uncertain.
+```
