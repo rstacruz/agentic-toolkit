@@ -43,7 +43,7 @@ LOOP:
   status=failing →
     unchanged_count = 0
     CHANGED_FILES=$(gh pr view {{PR_NUM}} --json files --jq '.files[].path')
-    Spawn ONE @general-alpha subagent with ALL failing_run_ids and CHANGED_FILES:
+    Spawn ONE @general subagent with ALL failing_run_ids and CHANGED_FILES:
       """
       Analyse CI failures for PR #{{PR_NUM}}.
 
@@ -106,13 +106,3 @@ LOOP:
 - Emit a progress update only on status changes (pending → failing → pushing, etc.)
 - Emit a heartbeat every 5 unchanged pending polls ("still pending, next check in Xs…")
 - On stop: output a final summary — PR number, final status, commits pushed, retries used
-
-## Stop conditions
-
-1. `merged` or `closed`
-2. `passing` — all checks green
-3. Branch-related failure where fix attempt fails or push is rejected
-4. Flaky retry budget (3) exhausted for any run
-5. Unrelated uncommitted changes in worktree
-6. Auth or permission failure (`gh` auth errors, push access denied)
-7. Uncertain classification — subagent cannot confidently classify failure; user must decide
