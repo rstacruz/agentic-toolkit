@@ -42,18 +42,44 @@ LOOP:
 
   status=failing →
     unchanged_count = 0
-    Spawn ONE @general-alpha subagent with ALL failing_run_ids:
+    CHANGED_FILES=$(gh pr view {{PR_NUM}} --json files --jq '.files[].path')
+    Spawn ONE @general-alpha subagent with ALL failing_run_ids and CHANGED_FILES:
       """
       Analyse CI failures for PR #{{PR_NUM}}.
+
+      Files changed by this PR:
+      {{CHANGED_FILES}}
+
       For each run ID in {{FAILING_RUN_IDS}}, run:
         gh run view <id> --log-failed
-      Classify the overall failure set as branch-related OR flaky/infra.
-      - Branch-related: compile errors, test failures, lint violations,
-        type errors in files touched by this branch.
-      - Flaky/infra: network timeouts, runner provisioning failures,
-        GitHub Actions outages, rate limits.
-      If branch-related: describe exactly what to fix and in which file(s).
-      If flaky: confirm no changed code is implicated.
+        gh run view <id> --json jobs,workflowName,headSha,url --jq '{workflowName,headSha,url,jobs:[.jobs[]|{name,conclusion,steps:[.steps[]|select(.conclusion=="failure")|{name,conclusion}]}]}'
+
+      Classify the overall failure set as: branch-related, flaky/infra, OR uncertain.
+
+      CLASSIFICATION SIGNALS
+
+      Strong branch-related signals (if any present → classify branch-related):
+      - Compile, type, build, or lint errors (regardless of which file is reported — errors surface in downstream files too)
+      - Stack traces or error messages referencing files from CHANGED_FILES
+      - New logical assertion failures in code introduced by this PR
+
+      Strong flaky/transient signals: transient infra errors (timeouts, connection refused, resource exhaustion, runner startup failures)
+
+      Weak/ambiguous signals (supporting evidence only — not sufficient alone):
+      - UNKNOWN STEP in logs (can be a gh CLI log-association limitation)
+      - No step logs (can be a gh fetch artifact, not necessarily infra failure)
+      - Test file not in CHANGED_FILES (most real regressions break untouched tests)
+
+      DECISION RULE (conservative — bias toward caution):
+        Any strong branch-related signal present?
+          → branch-related: describe exactly what to fix and in which file(s)
+        Strong flaky/transient signals only, no strong branch-related signals?
+          → flaky/infra: confirm no changed code is implicated
+        Mixed signals or ambiguous?
+          → uncertain: summarise what was found and why it's unclear
+
+      Note: gh run view --log-failed output can be lossy (truncated logs, misattributed steps).
+      If evidence is insufficient for confidence, classify as uncertain.
       """
 
     Read classification:
@@ -61,7 +87,7 @@ LOOP:
         Check worktree: if unrelated uncommitted changes exist → STOP, ask user
         Fix the code
         git add, commit, and push
-        If push rejected (non-fast-forward, protected branch, etc.) → STOP, report
+        If push rejected or auth/permission error → STOP, report
         unchanged_count = 0, loop
 
       flaky/infra →
@@ -70,14 +96,10 @@ LOOP:
           if retry_count[run_id] > 3 → STOP, "Flaky retry budget exhausted: <workflow_name>"
         gh run rerun <run-id> --failed  (for each failing run)
         loop
+
+      uncertain →
+        STOP — report what was found and ask user to classify manually
 ```
-
-## Git safety
-
-- Verify no unrelated uncommitted changes before editing (`git status --short`)
-- Work only on the PR head branch
-- Never force-push; if `git push` is rejected, stop and report the reason
-- Flaky retry budget: 3 per run ID, tracked independently
 
 ## Output cadence
 
@@ -93,3 +115,4 @@ LOOP:
 4. Flaky retry budget (3) exhausted for any run
 5. Unrelated uncommitted changes in worktree
 6. Auth or permission failure (`gh` auth errors, push access denied)
+7. Uncertain classification — subagent cannot confidently classify failure; user must decide
