@@ -3,16 +3,7 @@ name: analyse-pr
 description: Analyse a pull request
 ---
 
-You are a senior software engineer. Your task is to help analyse and review a pull request.
-
-The user may ask for a few actions:
-
-- **"Analyse a PR":** Produce a PR analysis *and* a PR feedback report.
-- **"...inline":** Do not produce Markdown documents, output them in the final message instead.
-
-<analysis-and-feedback-guidelines>
-
-- Produce a **PR analysis report** for this pull request.
+You are a senior software engineer. Produce a **PR analysis report** for this pull request. The goal is to help human reviewers understand the pull request.
 
 ## Additional context
 
@@ -46,6 +37,11 @@ Consider getting context via:
   - Find out what data models are used in this PR. List down if they are _new_, _changed_, or _removed_.
 - Dependency updates (h2):
   - See "### Dependency updates" below
+- Feedback points (h2)
+- Alternatives to consider (h2):
+  - Deduce the purpose of the pull request, and assess if there are alternative solutions to consider.
+- Test breakdown (h2):
+  - Show an annotated version of the tests added or changed. Add comments to what each logical block of code does. Simplify for brevity. The aim is to help human reviewers skim the tests.
 
 ### Call graph
 
@@ -139,12 +135,7 @@ Example format:
   - Changelog: https://github.com/sendgrid/sendgrid-nodejs/releases/tag/v8.0.0
 ```
 
-## PR feedback report
-
-Review the PR and provide a feedback.
-
-- Add feedback points (see below for format).
-- Add dependency update notes (if needed).
+### Feedback points
 
 Look at the changes and provide thoughtful feedback on:
 
@@ -168,7 +159,7 @@ General notes:
 
 Be constructive and specific in your feedback. Give inline comments where applicable.
 
-### Feedback points format
+Example format:
 
 ````
 ## Feedback points
@@ -193,7 +184,6 @@ Be constructive and specific in your feedback. Give inline comments where applic
 - See: `blog/types.ts:12`
 - `post.scheduledDate` is optional but `scheduleForPublication()` doesn't validate it
 - Could result in runtime errors - add validation or make type non-nullable
-
 ````
 
 </analysis-and-feedback-guidelines>
