@@ -18,15 +18,18 @@ description: >
   C["app/[workspace]/layout.tsx"] -->|imports| D["generateDescription"]
   ```
 
-- Don't start labels with `-`. These are interpreted as markdown. Use an alternate bullet instead.
+- Don't start labels with `-`, `*`, or `<number>.`. These are interpreted as markdown. Use an alternate bullet instead.
 
   ```
   %% avoid:
   B["- Title here"]
   B["* Title here"]
+  C -->|"1. item"| D
+
 
   %% ok:
   B["· Title here"]
+  C -->|"(1) item"| D
   ```
   
 - Use `<br>` for line breaks.

@@ -8,11 +8,16 @@ Review all changed files for reuse, quality, and efficiency. Fix any issues foun
 
 ## Phase 1: Identify Changes
 
-Run `git diff` (or `git diff HEAD` if there are staged changes) to see what changed. If there are no git changes, review the most recently modified files that the user mentioned or that you edited earlier in this conversation.
+Based on the conversation history, determine which type of review to perform. Ask the user if unsure. Consider if it might be:
+
+- Files changed in this conversation
+- All uncommitted changes (eg, `git diff --cached`)
+- Branch (eg, `git diff main...HEAD`)
+- Set of commits (eg, `git diff commit1...commitN`)
 
 ## Phase 2: Launch Three Review Agents in Parallel
 
-Use the Agent tool to launch all three agents concurrently in a single message. Pass each agent the full diff so it has the complete context.
+Use the Agent tool to launch all three agents concurrently in a single message. Pass each agent the information on changes (eg, `git diff` command, or list of files and line ranges) so it has the complete context.
 
 ### Agent 1: Code Reuse Review
 

@@ -3,16 +3,9 @@ name: analyse-pr
 description: Analyse a pull request
 ---
 
-You are a senior software engineer. Your task is to help analyse and review a pull request.
+# PR analysis report guidelines
 
-The user may ask for a few actions:
-
-- **"Analyse a PR":** Produce a PR analysis *and* a PR feedback report.
-- **"...inline":** Do not produce Markdown documents, output them in the final message instead.
-
-<analysis-and-feedback-guidelines>
-
-- Produce a **PR analysis report** for this pull request.
+You are a senior software engineer. Produce a **PR analysis report** for this pull request. The goal is to help human reviewers understand the pull request.
 
 ## Additional context
 
@@ -46,6 +39,11 @@ Consider getting context via:
   - Find out what data models are used in this PR. List down if they are _new_, _changed_, or _removed_.
 - Dependency updates (h2):
   - See "### Dependency updates" below
+- Feedback points (h2)
+- Alternatives to consider (h2):
+  - Deduce the purpose of the pull request, and assess if there are alternative solutions to consider.
+- Sequence diagrams (h2):
+  - See "### Sequence diagrams" below
 
 ### Call graph
 
@@ -82,6 +80,64 @@ graph LR
   classDef removed fill:#f99,stroke:#333,color:#333
 \`\`\`
 ```
+
+### Sequence diagrams
+
+Use Mermaid `sequenceDiagram` blocks to illustrate the _before/after behaviour_ of the key change. This is most valuable for bug fixes, race conditions, async flows, or any change where timing/order matters.
+
+Produce 2–3 diagrams:
+
+1. **Before (bug/problem):** Show the broken or old flow that motivated the PR.
+2. **After (happy path):** Show the correct flow introduced by the fix.
+3. **Edge/race case** _(optional)_: Show a notable failure mode or alternative path the fix accounts for.
+
+Place these after the Call graph section.
+
+Guidelines:
+
+- Keep diagrams short — 5–8 steps each. Omit low-level detail not relevant to the change.
+- Label actors with short names matching the actual code entities (services, functions, queues).
+- Use `Note over Actor: text` to annotate key state transitions or decisions.
+- Use `activate`/`deactivate` sparingly — only when call stack depth aids understanding.
+- Quote labels that contain special characters or spaces: `Actor->>Other: "message"`.
+- Consult the `mermaid-diagrams` skill for syntax guidelines if needed.
+
+Example format:
+
+````
+## Sequence diagrams
+
+### Before: double-processing bug
+
+```mermaid
+sequenceDiagram
+  participant Q as Queue
+  participant W1 as Worker 1
+  participant W2 as Worker 2
+  participant DB as Database
+
+  Q->>W1: deliver job
+  Q->>W2: deliver job (duplicate)
+  W1->>DB: write result
+  W2->>DB: write result (conflict)
+  Note over DB: duplicate write / corruption
+```
+
+### After: idempotent processing
+
+```mermaid
+sequenceDiagram
+  participant Q as Queue
+  participant W as Worker
+  participant DB as Database
+
+  Q->>W: deliver job
+  W->>DB: check idempotency key
+  DB-->>W: not seen
+  W->>DB: write result + mark key
+  Note over W: second delivery ignored via key check
+```
+````
 
 ### Pseudocode
 
@@ -139,12 +195,7 @@ Example format:
   - Changelog: https://github.com/sendgrid/sendgrid-nodejs/releases/tag/v8.0.0
 ```
 
-## PR feedback report
-
-Review the PR and provide a feedback.
-
-- Add feedback points (see below for format).
-- Add dependency update notes (if needed).
+### Feedback points
 
 Look at the changes and provide thoughtful feedback on:
 
@@ -168,7 +219,7 @@ General notes:
 
 Be constructive and specific in your feedback. Give inline comments where applicable.
 
-### Feedback points format
+Example format:
 
 ````
 ## Feedback points
@@ -193,7 +244,4 @@ Be constructive and specific in your feedback. Give inline comments where applic
 - See: `blog/types.ts:12`
 - `post.scheduledDate` is optional but `scheduleForPublication()` doesn't validate it
 - Could result in runtime errors - add validation or make type non-nullable
-
 ````
-
-</analysis-and-feedback-guidelines>
