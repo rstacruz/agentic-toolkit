@@ -53,7 +53,7 @@ description: Implements a spec on a ticket-by-ticket basis.
 
 9. Post-execution polish:
    - Load and run the `$refine-implementation` skill
-   - Pass the git range as context (e.g., `main...HEAD`) — let the skill use git commands to retrieve the diff; do not pass the diff directly
+   - Pass both the spec path and the git range as context (e.g., `artefacts/spec.md` and `main...HEAD`) so it can review against the spec and own the final post-polish verification pass
    - This step runs once, after all tickets are complete
 
 Important reminders:
@@ -62,4 +62,3 @@ Important reminders:
 - Only 1 ticket per agent. Do not ask agent to do more than 1 ticket
 - Use new agent sessions every iteration (eg, don't reuse session_id)
 - Let the `$implement-spec-subagent` skill handle all execution details
-
