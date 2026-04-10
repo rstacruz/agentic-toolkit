@@ -6,7 +6,7 @@ description: "Use after implementation to simplify and review code. Provide: git
 1. Determine change set to refine
    - Based on the conversation history, determine which type of review to perform. Ask the user if unsure. Consider if it might be:
       - Files changed in this conversation
-      - All uncommitted changes (eg, `git diff --cached`)
+      - Staged changes (eg, `git diff --cached`)
       - Branch (eg, `git diff main...HEAD`)
       - Set of commits (eg, `git diff commit1...commitN`)
 

@@ -11,7 +11,7 @@ Review all changed files for reuse, quality, and efficiency. Fix any issues foun
 Based on the conversation history, determine which type of review to perform. Ask the user if unsure. Consider if it might be:
 
 - Files changed in this conversation
-- All uncommitted changes (eg, `git diff --cached`)
+- Staged changes (eg, `git diff --cached`)
 - Branch (eg, `git diff main...HEAD`)
 - Set of commits (eg, `git diff commit1...commitN`)
 
@@ -55,5 +55,4 @@ Review the same changes for efficiency:
 Wait for all three agents to complete. Aggregate their findings and fix each issue directly. If a finding is a false positive or not worth addressing, note it and move on — do not argue with the finding, just skip it.
 
 When done, briefly summarize what was fixed (or confirm the code was already clean).
-
 
