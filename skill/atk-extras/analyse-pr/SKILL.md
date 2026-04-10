@@ -3,6 +3,8 @@ name: analyse-pr
 description: Analyse a pull request
 ---
 
+# PR analysis report guidelines
+
 You are a senior software engineer. Produce a **PR analysis report** for this pull request. The goal is to help human reviewers understand the pull request.
 
 ## Additional context
@@ -40,8 +42,8 @@ Consider getting context via:
 - Feedback points (h2)
 - Alternatives to consider (h2):
   - Deduce the purpose of the pull request, and assess if there are alternative solutions to consider.
-- Test breakdown (h2):
-  - Show an annotated version of the tests added or changed. Add comments to what each logical block of code does. Simplify for brevity. The aim is to help human reviewers skim the tests.
+- Sequence diagrams (h2):
+  - See "### Sequence diagrams" below
 
 ### Call graph
 
@@ -78,6 +80,64 @@ graph LR
   classDef removed fill:#f99,stroke:#333,color:#333
 \`\`\`
 ```
+
+### Sequence diagrams
+
+Use Mermaid `sequenceDiagram` blocks to illustrate the _before/after behaviour_ of the key change. This is most valuable for bug fixes, race conditions, async flows, or any change where timing/order matters.
+
+Produce 2–3 diagrams:
+
+1. **Before (bug/problem):** Show the broken or old flow that motivated the PR.
+2. **After (happy path):** Show the correct flow introduced by the fix.
+3. **Edge/race case** _(optional)_: Show a notable failure mode or alternative path the fix accounts for.
+
+Place these after the Call graph section.
+
+Guidelines:
+
+- Keep diagrams short — 5–8 steps each. Omit low-level detail not relevant to the change.
+- Label actors with short names matching the actual code entities (services, functions, queues).
+- Use `Note over Actor: text` to annotate key state transitions or decisions.
+- Use `activate`/`deactivate` sparingly — only when call stack depth aids understanding.
+- Quote labels that contain special characters or spaces: `Actor->>Other: "message"`.
+- Consult the `mermaid-diagrams` skill for syntax guidelines if needed.
+
+Example format:
+
+````
+## Sequence diagrams
+
+### Before: double-processing bug
+
+```mermaid
+sequenceDiagram
+  participant Q as Queue
+  participant W1 as Worker 1
+  participant W2 as Worker 2
+  participant DB as Database
+
+  Q->>W1: deliver job
+  Q->>W2: deliver job (duplicate)
+  W1->>DB: write result
+  W2->>DB: write result (conflict)
+  Note over DB: duplicate write / corruption
+```
+
+### After: idempotent processing
+
+```mermaid
+sequenceDiagram
+  participant Q as Queue
+  participant W as Worker
+  participant DB as Database
+
+  Q->>W: deliver job
+  W->>DB: check idempotency key
+  DB-->>W: not seen
+  W->>DB: write result + mark key
+  Note over W: second delivery ignored via key check
+```
+````
 
 ### Pseudocode
 
@@ -185,5 +245,3 @@ Example format:
 - `post.scheduledDate` is optional but `scheduleForPublication()` doesn't validate it
 - Could result in runtime errors - add validation or make type non-nullable
 ````
-
-</analysis-and-feedback-guidelines>

@@ -51,13 +51,13 @@ graph LR
 - [`$spec-product-requirements`](../skill/atk/spec-product-requirements/SKILL.md) — Define functional/technical requirements sections
 - [`$spec-tech-design`](../skill/atk/spec-tech-design/SKILL.md) — Define technical design — call graphs, data models, pseudocode
 - [`$spec-implementation-plan`](../skill/atk/spec-implementation-plan/SKILL.md) — Break features into smaller, reviewable tickets
-- [`$refine-spec`](../skill/atk/refine-spec/SKILL.md) — Refine a spec with subagents
+- [`$refine-spec`](../skill/atk/refine-spec/SKILL.md) — Pressure-test a spec or plan seed with independent critiques
 
 ### Execution
 
 - [`$implement-spec`](../skill/atk/implement-spec/SKILL.md) — Implement a spec ticket-by-ticket using subagents
 - [`$implement-spec-subagent`](../skill/atk/implement-spec-subagent/SKILL.md) — Implement a single ticket; used by `$implement-spec` subagents
-- [`$refine-implementation`](../skill/atk/refine-implementation/SKILL.md) — Review and improve an implementation
+- [`$refine-implementation`](../skill/atk/refine-implementation/SKILL.md) — Simplify and review an implementation
 - [`$review-changes`](../skill/atk/review-changes/SKILL.md) — Review code changes against the spec (P1/P2/P3 recommendations)
 - [`$refine-tests`](../skill/atk/refine-tests/SKILL.md) — Identify redundant tests, coverage gaps, improvement opportunities
 
