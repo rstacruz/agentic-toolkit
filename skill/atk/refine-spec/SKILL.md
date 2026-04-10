@@ -11,8 +11,7 @@ Pressure-test a spec or plan seed with independent critiques, resolve material i
 
 2. Launch critique passes in parallel:
    - Launch three independent passes in parallel: one @general-alpha pass for alternate solution options, one @general-alpha review pass, and one @general-beta review pass.
-   - Ask the alternate-solutions pass to identify the core problem being solved and come up with alternate solution options.
-   - This is a guardrail against overengineering and helps surface risks in the current spec.
+   - Ask the alternate-solutions pass to identify the core problem being solved and come up with alternate solution options. This is a guardrail against overengineering and helps surface risks in the current spec.
    - Ask the review passes to review the document for ambiguity, execution gaps, risk, and overengineering.
    - Give each reviewer the file path and enough context to read the document directly.
 
