@@ -31,11 +31,6 @@ graph LR
     implsubagent
     refineimpl
     reviewchanges
-    refinetests["refine-tests"]
-  end
-  subgraph Foundation
-    codingpractices["coding-practices"]
-    testingpractices["testing-practices"]
   end
 ```
 
@@ -59,12 +54,6 @@ graph LR
 - [`$implement-spec-subagent`](../skill/atk/implement-spec-subagent/SKILL.md) — Implement a single ticket; used by `$implement-spec` subagents
 - [`$refine-implementation`](../skill/atk/refine-implementation/SKILL.md) — Simplify and review an implementation
 - [`$review-changes`](../skill/atk/review-changes/SKILL.md) — Review code changes against the spec (P1/P2/P3 recommendations)
-- [`$refine-tests`](../skill/atk/refine-tests/SKILL.md) — Identify redundant tests, coverage gaps, improvement opportunities
-
-### Foundation
-
-- [`$coding-practices`](../skill/atk/coding-practices/SKILL.md) — Core coding guidelines (functional core, result patterns, components)
-- [`$testing-practices`](../skill/atk/testing-practices/SKILL.md) — Core testing guidelines (readability, quality, constants)
 
 ## Quick start 
 
