@@ -26,7 +26,7 @@
 **Breaking changes:**
 - **New plan mode** - Replaced `plan+` mode with new `/plan` command and plan-mode workflow
 - **Skills replaces agents** - No more agents, and commands are slimmer now with logic moved to skills
-- **Organised into atk/** - commands now in `command/atk/`, skills in `skill/atk/` for easy updating
+- **Organised into grouped skill directories** - commands and skills were moved into grouped `atk` paths for easier updating at the time
 
 **Added:**
 - Commands: `/plan`, `/reflect`, `/tdd`, `/discover`, `/explain-code`, `/preflight`, `/refine-plan`

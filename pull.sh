@@ -12,12 +12,18 @@ if [[ ! -d "${SOURCE_DIR}" ]]; then
   exit 1
 fi
 
-rsync -av --delete "$SOURCE_DIR/skill/atk/" "$REPO_ROOT/skill/atk/"
-rsync -av --delete "$SOURCE_DIR/skill/atk-extras/" "$REPO_ROOT/skill/atk-extras/"
+if [[ ! -d "${SOURCE_DIR}/skills" ]]; then
+  echo "✗ Error: ${SOURCE_DIR}/skills does not exist"
+  echo "Run the migrated ./push.sh first to install the new skills layout."
+  exit 1
+fi
 
-mkdir -p \
-  "$REPO_ROOT/command/atk" \
+mkdir -p "$REPO_ROOT/skills"
+
+rm -rf \
+  "$REPO_ROOT/skill/atk" \
+  "$REPO_ROOT/skill/atk-extras" \
   "$REPO_ROOT/command/atk-extras"
 
-rsync -av --delete "$SOURCE_DIR/command/atk-extras/" "$REPO_ROOT/command/atk-extras/"
+rsync -av --delete "$SOURCE_DIR/skills/" "$REPO_ROOT/skills/"
 rsync -av --delete "$SOURCE_DIR/agent/" "$REPO_ROOT/agent/" --include "general-alpha.md" --include "general-beta.md" --exclude "*"
