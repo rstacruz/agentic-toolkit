@@ -1,6 +1,6 @@
 ---
-name: refine-implementation
-description: "Use after implementation to simplify and review code. Provide: git range (eg, main...HEAD); spec or plan path is optional supplemental context when available. Runs simplify + peer review loop until change set is clean."
+name: polish
+description: "Use after implementation to simplify and review code. Provide: git range (eg, main...HEAD); spec or plan path is optional supplemental context when available. Runs polish via simplify + peer review loop until change set is clean."
 ---
 
 1. Determine change set to refine

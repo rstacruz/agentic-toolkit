@@ -40,19 +40,28 @@ description: Implements a spec on a ticket-by-ticket basis.
    - Verify that the agent created a git commit, create one if it didn't
    - Verify that commit message references exactly one ticket ID (e.g., T01, T-02). If multiple found, stop and notify user
 
-7. Assess completeness:
+7. Assess progress feedback:
+   - Read the latest entry in `artefacts/progress.md`
+   - Decide whether to:
+     - Continue unchanged when suggestions are informational only
+     - Auto-adjust upcoming ticket order or acceptance criteria when the fix is cheap and low-risk
+     - Make a small plan/spec correction directly when the issue is minor and unambiguous
+     - Pause and ask the user before continuing when the suggestion changes product behavior, widens scope, or reveals unresolved ambiguity
+   - Treat implementation-level fixes as safe to adjust inside the loop; treat behavior or scope changes as user decisions
+
+8. Assess completeness:
    - Check if there are any tickets requiring action after this
    - If work remains, repeat step 4
    - If 20 iterations reached, create summary in progress.md and notify user
-   - If there are none, continue to step 9
+   - If there are none, continue to step 10
 
-8. Error handling:
+9. Error handling:
    - If agent fails: check for partial work, verify any commits, update progress with error state
    - Critical failures (file not found, corrupted spec): stop and notify user
    - Non-critical failures: document in progress.md and continue next iteration
 
-9. Post-execution polish:
-   - Load and run the `$refine-implementation` skill
+10. Post-execution polish:
+   - Load and run the `$polish` skill
    - Pass both the spec path and the git range as context (e.g., `artefacts/spec.md` and `main...HEAD`) so it can review against the spec and own the final post-polish verification pass
    - This step runs once, after all tickets are complete
 
