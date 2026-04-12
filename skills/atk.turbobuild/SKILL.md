@@ -8,18 +8,17 @@ description: Expands a plan into implementation-ready tickets by asking a @gener
    - Ensure the file exists on disk as Markdown before continuing.
 
 2. Expand tickets:
-   - Spawn a NEW @general-alpha agent with a prompt that loads `$spec-implementation-plan`.
+   - Spawn a new @general-alpha agent with a prompt that loads `$spec-implementation-plan`.
    - Pass the plan file path and ask the subagent to strengthen the ticket breakdown in place.
    - Keep the subagent focused on ticket planning only.
 
 3. Execute the plan:
-   - Load and run `$implement-spec` against the updated plan.
+   - Use the `$implement-spec` to implement the plan ticket-by-ticket using subagents.
 
 4. Ask for next steps:
-   - Use the `question` tool to ask what the user wants to do next.
-   - Include a choice to create a PR when appropriate.
+   - When implementation is done, use the `question` tool to ask what the user wants to do next.
+   - Include a choice to create a PR.
 
 Important reminders:
 
-- This skill is a thin wrapper. Do not duplicate the detailed guidance from `$spec-implementation-plan` or `$implement-spec`.
 - If implementation produces scope or behavior changes, pause for user input rather than silently broadening the work.

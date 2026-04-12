@@ -2,9 +2,10 @@
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SOURCE_DIR="${HOME}/.config/opencode"
+SOURCE_DIR="${HOME}/.agents/skills"
+OPENCODE_AGENT_DIR="${HOME}/.config/opencode/agent"
 
-echo "Pulling files from ${SOURCE_DIR}..."
+echo "Pulling skills from ${SOURCE_DIR}..."
 
 # Check if source directory exists
 if [[ ! -d "${SOURCE_DIR}" ]]; then
@@ -12,9 +13,8 @@ if [[ ! -d "${SOURCE_DIR}" ]]; then
   exit 1
 fi
 
-if [[ ! -d "${SOURCE_DIR}/skills" ]]; then
-  echo "✗ Error: ${SOURCE_DIR}/skills does not exist"
-  echo "Run the migrated ./push.sh first to install the new skills layout."
+if [[ ! -d "${OPENCODE_AGENT_DIR}" ]]; then
+  echo "✗ Error: ${OPENCODE_AGENT_DIR} does not exist"
   exit 1
 fi
 
@@ -25,5 +25,5 @@ rm -rf \
   "$REPO_ROOT/skill/atk-extras" \
   "$REPO_ROOT/command/atk-extras"
 
-rsync -av --delete "$SOURCE_DIR/skills/" "$REPO_ROOT/skills/"
-rsync -av --delete "$SOURCE_DIR/agent/" "$REPO_ROOT/agent/" --include "general-alpha.md" --include "general-beta.md" --exclude "*"
+rsync -av --delete "$SOURCE_DIR/" "$REPO_ROOT/skills/"
+rsync -av --delete "$OPENCODE_AGENT_DIR/" "$REPO_ROOT/agent/" --include "general-alpha.md" --include "general-beta.md" --exclude "*"
