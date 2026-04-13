@@ -5,19 +5,12 @@
 ```mermaid
 graph LR
   brainstorm --> turboplan["turboplan"]
-  brainstorm --> specmode["spec-mode"]
   turboplan --> spectech["spec-tech-design"]
   turboplan --> refinespec["refine-spec"]
   turboplan --> turbobuild["turbobuild"]
-  specmode --> specprod["spec-product-requirements"]
-  specmode --> spectech["spec-tech-design"]
-  specmode --> specimpl["spec-implementation-plan"]
-  specmode --> refinespec["refine-spec"]
-  specmode --> implspec["implement-spec"]
   turbobuild --> specimpl["spec-implementation-plan"]
-  turbobuild --> implspec["implement-spec"]
-  implspec --> implsubagent["implement-spec-subagent"]
-  implspec --> polish
+  turbobuild --> implsubagent["implement-spec-subagent"]
+  turbobuild --> polish
   implsubagent --> reviewchanges["review-changes"]
   polish["polish"] --> reviewchanges
   polish --> simplify["simplify"]
@@ -25,15 +18,12 @@ graph LR
   subgraph turboplan_group["turboplan"]
     brainstorm
     turboplan
-    specmode
-    specprod
     spectech
-    specimpl
     refinespec
   end
   subgraph turbobuild_group["turbobuild"]
     turbobuild
-    implspec
+    specimpl
     implsubagent
   end
   subgraph polish_group["polish"]
@@ -60,10 +50,9 @@ graph LR
 
 ### turbobuild
 
-- [`$turbobuild`](../skills/atk.turbobuild/SKILL.md) — Expand a plan into tickets and run implementation
+- [`$turbobuild`](../skills/atk.turbobuild/SKILL.md) — Strengthen ticket planning when needed, then implement a spec ticket-by-ticket
   - [`$spec-implementation-plan`](../skills/atk.spec-implementation-plan/SKILL.md) — Break features into smaller, reviewable tickets
-  - [`$implement-spec`](../skills/atk.implement-spec/SKILL.md) — Implement a spec ticket-by-ticket using subagents
-  - [`$implement-spec-subagent`](../skills/atk.implement-spec-subagent/SKILL.md) — Implement a single ticket; used by `$implement-spec` subagents
+  - [`$implement-spec-subagent`](../skills/atk.implement-spec-subagent/SKILL.md) — Implement a single ticket; used by `$turbobuild` subagents
 
 ### polish
 
@@ -103,4 +92,4 @@ Use `$polish`
 Concrete examples of skill outputs using a rate-limiting middleware scenario:
 
 - [`example-seed.md`](./example-seed.md) — example plan seed produced by `$brainstorm`
-- [`example-spec.md`](./example-spec.md) — example full spec (PRD + TDD + tickets) produced by `$spec-mode`
+- [`example-spec.md`](./example-spec.md) — example full spec document (PRD + TDD + tickets) from the planning workflow

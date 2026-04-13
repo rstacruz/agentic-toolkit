@@ -1,4 +1,4 @@
-> **Note:** This is an example spec produced by the `$spec-mode` skill.
+> **Note:** This is an example spec from the planning workflow.
 > It demonstrates what a full spec document looks like, derived from a plan seed.
 > Source seed: [`example-seed.md`](./example-seed.md)
 

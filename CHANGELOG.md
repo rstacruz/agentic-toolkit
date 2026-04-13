@@ -4,6 +4,8 @@
 ### [main](https://github.com/rstacruz/agentic-toolkit/tree/main)
 
 - TBD
+- Merges `implement-spec` into `turbobuild`; `turbobuild` now strengthens ticket planning when needed before running ticket-by-ticket execution.
+- Renames the public build skill from `implement-spec` to `turbobuild` and updates docs accordingly.
 - Removes atk-extras, spec-mode
 
 ### [v26.03](https://github.com/rstacruz/agentic-toolkit/tree/v26.03)
