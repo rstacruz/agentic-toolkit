@@ -1,5 +1,51 @@
 # Skills
 
+## Quick start
+
+### Starting from scratch
+
+Start with the brainstorm skill.
+
+*When to use:* from scratch. Works great when you have a vague idea.
+
+*What it does:* it refines your prompt into a better prompt. It does this with research and asking you questions.
+
+```
+/brainstorm i want to implement config via c12 npm package
+```
+
+### Hardening a plan
+
+Use `$turboplan` to improve a plan.
+
+*When to use:* you already have a plan (from your agwntw plan mode) or plan seed from `$brainstorm`
+
+*What it does:* it expounds the plan with more concrete technical implementation details. Then it uses 2 LLM models (Opus and GPT 5.4 High by default) to refine it in multiple passes.
+
+### Build with subagents
+
+Use `$turbobuild`
+
+*When to use:* ...
+
+*What it does:* Split a plan into smaller tickets, then assign subagents to build them (Opus by default)
+
+Compare with ralph or Copilot /fleet
+
+### Polish an existing implementation
+
+Use `$polish`
+
+*When to use:* ...
+
+*What it does:* .,.
+
+## Examples
+
+Concrete examples of skill outputs using a rate-limiting middleware scenario:
+
+- [`example-seed.md`](./example-seed.md) — example plan seed produced by `$brainstorm`
+- [`example-spec.md`](./example-spec.md) — example full spec document (PRD + TDD + tickets) from the planning workflow
 ## Skill map
 
 ```mermaid
@@ -64,32 +110,3 @@ graph LR
 
 - [`$spec-product-requirements`](../skills/atk.spec-product-requirements/SKILL.md) — Define functional/technical requirements sections
 - [`$mermaid-diagrams`](../skills/atk.mermaid-diagrams/SKILL.md) — Create Mermaid diagrams and fix Mermaid syntax issues
-
-## Quick start 
-
-### Starting from scratch
-
-Start with the brainstorm skill or command.
-
-```
-/brainstorm i want to implement config via c12 npm package
-```
-
-### Hardening a plan
-
-Use `$turboplan` to improve a plan
-
-### Build with subagents
-
-Use `$turbobuild`
-
-### Polish an existing implementation
-
-Use `$polish`
-
-## Examples
-
-Concrete examples of skill outputs using a rate-limiting middleware scenario:
-
-- [`example-seed.md`](./example-seed.md) — example plan seed produced by `$brainstorm`
-- [`example-spec.md`](./example-spec.md) — example full spec document (PRD + TDD + tickets) from the planning workflow
