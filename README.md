@@ -1,20 +1,21 @@
 # Agentic toolkit
 
-Some indispensable prompts and tools I use with [OpenCode](https://opencode.ai/).
+Some indispensable prompts and tools I use with [OpenCode](https://opencode.ai/), packaged as [Agent Skills](https://agentskills.io/home) so they can travel to other compatible tools too.
 
 ## Installation
 
-Consider this repo as a glimpse into what I do, *not* a pre-packaged system to install. I recommend perusing it, take what you need, and edit it to your use case.
+Consider this repo as a glimpse into what I do, not a sealed product. Use the parts you want and adapt them to your setup.
 
 1. Install [OpenCode](https://opencode.ai).
-2. Set up artefacts directories:
-  - Add to global gitignore: `echo artefacts >> ~/.config/git/global_ignore` (or wherever your global ignore is)
-  - Exclude from global rgignore (for OpenCode): `echo '!artefacts' >> ~/.rgignore`
-3. Pick-and-choose what you want to copy:
-  - Copy `agent/` files into `~/.config/opencode/agent/`
-  - Copy `skills/` files into `~/.config/opencode/skills/`
+2. Add `artefacts` to your global git ignore:
+   - `echo artefacts >> ~/.config/git/global_ignore`
+3. Exclude `artefacts` from your global `rgignore` for OpenCode search:
+   - `echo '!artefacts' >> ~/.rgignore`
+4. For OpenCode only, copy `agent/` files into `~/.config/opencode/agent/`.
+5. Install the skills:
+   - `npx skills add rstacruz/agentic-toolkit`
 
-Not an OpenCode user? These are [Agent Skills](https://https://agentskills.io/home), it should work with Claude Code and Gemini CLI and other tools (with some edits).
+These skills are written in the [Agent Skills](https://agentskills.io/home) format, so the skills themselves work with Agent Skills-compatible tools. The `agent/` directory is OpenCode-specific.
 
 ## Contents
 
