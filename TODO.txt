@@ -1,0 +1,5 @@
+fix pull.sh
+
+update readme
+
+rename spec-tech-design and spec-implemetnation-plan? anything with spec

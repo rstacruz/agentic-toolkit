@@ -2,9 +2,10 @@
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SOURCE_DIR="${HOME}/.config/opencode"
+SOURCE_DIR="${HOME}/.agents/skills"
+OPENCODE_AGENT_DIR="${HOME}/.config/opencode/agent"
 
-echo "Pulling files from ${SOURCE_DIR}..."
+echo "Pulling skills from ${SOURCE_DIR}..."
 
 # Check if source directory exists
 if [[ ! -d "${SOURCE_DIR}" ]]; then
@@ -12,12 +13,17 @@ if [[ ! -d "${SOURCE_DIR}" ]]; then
   exit 1
 fi
 
-rsync -av --delete "$SOURCE_DIR/skill/atk/" "$REPO_ROOT/skill/atk/"
-rsync -av --delete "$SOURCE_DIR/skill/atk-extras/" "$REPO_ROOT/skill/atk-extras/"
+if [[ ! -d "${OPENCODE_AGENT_DIR}" ]]; then
+  echo "✗ Error: ${OPENCODE_AGENT_DIR} does not exist"
+  exit 1
+fi
 
-mkdir -p \
-  "$REPO_ROOT/command/atk" \
+mkdir -p "$REPO_ROOT/skills"
+
+rm -rf \
+  "$REPO_ROOT/skill/atk" \
+  "$REPO_ROOT/skill/atk-extras" \
   "$REPO_ROOT/command/atk-extras"
 
-rsync -av --delete "$SOURCE_DIR/command/atk-extras/" "$REPO_ROOT/command/atk-extras/"
-rsync -av --delete "$SOURCE_DIR/agent/" "$REPO_ROOT/agent/" --include "general-alpha.md" --include "general-beta.md" --exclude "*"
+cp -R "$SOURCE_DIR"/atk.*/ "$REPO_ROOT/skills/"
+rsync -av --delete "$OPENCODE_AGENT_DIR/" "$REPO_ROOT/agent/" --include "general-alpha.md" --include "general-beta.md" --exclude "*"

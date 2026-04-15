@@ -24,12 +24,7 @@ READY_FOR_EXECUTION criteria: All planning criteria, plus the ones below:
 - **Scope is narrow** — touches a single file or tightly bounded area; no cross-cutting concerns
 - **Single deliverable** — one concrete task, not a breakdown of sub-tasks
 
-**When done:** Write the plan seed to `artefacts/seed-<title>.md`. Reply with the filename, then use the `question` tool to ask what's next:
-
-- create a spec (`$spec-mode`) or 
-- refine the seed (`$refine-spec`) or
-- add code blocks to explain changes (`$spec-tech-design`) or
-- implement now (`$implement-spec`)
+**When done:** Write the plan seed to `artefacts/seed-<title>.md`. Reply with the filename, then use the `question` tool to ask what's next. Include "strengthen the plan (`$turboplan`)" in the suggestions.
 
 **Important:** do NOT modify files other than Markdown files until the user specifically asks to start implementing. The goal is to assist the user in building a seed and a spec.
 

@@ -2,27 +2,14 @@
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-TARGET_DIR="${HOME}/.config/opencode"
+TARGET_DIR="${HOME}/.agents/skills"
+OPENCODE_AGENT_DIR="${HOME}/.config/opencode/agent"
 
-echo "Pushing files to ${TARGET_DIR}..."
+echo "Pushing skills to ${TARGET_DIR}..."
+mkdir -p "$TARGET_DIR"
+rm -rf "${TARGET_DIR}"/atk.*
+rsync -av "$REPO_ROOT/skills/" "$TARGET_DIR/"
 
-# Check if target directory exists
-if [[ ! -d "${TARGET_DIR}" ]]; then
-  echo "✗ Error: ${TARGET_DIR} does not exist"
-  exit 1
-fi
-
-# Ensure required subdirectories exist before syncing
-mkdir -p \
-  "${TARGET_DIR}/skill/atk" \
-  "${TARGET_DIR}/skill/atk-extras" \
-  "${TARGET_DIR}/command/atk" \
-  "${TARGET_DIR}/command/atk-extras" \
-  "${TARGET_DIR}/agent"
-
-rsync -av --delete "$REPO_ROOT/skill/atk/" "$TARGET_DIR/skill/atk/"
-rsync -av --delete "$REPO_ROOT/skill/atk-extras/" "$TARGET_DIR/skill/atk-extras/"
-rsync -av --delete "$REPO_ROOT/command/atk-extras/" "$TARGET_DIR/command/atk-extras/"
-
-# Don't --delete here to not overwrite user's custom agents
-rsync -av "$REPO_ROOT/agent/" "$TARGET_DIR/agent/" --include "general-alpha.md" --include "general-beta.md" --exclude "*"
+echo "Pushing agents to ${OPENCODE_AGENT_DIR}"
+mkdir -p "$OPENCODE_AGENT_DIR"
+rsync -av "$REPO_ROOT/agent/" "$OPENCODE_AGENT_DIR" --include "general-alpha.md" --include "general-beta.md" --exclude "*"

@@ -39,9 +39,19 @@ Do not proceed further. Do not attempt to infer or guess missing values.
    - If you touched multiple tickets, undo changes and redo with single ticket focus
 
 5. Document learnings
-   - Assess the conversation, summarise work done, include assumptions flagged
-   - Identify potential roadblocks that future dev work might encounter (eg, errors, wrong decisions)
-   - Append them to *progress file* - this is to assist future work
+   - Append one progress entry for `{{TICKET}}` to `{{PROGRESS_FILE}}`
+   - Use this structure:
+     - `Status:` completed, blocked, or partial
+     - `Assumptions:` assumptions you made while implementing the ticket
+     - `Learnings:` implementation details that future tickets should know about
+     - `Blockers/Risks:` potential roadblocks that future work might encounter
+     - `Suggested plan changes:` optional list of corrections or pivots the parent agent should assess
+   - For each suggested plan change, include:
+     - `Type:` spec inaccuracy, inconsistency, hidden dependency, reorder needed, pivot needed, or similar
+     - `Impact:` what this changes for upcoming work
+     - `Recommendation:` the concrete next-step adjustment to make
+     - `User input needed:` yes or no
+   - Do not directly rewrite the broader spec or plan unless that work is explicitly part of `{{TICKET}}`
 
 6. Commit changes
    - Include ticket ID in commit title

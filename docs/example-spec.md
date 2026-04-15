@@ -1,5 +1,5 @@
-> **Note:** This is an example spec produced by the `$spec-mode` skill.
-> It demonstrates what a full spec document looks like, derived from a plan seed.
+> **Note:** This is an example spec from the planning workflow.
+> It shows what a full spec document can look like when derived from a plan seed.
 > Source seed: [`example-seed.md`](./example-seed.md)
 
 ---
@@ -12,7 +12,7 @@ Add per-user rate limiting middleware to the Express API. Each authenticated use
 
 ## Problem statement
 
-API has no per-user request throttling. Single client can flood any endpoint, degrading service for all other users. Blocks safe issuance of API keys to third-party developers.
+The API has no per-user request throttling. A single client can flood any endpoint, degrading service for all other users. This blocks the safe issuance of API keys to third-party developers.
 
 ## Solution overview
 
@@ -24,24 +24,24 @@ API has no per-user request throttling. Single client can flood any endpoint, de
 
 ## Functional requirements
 
-- **F1 — Rate limit enforcement** — Requests exceeding per-user limit within window rejected with HTTP 429
-- **F2 — Response headers** — Every response includes `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`; rejected requests add `Retry-After`
-- **F3 — Configurable key extractor** — User key derived via configurable `keyExtractor` function; default: JWT `sub` claim
-- **F4 — Configurable limit/window** — Limit and window duration configurable per middleware instance
-- **F5 — Fail open** — `keyExtractor` returning `null`/`undefined` passes request through unchanged
-- **F6 — Single-call attachment** — Middleware attaches to any Express route or router in one call
-- **F7 — Route isolation** — Routes without middleware attached are unaffected
+- **F1 — Rate limit enforcement** — Requests exceeding the per-user limit within the window are rejected with HTTP 429
+- **F2 — Response headers** — Every response includes `X-RateLimit-Limit`, `X-RateLimit-Remaining`, and `X-RateLimit-Reset`; rejected requests also include `Retry-After`
+- **F3 — Configurable key extractor** — The user key is derived through a configurable `keyExtractor` function; the default uses the JWT `sub` claim
+- **F4 — Configurable limit/window** — Limit and window duration are configurable per middleware instance
+- **F5 — Fail open** — If `keyExtractor` returns `null` or `undefined`, the request passes through unchanged
+- **F6 — Single-call attachment** — The middleware attaches to any Express route or router in one call
+- **F7 — Route isolation** — Routes without the middleware attached are unaffected
 
 ## Technical requirements
 
-- **TR1 — Token bucket algorithm** — Continuous refill: tokens replenish proportionally to elapsed time; never exceed `limit`
+- **TR1 — Token bucket algorithm** — Continuous refill: tokens replenish in proportion to elapsed time and never exceed `limit`
 - **TR2 — In-memory store** — `Map<string, BucketState>`; no Redis or external dependency
 - **TR3 — JWT decoding** — `defaultKeyExtractor` decodes JWT without verification; extracts `payload.sub`; returns `null` on missing/malformed header
 - **TR4 — Factory interface** — `rateLimiter(options): RequestHandler` returns Express-compatible handler
 
 ## Non-functional requirements
 
-- **NF1 — Latency** — < 1 ms overhead per request for bucket check
+- **NF1 — Latency** — Less than 1 ms overhead per request for the bucket check
 - **NF2 — Zero external deps** — In-memory only for this iteration
 - **NF3 — Thread safety** — Single Node.js process; no locking required
 
@@ -53,7 +53,7 @@ API has no per-user request throttling. Single client can flood any endpoint, de
 
 ## Design considerations
 
-- **DC1 — Fail open caveat** — F5 means unauthenticated routes must not attach this middleware; document clearly
+- **DC1 — Fail open caveat** — F5 means unauthenticated routes must not attach this middleware; this should be documented clearly
 - **DC2 — Header exposure** — Rate limit headers included by default; helps clients back off gracefully
 - **DC3 — Token bucket over sliding window** — Simpler implementation; constant memory per user
 
@@ -118,7 +118,7 @@ interface ConsumeResult {
 
 ## Pseudocode breakdown
 
-`[A]` **Middleware handler** — request entry point
+`[A]` **Middleware handler** — Request entry point
 
 ```sh
 rateLimiter(options) → RequestHandler: # [🟢 NEW] [A]
@@ -130,7 +130,7 @@ rateLimiter(options) → RequestHandler: # [🟢 NEW] [A]
   else → res.status(429).json(...)
 ```
 
-`[B]` **Refill** — replenish tokens by elapsed time
+`[B]` **Refill** — Replenish tokens based on elapsed time
 
 ```sh
 refill(bucket, options, now): # [🟢 NEW] [B]
@@ -139,7 +139,7 @@ refill(bucket, options, now): # [🟢 NEW] [B]
   bucket.lastRefill = now
 ```
 
-`[C]` **Consume** — refill then deduct one token
+`[C]` **Consume** — Refill, then deduct one token
 
 ```sh
 consume(bucket, options, now): # [🟢 NEW] [C]
@@ -151,7 +151,7 @@ consume(bucket, options, now): # [🟢 NEW] [C]
     return { allowed: false, retryAfter: ceil(...) }
 ```
 
-`[D]` **Memory store** — get-or-create, persist
+`[D]` **Memory store** — Get or create, then persist
 
 ```sh
 MemoryStore.consume(key, options): # [🟢 NEW] [D]
@@ -178,7 +178,7 @@ defaultKeyExtractor(req): # [🟢 NEW] [E]
 
 **Run:** `npx vitest src/middleware/`
 
-**Mocks:** none (in-memory; no I/O)
+**Mocks:** None (in-memory; no I/O)
 
 **Tests:**
 - Token bucket: refill math, boundary at exactly 0 tokens, tokens never exceed limit, `retryAfter` accuracy

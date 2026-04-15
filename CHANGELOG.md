@@ -1,44 +1,27 @@
 # Changelog
 
-## v2026.01.15
 
-**Added:**
-- New skills: `ralph-loop`, `analyse-and-review-pr`, `execute-plan`, `explain-code`, `mermaid-diagrams`, `refine-implementation`, `triangulate-plan`, `verify-implementation`, `high-density-writing-style`
-- New commands: `/triangulate-plan`, `/proceed`
-- Comprehensive READMEs for all `atk` skills
-- Roadmap task sizing and phasing guide
-- Quality gates and user stories sections in planning documentation
+### [main](https://github.com/rstacruz/agentic-toolkit/tree/main)
 
-**Changed:**
-- **High-density writing style** - Enforced terse, direct style for prompts and documents
-- Major refactor of `plan-with-tdd-and-prd` skill
-- Updated `pull.sh` to use `--delete` with `rsync`
-- Refined `reflection` skill and command instructions
-- Streamlined root `README.md`
-- Renamed `/refine-plan` to include updated logic
-- Refined `proceed` command logic
+- TBD
+- Merges `implement-spec` into `turbobuild`; `turbobuild` now strengthens ticket planning when needed before running ticket-by-ticket execution.
+- Renames the public build skill from `implement-spec` to `turbobuild` and updates docs accordingly.
+- Removes atk-extras, spec-mode
 
-**Removed:**
-- Obsolete tool usage instructions from documentation
+### [v26.03](https://github.com/rstacruz/agentic-toolkit/tree/v26.03)
 
-## v2026.01.04
+- Most compact version of the skill-first toolkit.
+- Moves foundation skills like `coding-practices`, `testing-practices`, and `refine-tests` into a separate extras bundle.
+- Compared with `v26.01`, the visible changes are mostly docs and layout cleanup.
 
-**Breaking changes:**
-- **New plan mode** - Replaced `plan+` mode with new `/plan` command and plan-mode workflow
-- **Skills replaces agents** - No more agents, and commands are slimmer now with logic moved to skills
-- **Organised into atk/** - commands now in `command/atk/`, skills in `skill/atk/` for easy updating
+### [v26.01](https://github.com/rstacruz/agentic-toolkit/tree/v26.01)
 
-**Added:**
-- Commands: `/plan`, `/reflect`, `/tdd`, `/discover`, `/explain-code`, `/preflight`, `/refine-plan`
-- Skills: `plan-mode`, `execute-plan`, `reflect`, `generate-changelog`, `review-with-subagent`, `plan-feature-roadmap`, `solution-options-document`
+- Introduces the skill-first workflow: `brainstorm -> spec-mode -> implement-spec -> refine/review`.
+- Adds the spec/refine/review family and newer operational skills like `babysit-pr`.
+- README becomes much slimmer and points to `docs/skills.md` for the quick start.
 
-**Changed:**
-- Significantly enhanced `plan-with-tdd-and-prd` skill
-- Updated installation instructions
+### [v25.12](https://github.com/rstacruz/agentic-toolkit/tree/v25.12)
 
-**Removed:**
-- Legacy `agent/plan+.md` (replaced by plan mode)
-
-## v2025.12.23
-
-Reference version with plan+ mode
+- Uses the older `plan+`, `/proceed`, and `/continue-from-here` workflow.
+- README is more command- and prompt-oriented, with detailed usage examples inline.
+- Predates the later spec-oriented docs and skill layout introduced in `v26.01`.

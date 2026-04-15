@@ -4,68 +4,60 @@
 
 ```mermaid
 graph LR
-  brainstorm --> specmode["spec-mode"]
-  specmode --> specprod["spec-product-requirements"]
-  specmode --> spectech["spec-tech-design"]
-  specmode --> specimpl["spec-implementation-plan"]
-  specmode --> refinespec["refine-spec"]
-  specmode --> implspec["implement-spec"]
-  implspec --> implsubagent["implement-spec-subagent"]
-  implspec --> refineimpl
+  brainstorm --> turboplan["turboplan"]
+  turboplan --> spectech["spec-tech-design"]
+  turboplan --> refinespec["refine-spec"]
+  turboplan --> turbobuild["turbobuild"]
+  turbobuild --> specimpl["spec-implementation-plan"]
+  turbobuild --> implsubagent["implement-spec-subagent"]
+  turbobuild --> polish
   implsubagent --> reviewchanges["review-changes"]
-  refineimpl["refine-implementation"] --> reviewchanges
-  refineimpl --> simplify["simplify"]
+  polish["polish"] --> reviewchanges
 
-  subgraph Brainstorm
+  subgraph turboplan_group["turboplan"]
     brainstorm
-  end
-  subgraph Spec
-    specmode
-    specprod
+    turboplan
     spectech
-    specimpl
     refinespec
   end
-  subgraph Execution
-    implspec
+  subgraph turbobuild_group["turbobuild"]
+    turbobuild
+    specimpl
     implsubagent
-    refineimpl
+  end
+  subgraph polish_group["polish"]
+    polish
     reviewchanges
+  end
+  subgraph other_group["other"]
+    mermaid["mermaid-diagrams"]
   end
 ```
 
 ## Skills reference
 
-### Brainstorm
+### Pre-plan
 
-- [`$brainstorm`](../skill/atk/brainstorm/SKILL.md) — Develop a vague idea into a scoped, handoff-ready plan seed
+- [`$brainstorm`](../skills/atk.brainstorm/SKILL.md) — Develop a vague idea into a scoped, handoff-ready plan seed
 
-### Spec
+### Turboplan
 
-- [`$spec-mode`](../skill/atk/spec-mode/SKILL.md) — Guide interactive specification creation — requirements, design, tickets
-- [`$spec-product-requirements`](../skill/atk/spec-product-requirements/SKILL.md) — Define functional/technical requirements sections
-- [`$spec-tech-design`](../skill/atk/spec-tech-design/SKILL.md) — Define technical design — call graphs, data models, pseudocode
-- [`$spec-implementation-plan`](../skill/atk/spec-implementation-plan/SKILL.md) — Break features into smaller, reviewable tickets
-- [`$refine-spec`](../skill/atk/refine-spec/SKILL.md) — Pressure-test a spec or plan seed with independent critiques
+- [`$turboplan`](../skills/atk.turboplan/SKILL.md) — Expand an approved pre-plan with technical design, then refine it
+  - [`$spec-tech-design`](../skills/atk.spec-tech-design/SKILL.md) — Define technical design — call graphs, data models, pseudocode
+  - [`$refine-spec`](../skills/atk.refine-spec/SKILL.md) — Pressure-test a spec or plan seed with independent critiques
 
-### Execution
+### Turbobuild
 
-- [`$implement-spec`](../skill/atk/implement-spec/SKILL.md) — Implement a spec ticket-by-ticket using subagents
-- [`$implement-spec-subagent`](../skill/atk/implement-spec-subagent/SKILL.md) — Implement a single ticket; used by `$implement-spec` subagents
-- [`$refine-implementation`](../skill/atk/refine-implementation/SKILL.md) — Simplify and review an implementation
-- [`$review-changes`](../skill/atk/review-changes/SKILL.md) — Review code changes against the spec (P1/P2/P3 recommendations)
+- [`$turbobuild`](../skills/atk.turbobuild/SKILL.md) — Strengthen ticket planning when needed, then implement a spec ticket-by-ticket
+  - [`$spec-implementation-plan`](../skills/atk.spec-implementation-plan/SKILL.md) — Break features into smaller, reviewable tickets
+  - [`$implement-spec-subagent`](../skills/atk.implement-spec-subagent/SKILL.md) — Implement a single ticket; used by `$turbobuild` subagents
 
-## Quick start 
+### Polish
 
-Start with the brainstorm skill or command.
+- [`$polish`](../skills/atk.polish/SKILL.md) — Simplify and review an implementation
+  - [`$review-changes`](../skills/atk.review-changes/SKILL.md) — Review code changes against the spec (P1/P2/P3 recommendations)
 
-```
-/brainstorm i want to implement config via c12 npm package
-```
+### Other
 
-## Examples
-
-Concrete examples of skill outputs using a rate-limiting middleware scenario:
-
-- [`example-seed.md`](./example-seed.md) — example plan seed produced by `$brainstorm`
-- [`example-spec.md`](./example-spec.md) — example full spec (PRD + TDD + tickets) produced by `$spec-mode`
+- [`$spec-product-requirements`](../skills/atk.spec-product-requirements/SKILL.md) — Define functional/technical requirements sections
+- [`$mermaid-diagrams`](../skills/atk.mermaid-diagrams/SKILL.md) — Create Mermaid diagrams and fix Mermaid syntax issues

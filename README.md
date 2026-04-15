@@ -1,46 +1,95 @@
-# Agentic toolkit
+# Agentic Toolkit
 
-Some indispensable prompts and tools I use with [OpenCode](https://opencode.ai/).
+A set of prompts and tools I use with [OpenCode](https://opencode.ai/), packaged as [Agent Skills](https://agentskills.io/home) so they can travel to other compatible tools too.
 
 ## Installation
 
-Consider this repo as a glimpse into what I do, *not* a pre-packaged system to install. I recommend perusing it, take what you need, and edit it to your use case.
+Treat this repo as a glimpse into my setup, not a sealed product. Use the parts you want and adapt them.
 
 1. Install [OpenCode](https://opencode.ai).
-2. Set up artefacts directories:
-  - Add to global gitignore: `echo artefacts >> ~/.config/git/global_ignore` (or wherever your global ignore is)
-  - Exclude from global rgignore (for OpenCode): `echo '!artefacts' >> ~/.rgignore`
-3. Pick-and-choose what you want to copy:
-  - Copy `agent/` files into `~/.config/opencode/agent/`
-  - Copy `skill/atk/` files into `~/.config/opencode/skill/atk/`
+2. Add `artefacts` to your global git ignore:
+   - `echo artefacts >> ~/.config/git/global_ignore`
+3. Exclude `artefacts` from your global `rgignore` for OpenCode search:
+   - `echo '!artefacts' >> ~/.rgignore`
+4. If you use OpenCode, copy the `agent/` files into `~/.config/opencode/agent/`.
+5. Install the skills:
+    - `npx skills add rstacruz/agentic-toolkit`
 
-Not an OpenCode user? These are [Agent Skills](https://https://agentskills.io/home), it should work with Claude Code and Gemini CLI and other tools (with some edits).
+These skills use the [Agent Skills](https://agentskills.io/home) format, so they work across compatible tools. The `agent/` directory is OpenCode-specific.
 
 ## Contents
 
-- [skill/atk/](skill/atk/) - the main skills
-- [skill/atk-extras/](skill/atk-extras/) - skills that aren't really part of the plan-and-execute loop, but still useful nonetheless
+- [skills/](skills/) - the main skills
 
 ## Quick start
 
-See [docs/skills.md](./docs/skills.md).
+### Starting from scratch
 
-## Previous versions
+Start with `$brainstorm`.
 
-### [v26.03](https://github.com/rstacruz/agentic-toolkit/tree/v26.03)
+*When to use:* when you are starting from scratch and only have a vague idea.
 
-- Most compact version of the skill-first toolkit.
-- Moves foundation skills like `coding-practices`, `testing-practices`, and `refine-tests` into `skill/atk-extras/`.
-- Compared with `v26.01`, the visible changes are mostly docs and layout cleanup.
+*What it does:* it turns a rough prompt into a stronger one by doing research and asking clarifying questions.
 
-### [v26.01](https://github.com/rstacruz/agentic-toolkit/tree/v26.01)
+```
+/brainstorm i want to implement config via c12 npm package
+```
 
-- Introduces the skill-first workflow: `brainstorm -> spec-mode -> implement-spec -> refine/review`.
-- Adds the spec/refine/review family and newer operational skills like `babysit-pr`.
-- README becomes much slimmer and points to `docs/skills.md` for the quick start.
+*Example:* [`example-seed.md`](./docs/example-seed.md) — example plan seed produced by `$brainstorm`
 
-### [v25.12](https://github.com/rstacruz/agentic-toolkit/tree/v25.12)
+### Hardening a plan
 
-- Uses the older `plan+`, `/proceed`, and `/continue-from-here` workflow.
-- README is more command- and prompt-oriented, with detailed usage examples inline.
-- Predates the later spec-oriented docs and skill layout introduced in `v26.01`.
+Use `$turboplan` to improve a plan.
+
+*When to use:* when you already have a plan or a plan seed from `$brainstorm`.
+
+*What it does:* it expands the plan with concrete implementation details, then refines it in multiple passes using two LLMs (Opus and GPT 5.4 High by default).
+
+```
+> ...
+> Plan is done.
+
+use turboplan
+```
+
+*Example:* [`example-spec.md`](./docs/example-spec.md) - example full spec document (PRD + TDD + tickets) from the planning workflow.
+
+### Build with subagents
+
+Use `$turbobuild` to build a plan.
+
+*When to use:* when a plan is ready for implementation. Great follow-up to `$turboplan`, but it can work with any plan.
+
+*What it does:* it splits a plan into smaller tickets, then assigns subagents to build them (Opus by default).
+
+Strongly inspired by Ralph Loop principles and Copilot /fleet.
+
+```
+> ...
+> Plan is done.
+
+use turboplan
+
+> ...
+> Plan has been refined through 2 review passes.
+
+use turbobuild
+
+-or-
+
+use turbobuild then create a draft pull request
+```
+
+### Polish an existing implementation
+
+Use `$polish` to make a pull request ready for submitting.
+
+*When to use:* after making follow-up changes after `$turbobuild`, or when working on an existing pull request.
+
+*What it does:* it makes a change pull-request ready through multiple rounds of subagent review.
+
+This is done automatically by `$turbobuild`.
+
+Compare with Copilot, Claude and Codex reviews, but automated.
+
+See [`docs/skills.md`](./docs/skills.md).

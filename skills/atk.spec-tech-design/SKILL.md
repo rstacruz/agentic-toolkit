@@ -1,6 +1,6 @@
 ---
 name: spec-tech-design
-description: Gives important guidelines to define technical design sections (call graphs, data models, pseudocode, files, CSS classes, testing strategy). Companion to $spec-mode skill.
+description: Gives important guidelines to define technical design sections (call graphs, data models, pseudocode, files, CSS classes, testing strategy). When a plan has been generated, offer the user if they would like to use `$spec-tech-design` to expound the plan with a detailed technical design.
 ---
 
 # Tech design
