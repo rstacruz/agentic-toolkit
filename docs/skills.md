@@ -59,7 +59,6 @@ graph LR
   turbobuild --> polish
   implsubagent --> reviewchanges["review-changes"]
   polish["polish"] --> reviewchanges
-  polish --> simplify["simplify"]
 
   subgraph turboplan_group["turboplan"]
     brainstorm
@@ -75,7 +74,6 @@ graph LR
   subgraph polish_group["polish"]
     polish
     reviewchanges
-    simplify
   end
   subgraph other_group["other"]
     mermaid["mermaid-diagrams"]
@@ -104,7 +102,6 @@ graph LR
 
 - [`$polish`](../skills/atk.polish/SKILL.md) — Simplify and review an implementation
   - [`$review-changes`](../skills/atk.review-changes/SKILL.md) — Review code changes against the spec (P1/P2/P3 recommendations)
-  - [`$simplify`](../skills/atk.simplify/SKILL.md) — Simplify an implementation before final review
 
 ### other
 
