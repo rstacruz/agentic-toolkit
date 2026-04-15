@@ -1,13 +1,13 @@
 # Plan Seed: Per-User Rate Limiting Middleware
 
 > **Note:** This is an example plan seed produced by the `$brainstorm` skill.
-> It demonstrates what a seed document looks like after a brainstorm session.
+> It shows what a seed document can look like after a brainstorm session.
 
 ---
 
 ## Problem
 
-The API has no protection against request floods from individual users. A single misbehaving client can exhaust server resources and degrade service for everyone else. There is no consistent mechanism to enforce per-user limits across endpoints.
+The API has no protection against request floods from individual users. A single misbehaving client can exhaust server resources and degrade service for everyone else. There is no consistent way to enforce per-user limits across endpoints.
 
 **Who it's for:** The backend engineering team maintaining an Express-based API.
 
@@ -15,7 +15,7 @@ The API has no protection against request floods from individual users. A single
 
 - Requests exceeding the configured limit return `429 Too Many Requests` with a `Retry-After` header
 - Rate limit state is tracked per user (by user ID extracted from a JWT or API key)
-- Middleware is easy to attach to any route or router with one line
+- Middleware is easy to attach to any route or router in one line
 - Limits and window duration are configurable per route
 - Existing routes are not affected until the middleware is explicitly attached
 
@@ -24,7 +24,7 @@ The API has no protection against request floods from individual users. A single
 - Token bucket algorithm implementation
 - Express middleware wrapper
 - In-memory storage for token bucket state
-- Configuration options (limit, window, key extractor)
+- Configuration options (`limit`, `window`, `keyExtractor`)
 - Unit tests for the bucket logic and middleware
 
 ## Out of scope
@@ -36,7 +36,7 @@ The API has no protection against request floods from individual users. A single
 
 ## Why this matters
 
-A single abusive client can take down the API for all users. Per-user rate limiting is the minimum protection needed before the API is opened to third-party developers. Without it, the team cannot safely issue API keys.
+A single abusive client can take down the API for all users. Per-user rate limiting is the minimum protection needed before opening the API to third-party developers. Without it, the team cannot safely issue API keys.
 
 ---
 
@@ -51,7 +51,7 @@ import { rateLimiter } from './middleware/rateLimiter.js'
 app.use('/api/data', rateLimiter({ limit: 100, windowMs: 15 * 60 * 1000 }))
 ```
 
-### Per-route customisation
+### Per-route customization
 
 ```js
 // Stricter limit on an expensive endpoint
@@ -105,6 +105,6 @@ X-RateLimit-Reset: 1711058400
 
 ## Open questions for planner
 
-1. Should the middleware short-circuit before route handlers run, or allow the handler to opt out?
+1. Should the middleware short-circuit before route handlers run, or should the handler be able to opt out?
 2. What happens when `keyExtractor` returns `null` — fail open (allow) or fail closed (block)?
 3. Should hit counts be exposed in response headers by default, or opt-in?
