@@ -25,5 +25,5 @@ rm -rf \
   "$REPO_ROOT/skill/atk-extras" \
   "$REPO_ROOT/command/atk-extras"
 
-cp -R "$SOURCE_DIR"/atk.*/ "$REPO_ROOT/skills/"
+rsync -av "$SOURCE_DIR/" "$REPO_ROOT/skills/" --include "atk.*" --exclude "*"
 rsync -av --delete "$OPENCODE_AGENT_DIR/" "$REPO_ROOT/agent/" --include "general-alpha.md" --include "general-beta.md" --exclude "*"
