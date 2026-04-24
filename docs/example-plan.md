@@ -1,110 +1,299 @@
-# Plan: Per-User Rate Limiting Middleware
-
-> **Note:** This is an example plan produced by the `$brainstorm` skill.
-> It shows what a compact planning document can look like after a brainstorm session.
+> **Note:** This is an example plan from the planning workflow.
+> It shows what a full plan document can look like when expanded from an initial plan.
+> Source plan: [`example-brainstorm-plan.md`](./example-brainstorm-plan.md)
 
 ---
 
-## Problem
+# Plan: Per-User Rate Limiting Middleware
 
-The API has no protection against request floods from individual users. A single misbehaving client can exhaust server resources and degrade service for everyone else. There is no consistent way to enforce per-user limits across endpoints.
+## Initial ask
 
-**Who it's for:** The backend engineering team maintaining an Express-based API.
+Add per-user rate limiting middleware to the Express API. Each authenticated user gets a configurable request quota per time window using a token bucket algorithm. Exceeded quotas return HTTP 429 with standard rate limit headers.
 
-## Success criteria
+## Problem statement
 
-- Requests exceeding the configured limit return `429 Too Many Requests` with a `Retry-After` header
-- Rate limit state is tracked per user (by user ID extracted from a JWT or API key)
-- Middleware is easy to attach to any route or router in one line
-- Limits and window duration are configurable per route
-- Existing routes are not affected until the middleware is explicitly attached
+The API has no per-user request throttling. A single client can flood any endpoint, degrading service for all other users. This blocks the safe issuance of API keys to third-party developers.
 
-## In scope
+## Solution overview
 
-- Token bucket algorithm implementation
-- Express middleware wrapper
-- In-memory storage for token bucket state
-- Configuration options (`limit`, `window`, `keyExtractor`)
-- Unit tests for the bucket logic and middleware
+1. Token bucket middleware factory — configurable limit, window, and key extractor
+2. In-memory per-user bucket store — no external dependencies
+3. Standard rate limit headers on every response
+4. Fail-open on unauthenticated requests
+5. Single-call attachment to any Express route or router
+
+## Functional requirements
+
+- **F1 — Rate limit enforcement** — Requests exceeding the per-user limit within the window are rejected with HTTP 429
+- **F2 — Response headers** — Every response includes `X-RateLimit-Limit`, `X-RateLimit-Remaining`, and `X-RateLimit-Reset`; rejected requests also include `Retry-After`
+- **F3 — Configurable key extractor** — The user key is derived through a configurable `keyExtractor` function; the default uses the JWT `sub` claim
+- **F4 — Configurable limit/window** — Limit and window duration are configurable per middleware instance
+- **F5 — Fail open** — If `keyExtractor` returns `null` or `undefined`, the request passes through unchanged
+- **F6 — Single-call attachment** — The middleware attaches to any Express route or router in one call
+- **F7 — Route isolation** — Routes without the middleware attached are unaffected
+
+## Technical requirements
+
+- **TR1 — Token bucket algorithm** — Continuous refill: tokens replenish in proportion to elapsed time and never exceed `limit`
+- **TR2 — In-memory store** — `Map<string, BucketState>`; no Redis or external dependency
+- **TR3 — JWT decoding** — `defaultKeyExtractor` decodes JWT without verification; extracts `payload.sub`; returns `null` on missing/malformed header
+- **TR4 — Factory interface** — `rateLimiter(options): RequestHandler` returns Express-compatible handler
+
+## Non-functional requirements
+
+- **NF1 — Latency** — Less than 1 ms overhead per request for the bucket check
+- **NF2 — Zero external deps** — In-memory only for this iteration
+- **NF3 — Thread safety** — Single Node.js process; no locking required
+
+## Technical constraints
+
+- **TC1 — In-memory only** — No Redis or database in this iteration
+- **TC2 — Single instance** — Does not support distributed deployments
+- **TC3 — Authenticated routes only** — Rate limiting applies only where a user key is extractable
+
+## Design considerations
+
+- **DC1 — Fail open caveat** — F5 means unauthenticated routes must not attach this middleware; this should be documented clearly
+- **DC2 — Header exposure** — Rate limit headers included by default; helps clients back off gracefully
+- **DC3 — Token bucket over sliding window** — Simpler implementation; constant memory per user
 
 ## Out of scope
 
-- Persistent storage (Redis, database) — in-memory only for now
-- Distributed rate limiting across multiple server instances
-- Rate limiting by IP (only per-user, authenticated routes)
-- Admin UI or dashboard for monitoring rate limit hits
+- IP-based rate limiting
+- Persistent storage adapters
+- Admin dashboard or monitoring
+- Distributed / multi-instance coordination
 
-## Why this matters
+## Call graph
 
-A single abusive client can take down the API for all users. Per-user rate limiting is the minimum protection needed before opening the API to third-party developers. Without it, the team cannot safely issue API keys.
+```mermaid
+flowchart TD
+  subgraph mw["middleware/rateLimiter.ts"]
+    A["rateLimiter(options) [🟢 NEW] [A]"]
+    E["defaultKeyExtractor(req) [🟢 NEW] [E]"]
+  end
 
----
+  subgraph ms["middleware/memoryStore.ts"]
+    D["MemoryStore.consume() [🟢 NEW] [D]"]
+  end
 
-## Illustrative examples
+  subgraph tb["middleware/tokenBucket.ts"]
+    C["consume(bucket) [🟢 NEW] [C]"]
+    B["refill(bucket) [🟢 NEW] [B]"]
+  end
 
-### Attaching the middleware to a route
-
-```js
-import { rateLimiter } from './middleware/rateLimiter.js'
-
-// Allow 100 requests per user per 15-minute window
-app.use('/api/data', rateLimiter({ limit: 100, windowMs: 15 * 60 * 1000 }))
+  A -->|"calls"| E
+  A -->|"calls"| D
+  D -->|"calls"| C
+  C -->|"calls"| B
 ```
 
-### Per-route customization
+## Data models
 
-```js
-// Stricter limit on an expensive endpoint
-app.post(
-  '/api/export',
-  rateLimiter({ limit: 5, windowMs: 60 * 1000 }),
-  exportHandler
-)
+```ts
+interface BucketState {
+  tokens: number      // current count (float)
+  lastRefill: number  // Unix ms of last refill
+}
+// Store: Map<string, BucketState>
 ```
 
-### Custom key extractor (default: JWT sub claim)
-
-```js
-rateLimiter({
-  limit: 50,
-  windowMs: 60 * 1000,
-  keyExtractor: (req) => req.headers['x-api-key'],
-})
-```
-
-### 429 response shape
-
-```json
-{
-  "error": "Too Many Requests",
-  "retryAfter": 42
+```ts
+interface RateLimiterOptions {
+  limit: number
+  windowMs: number
+  keyExtractor?: (req: Request) => string | null
+  store?: BucketStore
 }
 ```
 
-Response headers:
-
-```
-HTTP/1.1 429 Too Many Requests
-Retry-After: 42
-X-RateLimit-Limit: 100
-X-RateLimit-Remaining: 0
-X-RateLimit-Reset: 1711058400
-```
-
-### Token bucket state (in-memory, per user key)
-
-```js
-// Internal store — not exposed externally
-{
-  "user:abc123": { tokens: 0, lastRefill: 1711058358000 },
-  "user:def456": { tokens: 87, lastRefill: 1711058300000 },
+```ts
+interface ConsumeResult {
+  allowed: boolean
+  remaining: number    // tokens left after request
+  resetAt: number      // Unix ms when bucket fully refills
+  retryAfter?: number  // seconds until next token (only when !allowed)
 }
 ```
 
+## Pseudocode breakdown
+
+`[A]` **Middleware handler** — Request entry point
+
+```sh
+rateLimiter(options) → RequestHandler: # [🟢 NEW] [A]
+  key = (options.keyExtractor ?? defaultKeyExtractor)(req)  # [E]
+  if key is null → return next()
+  result = store.consume(key, options)  # [D]
+  setHeaders(res, result, options)
+  if result.allowed → next()
+  else → res.status(429).json(...)
+```
+
+`[B]` **Refill** — Replenish tokens based on elapsed time
+
+```sh
+refill(bucket, options, now): # [🟢 NEW] [B]
+  tokensPerMs = options.limit / options.windowMs
+  bucket.tokens = min(limit, bucket.tokens + (now - bucket.lastRefill) * tokensPerMs)
+  bucket.lastRefill = now
+```
+
+`[C]` **Consume** — Refill, then deduct one token
+
+```sh
+consume(bucket, options, now): # [🟢 NEW] [C]
+  refill(bucket, options, now)  # [B]
+  if bucket.tokens >= 1:
+    bucket.tokens -= 1
+    return { allowed: true, remaining: floor(bucket.tokens) }
+  else:
+    return { allowed: false, retryAfter: ceil(...) }
+```
+
+`[D]` **Memory store** — Get or create, then persist
+
+```sh
+MemoryStore.consume(key, options): # [🟢 NEW] [D]
+  bucket = map.get(key) ?? { tokens: options.limit, lastRefill: now }
+  result = consume(bucket, options, now)  # [C]
+  map.set(key, bucket)
+  return result
+```
+
+`[E]` **Default key extractor** — JWT `sub` claim
+
+```sh
+defaultKeyExtractor(req): # [🟢 NEW] [E]
+  token = req.headers.authorization?.split(' ')[1]
+  payload = jwt.decode(token)  // no verification
+  return payload?.sub ?? null
+```
+
+## Files
+
+**New:** `src/middleware/rateLimiter.ts`, `src/middleware/tokenBucket.ts`, `src/middleware/memoryStore.ts`, `src/middleware/types.ts`, `src/middleware/rateLimiter.test.ts`, `src/middleware/tokenBucket.test.ts`, `src/middleware/memoryStore.test.ts`, `src/middleware/README.md`
+
+## Testing strategy
+
+**Run:** `npx vitest src/middleware/`
+
+**Mocks:** None (in-memory; no I/O)
+
+**Tests:**
+- Token bucket: refill math, boundary at exactly 0 tokens, tokens never exceed limit, `retryAfter` accuracy
+- MemoryStore: state persists across calls, new keys initialised at full limit
+- Middleware: 200 on first N requests, 429 on N+1, correct headers, null key = pass-through, custom `keyExtractor`
+- Integration (supertest): full Express app, route with/without middleware, window reset after `windowMs`
+
+## Quality gates
+
+```sh
+npx vitest run
+npx tsc --noEmit
+npx eslint src/middleware/
+```
+
+## Ticket dependencies
+
+```mermaid
+graph LR
+  T1["T1: Token bucket"] --> T2["T2: Memory store"]
+  T1 --> T3["T3: Key extractor"]
+  T2 --> T4["T4: Middleware factory"]
+  T3 --> T4
+  T4 --> T5["T5: Tests"]
+  T4 --> T6["T6: Docs"]
+  T5 --> T7["T7: Final verification"]
+  T6 --> T7
+```
+
+## Tickets
+
+### T1 — Core token bucket logic
+
+**Description:** As a developer, I want pure token bucket functions so that rate limiting logic is testable in isolation.
+
+**Acceptance criteria:**
+- [ ] `BucketState`, `RateLimiterOptions`, `ConsumeResult` interfaces defined in `types.ts`
+- [ ] `refill(bucket, options, now?)` mutates bucket in place [B]
+- [ ] `consume(bucket, options, now?)` calls refill, returns `ConsumeResult` [C]
+- [ ] No Express dependency
+- [ ] `tokenBucket.test.ts` passes
+
 ---
 
-## Open questions for planner
+### T2 — In-memory store
 
-1. Should the middleware short-circuit before route handlers run, or should the handler be able to opt out?
-2. What happens when `keyExtractor` returns `null` — fail open (allow) or fail closed (block)?
-3. Should hit counts be exposed in response headers by default, or opt-in?
+**Description:** As a developer, I want a `MemoryStore` class so that bucket state persists across requests per user.
+
+**Acceptance criteria:**
+- [ ] `Map<string, BucketState>` internal store
+- [ ] `consume(key, options)` — get-or-create bucket, delegate to T1, persist [D]
+- [ ] `clear()` — empties map (test helper)
+- [ ] Bucket state persists across calls for same key
+
+---
+
+### T3 — Default key extractor
+
+**Description:** As a developer, I want a default key extractor so that the middleware works out-of-the-box with JWT auth.
+
+**Acceptance criteria:**
+- [ ] Reads `Authorization: Bearer <token>` header
+- [ ] Decodes JWT without verification via `jsonwebtoken.decode`
+- [ ] Returns `payload.sub` as string, or `null` [E]
+- [ ] Returns `null` for missing or malformed header
+
+---
+
+### T4 — Middleware factory
+
+**Description:** As a developer, I want `rateLimiter(options)` so that I can attach rate limiting to any Express route in one call.
+
+**Acceptance criteria:**
+- [ ] Uses `MemoryStore` by default (or `options.store`)
+- [ ] Uses `defaultKeyExtractor` by default (or `options.keyExtractor`)
+- [ ] Null key → `next()` (fail open) [A]
+- [ ] Sets `X-RateLimit-*` headers on every request
+- [ ] Returns 429 + JSON body with `retryAfter` when limit exceeded
+- [ ] Attaches to Express app in one line
+
+---
+
+### T5 — Tests
+
+**Description:** As a developer, I want full test coverage so that behaviour is verified at all layers.
+
+**Acceptance criteria:**
+- [ ] Token bucket: refill math, boundary conditions, `retryAfter` accuracy
+- [ ] MemoryStore: state persistence, initial bucket at full limit
+- [ ] Middleware: 200 on first N requests, 429 on N+1, correct headers, null key pass-through, custom `keyExtractor`
+- [ ] Integration (supertest): window reset after `windowMs`
+- [ ] All tests pass
+
+---
+
+### T6 — Usage documentation
+
+**Description:** As an API developer, I want a README so that I can quickly integrate the middleware.
+
+**Acceptance criteria:**
+- [ ] Install / import instructions
+- [ ] Basic one-liner usage example
+- [ ] Options reference table
+- [ ] Custom `keyExtractor` example
+- [ ] Known limitations: in-memory, single-instance only
+
+---
+
+### T7 — Final verification
+
+**Description:** As a developer, I want all quality gates to pass so that the feature is production-ready.
+
+**Acceptance criteria:**
+- [ ] `npx vitest run` — all tests pass
+- [ ] `npx tsc --noEmit` — no type errors
+- [ ] `npx eslint src/middleware/` — no lint errors
+- [ ] Remove TODO/debug comments from implementation
+- [ ] JSDoc limited to 2 lines max where present

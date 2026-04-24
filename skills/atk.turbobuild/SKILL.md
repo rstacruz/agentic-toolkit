@@ -3,10 +3,11 @@ name: turbobuild
 description: Implements a plan on a ticket-by-ticket basis using subagents. Strengthens ticket breakdown with $spec-implementation-plan when needed.
 ---
 
-1. ****Find the plan:**
+1. **Find the plan:**
    - Find the plan file. It may be mentioned previously in the conversation, or ask the user if it can't be found.
    - Reuse the exact plan path if it was already provided.
-   - Ensure that the file is on disk as an .md file. If not, write it to `artefacts/plan-<title>.md` first.
+   - If that plan path is not on disk yet, create the plan at that exact path.
+   - Only if no plan path exists yet, write it to `artefacts/plan-<title>.md` first.
 
 2. **Evaluate and clarify:**
    - Evaluate if the plan has structured Tickets suitable for execution.

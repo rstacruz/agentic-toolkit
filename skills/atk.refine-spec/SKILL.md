@@ -6,7 +6,8 @@ description: "Pressure-test a plan with subagents, resolve material issues, and 
 1. **Find the plan:**
    - Find the file. It may be mentioned previously in the conversation, or ask the user if it can't be found.
    - Reuse the exact plan path if it was already provided.
-   - Ensure the file is on disk as an `.md` file. If not, write it to `artefacts/plan-<title>.md` first.
+   - If that plan path is not on disk yet, create the plan at that exact path.
+   - Only if no plan path exists yet, write it to `artefacts/plan-<title>.md` first.
 
 2. **Launch parallel critique passes:**
    - Launch 2 independent passes in parallel: one @general-alpha and one @general-beta review pass.

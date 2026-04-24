@@ -7,7 +7,8 @@ description: Gives important guidelines to define technical design sections (cal
 
 **Process:**
 - If plan exists in a file: Update that file with sections below
-- If plan is not in a file: Create `artefacts/plan-<title>.md` with sections below
+- If a plan path is already known but the file is not on disk yet: Create the file at that exact path with sections below
+- If no plan path is known yet: Create `artefacts/plan-<title>.md` with sections below
 
 ## Sections
 

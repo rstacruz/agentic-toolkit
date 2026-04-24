@@ -30,7 +30,7 @@ Do not proceed further. Do not attempt to infer or guess missing values.
 
 3. Verify work
    - Stage updates in Git (git add)
-   - Load `$review-changes` skill. Ask it to review staged changes (git diff --cached).
+   - Load `$review-changes` skill. Ask it to review staged changes (`git diff --cached`) against `{{PLAN_FILE}}`.
    - Assess feedback. Address any P1 issues that makes sense to do.
    - If there was feedback, ask reviews again, then address again. Keep looping until there are no more changes to do.
 
@@ -47,10 +47,10 @@ Do not proceed further. Do not attempt to infer or guess missing values.
      - `Blockers/Risks:` potential roadblocks that future work might encounter
      - `Suggested plan changes:` optional list of corrections or pivots the parent agent should assess
    - For each suggested plan change, include:
-     - `Type:` spec inaccuracy, inconsistency, hidden dependency, reorder needed, pivot needed, or similar
-     - `Impact:` what this changes for upcoming work
-     - `Recommendation:` the concrete next-step adjustment to make
-     - `User input needed:` yes or no
+      - `Type:` plan inaccuracy, inconsistency, hidden dependency, reorder needed, pivot needed, or similar
+      - `Impact:` what this changes for upcoming work
+      - `Recommendation:` the concrete next-step adjustment to make
+      - `User input needed:` yes or no
    - Do not directly rewrite the broader plan unless that work is explicitly part of `{{TICKET}}`
 
 6. Commit changes

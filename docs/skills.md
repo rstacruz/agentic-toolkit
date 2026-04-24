@@ -55,7 +55,7 @@ graph LR
 ### Polish
 
 - [`$polish`](../skills/atk.polish/SKILL.md) — Simplify and review an implementation
-  - [`$review-changes`](../skills/atk.review-changes/SKILL.md) — Review code changes against the spec (P1/P2/P3 recommendations)
+  - [`$review-changes`](../skills/atk.review-changes/SKILL.md) — Review code changes against the plan (P1/P2/P3 recommendations)
 
 ### Other
 

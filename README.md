@@ -45,7 +45,7 @@ Start with `$brainstorm`.
 /brainstorm i want to implement config via c12 npm package
 ```
 
-*Example:* [`example-plan.md`](./docs/example-plan.md) — example plan produced by `$brainstorm`
+*Example:* [`example-brainstorm-plan.md`](./docs/example-brainstorm-plan.md) — example plan produced by `$brainstorm`
 
 ### Hardening a plan
 
@@ -62,7 +62,7 @@ Use `$turboplan` to improve a plan.
 use turboplan
 ```
 
-*Example:* [`example-spec.md`](./docs/example-spec.md) - example full plan document (PRD + TDD + tickets) from the planning workflow.
+*Example:* [`example-plan.md`](./docs/example-plan.md) - example full plan document (PRD + TDD + tickets) from the planning workflow.
 
 ### Build with subagents
 
