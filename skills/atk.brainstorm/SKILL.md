@@ -29,6 +29,17 @@ The user shares a rough idea. Guide them to a **pre-plan** through targeted ques
 - **Scope is narrow** — touches a single file or tightly bounded area; no cross-cutting concerns
 - **Single deliverable** — one concrete task, not a breakdown of sub-tasks
 
+**Decision framing before lock-in:**
+
+- Once the user's answers narrow the space, do not jump straight to a concrete pre-plan if a meaningful design choice still remains.
+- First:
+- Reflect back what changed.
+- Name the main tradeoffs.
+- Present `2-3` viable options with a short label, one-line shape, and brief pros/cons.
+- State your current leaning and why.
+- Ask only the minimum follow-up questions needed to lock direction.
+- Skip the option list only when the implementation path is already obvious.
+
 **When done:** upon reaching READY_FOR_PLANNING or READY_FOR_EXECUTION:
 
 - Write the pre-plan to `artefacts/plan-<title>.md`.
