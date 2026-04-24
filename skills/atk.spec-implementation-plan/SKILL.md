@@ -5,15 +5,16 @@ description: Gives important guidelines to break down large features into smalle
 
 # Implementation plan
 
-Update a spec to break down large features into tickets optimized for AI agent execution.
+Update a plan to break down large features into tickets optimized for AI agent execution.
 
 **Output:**
 - Tickets: Vertical slices implementing functional requirements
 - Dependencies: Mermaid graph showing execution order (optional)
 
 **Process:**
-- If spec exists in a file: Update that file with sections below
-- If spec is not in a file: Create `artefacts/spec-{title}.md` with sections below
+- If plan exists in a file: Update that file with sections below
+- If a plan path is already known but the file is not on disk yet: Create the file at that exact path with sections below
+- If no plan path is known yet: Create `artefacts/plan-<title>.md` with sections below
 
 # Output format
 

@@ -1,10 +1,10 @@
-> **Note:** This is an example spec from the planning workflow.
-> It shows what a full spec document can look like when derived from a plan seed.
-> Source seed: [`example-seed.md`](./example-seed.md)
+> **Note:** This is an example plan from the planning workflow.
+> It shows what a full plan document can look like when expanded from an initial plan.
+> Source plan: [`example-brainstorm-plan.md`](./example-brainstorm-plan.md)
 
 ---
 
-# Spec: Per-User Rate Limiting Middleware
+# Plan: Per-User Rate Limiting Middleware
 
 ## Initial ask
 

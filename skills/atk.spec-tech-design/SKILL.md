@@ -6,8 +6,9 @@ description: Gives important guidelines to define technical design sections (cal
 # Tech design
 
 **Process:**
-- If spec exists in a file: Update that file with sections below
-- If spec is not in a file: Create `artefacts/spec-{title}.md` with sections below
+- If plan exists in a file: Update that file with sections below
+- If a plan path is already known but the file is not on disk yet: Create the file at that exact path with sections below
+- If no plan path is known yet: Create `artefacts/plan-<title>.md` with sections below
 
 ## Sections
 
@@ -93,7 +94,7 @@ List tests needed with run commands.
 
 ### Example: Comprehensive planning document
 
-This example shows ALL available sections in a combined spec. **Include only sections relevant to your feature.**
+This example shows ALL available sections in a combined plan. **Include only sections relevant to your feature.**
 
 ````markdown
 # Plan: Task notification system
@@ -202,4 +203,3 @@ For UI work: Verify in browser via http://localhost:3000/notifications
 .
 .
 ````
-
