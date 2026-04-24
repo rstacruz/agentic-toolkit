@@ -45,13 +45,13 @@ Start with `$brainstorm`.
 /brainstorm i want to implement config via c12 npm package
 ```
 
-*Example:* [`example-seed.md`](./docs/example-seed.md) — example plan seed produced by `$brainstorm`
+*Example:* [`example-plan.md`](./docs/example-plan.md) — example plan produced by `$brainstorm`
 
 ### Hardening a plan
 
 Use `$turboplan` to improve a plan.
 
-*When to use:* when you already have a plan or a plan seed from `$brainstorm`.
+*When to use:* when you already have a plan from `$brainstorm` or another planning pass.
 
 *What it does:* it expands the plan with concrete implementation details, then refines it in multiple passes using two LLMs (Opus and GPT 5.4 High by default).
 
@@ -62,7 +62,7 @@ Use `$turboplan` to improve a plan.
 use turboplan
 ```
 
-*Example:* [`example-spec.md`](./docs/example-spec.md) - example full spec document (PRD + TDD + tickets) from the planning workflow.
+*Example:* [`example-spec.md`](./docs/example-spec.md) - example full plan document (PRD + TDD + tickets) from the planning workflow.
 
 ### Build with subagents
 

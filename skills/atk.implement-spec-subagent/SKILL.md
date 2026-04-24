@@ -1,6 +1,6 @@
 ---
 name: implement-spec-subagent
-description: Implements a single ticket from a spec. Always invoke with ticket, spec file, progress file. For use by subagents only.
+description: Implements a single ticket from a plan. Always invoke with ticket, plan file, progress file. For use by subagents only.
 ---
 
 ## Input Validation
@@ -8,12 +8,12 @@ description: Implements a single ticket from a spec. Always invoke with ticket, 
 **CRITICAL**: This skill requires three inputs to be passed from the parent agent:
 
 1. `{{TICKET}}` - The ticket ID and title (e.g., "T-01: Implement user authentication")
-2. `{{SPEC_FILE}}` - Path to the spec file (e.g., `artefacts/spec.md`)
-3. `{{PROGRESS_FILE}}` - Path to the progress file (e.g., `artefacts/progress.md`)
+2. `{{PLAN_FILE}}` - Path to the plan file (e.g., `artefacts/plan-user-authentication.md`)
+3. `{{PROGRESS_FILE}}` - Path to the progress file (e.g., `artefacts/plan-user-authentication-progress.md`)
 
 If any of these inputs are missing or not provided, exit immediately with this message:
 
-> Error: Missing required input. Please provide: ticket ID, spec file path, and progress file path.
+> Error: Missing required input. Please provide: ticket ID, plan file path, and progress file path.
 
 Do not proceed further. Do not attempt to infer or guess missing values.
 
@@ -21,7 +21,7 @@ Do not proceed further. Do not attempt to infer or guess missing values.
 
 1. Gather context
    - Read *progress file* (`{{PROGRESS_FILE}}`)
-   - Read *spec file(s)* (`{{SPEC_FILE}}`)
+   - Read *plan file* (`{{PLAN_FILE}}`)
 
 2. Do ticket
    - Ticket: `{{TICKET}}`
@@ -51,7 +51,7 @@ Do not proceed further. Do not attempt to infer or guess missing values.
      - `Impact:` what this changes for upcoming work
      - `Recommendation:` the concrete next-step adjustment to make
      - `User input needed:` yes or no
-   - Do not directly rewrite the broader spec or plan unless that work is explicitly part of `{{TICKET}}`
+   - Do not directly rewrite the broader plan unless that work is explicitly part of `{{TICKET}}`
 
 6. Commit changes
    - Include ticket ID in commit title

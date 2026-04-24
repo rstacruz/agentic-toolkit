@@ -1,11 +1,12 @@
 ---
 name: refine-spec
-description: "Pressure-test a spec, plan, or plan seed with subagents, resolve material issues, and iterate until it is ready for implementation."
+description: "Pressure-test a plan with subagents, resolve material issues, and iterate until it is ready for implementation."
 ---
 
-1. **Find the spec, plan, or plan seed:**
+1. **Find the plan:**
    - Find the file. It may be mentioned previously in the conversation, or ask the user if it can't be found.
-   - Ensure the file is on disk as an `.md` file. If not, write it to `artefacts/<title>.md` first.
+   - Reuse the exact plan path if it was already provided.
+   - Ensure the file is on disk as an `.md` file. If not, write it to `artefacts/plan-<title>.md` first.
 
 2. **Launch parallel critique passes:**
    - Launch 2 independent passes in parallel: one @general-alpha and one @general-beta review pass.

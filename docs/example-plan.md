@@ -1,7 +1,7 @@
-# Plan Seed: Per-User Rate Limiting Middleware
+# Plan: Per-User Rate Limiting Middleware
 
-> **Note:** This is an example plan seed produced by the `$brainstorm` skill.
-> It shows what a seed document can look like after a brainstorm session.
+> **Note:** This is an example plan produced by the `$brainstorm` skill.
+> It shows what a compact planning document can look like after a brainstorm session.
 
 ---
 
