@@ -24,38 +24,78 @@ The API has no per-user request throttling. A single client can flood any endpoi
 
 ## Functional requirements
 
-- **F1 — Rate limit enforcement** — Requests exceeding the per-user limit within the window are rejected with HTTP 429
-- **F2 — Response headers** — Every response includes `X-RateLimit-Limit`, `X-RateLimit-Remaining`, and `X-RateLimit-Reset`; rejected requests also include `Retry-After`
-- **F3 — Configurable key extractor** — The user key is derived through a configurable `keyExtractor` function; the default uses the JWT `sub` claim
-- **F4 — Configurable limit/window** — Limit and window duration are configurable per middleware instance
-- **F5 — Fail open** — If `keyExtractor` returns `null` or `undefined`, the request passes through unchanged
-- **F6 — Single-call attachment** — The middleware attaches to any Express route or router in one call
-- **F7 — Route isolation** — Routes without the middleware attached are unaffected
+- **F1.1. Limit enforcement**
+  - Reject over-quota requests with HTTP 429
+  - Applies per authenticated user within the configured window
+- **F1.2. Rate limit headers**
+  - Include standard headers on every response
+  - Rejected responses also include `Retry-After`
+- **F1.3. Configurable key**
+  - Derive user key through configurable extractor
+  - Default extractor reads JWT `sub`
+- **F1.4. Configurable window**
+  - Configure limit and window per middleware instance
+  - Each attachment can use different quota settings
+- **F1.5. Fail open**
+  - Pass through requests without an extracted key
+  - Applies when `keyExtractor` returns `null` or `undefined`
+- **F1.6. Single-call attachment**
+  - Attach middleware in one route-level call
+  - Works on individual routes and routers
+- **F1.7. Route isolation**
+  - Leave untouched routes unaffected
+  - Only attached routes are rate-limited
 
 ## Technical requirements
 
-- **TR1 — Token bucket algorithm** — Continuous refill: tokens replenish in proportion to elapsed time and never exceed `limit`
-- **TR2 — In-memory store** — `Map<string, BucketState>`; no Redis or external dependency
-- **TR3 — JWT decoding** — `defaultKeyExtractor` decodes JWT without verification; extracts `payload.sub`; returns `null` on missing/malformed header
-- **TR4 — Factory interface** — `rateLimiter(options): RequestHandler` returns Express-compatible handler
+- **TR1.1. Token bucket**
+  - Refill tokens continuously up to `limit`
+  - Refill amount scales with elapsed time
+- **TR1.2. In-memory store**
+  - Store bucket state in `Map<string, BucketState>`
+  - No Redis or external dependency in this iteration
+- **TR1.3. JWT decoding**
+  - Default extractor decodes JWT without verification
+  - Returns `payload.sub` or `null` for invalid input
+- **TR1.4. Factory interface**
+  - `rateLimiter(options)` returns Express-compatible handler
+  - Accepts custom `keyExtractor` and `store`
 
 ## Non-functional requirements
 
-- **NF1 — Latency** — Less than 1 ms overhead per request for the bucket check
-- **NF2 — Zero external deps** — In-memory only for this iteration
-- **NF3 — Thread safety** — Single Node.js process; no locking required
+- **NF1.1. Request overhead**
+  - Add less than 1 ms per request
+  - Budget covers the bucket check path only
+- **NF1.2. External dependencies**
+  - Use in-memory state only this iteration
+  - No network round trips on the hot path
+- **NF1.3. Concurrency model**
+  - Assume a single Node.js process
+  - No locking required in this deployment model
 
 ## Technical constraints
 
-- **TC1 — In-memory only** — No Redis or database in this iteration
-- **TC2 — Single instance** — Does not support distributed deployments
-- **TC3 — Authenticated routes only** — Rate limiting applies only where a user key is extractable
+- **TC1.1. Storage scope**
+  - Do not use Redis or a database
+  - This iteration stays in-memory only
+- **TC1.2. Deployment model**
+  - Do not support distributed deployments
+  - Behaviour is limited to a single instance
+- **TC1.3. Authenticated routes**
+  - Apply only when a user key is extractable
+  - Unauthenticated traffic is outside this middleware's scope
 
 ## Design considerations
 
-- **DC1 — Fail open caveat** — F5 means unauthenticated routes must not attach this middleware; this should be documented clearly
-- **DC2 — Header exposure** — Rate limit headers included by default; helps clients back off gracefully
-- **DC3 — Token bucket over sliding window** — Simpler implementation; constant memory per user
+- **DC1.1. Fail-open caveat**
+  - Do not attach middleware to unauthenticated routes
+  - F1.5 depends on authenticated routes providing a user key
+- **DC1.2. Header exposure**
+  - Expose rate limit headers by default
+  - Helps clients back off gracefully
+- **DC1.3. Bucket choice**
+  - Prefer token bucket over sliding window
+  - Simpler implementation with constant memory per user
 
 ## Out of scope
 

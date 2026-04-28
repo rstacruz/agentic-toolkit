@@ -20,6 +20,23 @@ description: Gives important guidelines to define product requirements sections 
 
 ## Sections
 
+## Requirement item format
+
+Applies to Functional requirements, Technical requirements, Non-functional requirements,
+Technical constraints, and Design considerations.
+
+- Use `- **<PREFIX>1.1. Short title**` followed by nested detail bullets
+- Keep `Short title` to 5 words max
+- Use the first nested bullet for the short description
+- Keep that first bullet to 10 words max
+
+**Prefixes:**
+- `F` = Functional requirements
+- `TR` = Technical requirements
+- `NF` = Non-functional requirements
+- `TC` = Technical constraints
+- `DC` = Design considerations
+
 ### Functional requirements
 
 Product-focused: **what** users can do and system does, not **how** it's implemented.
@@ -27,15 +44,23 @@ Product-focused: **what** users can do and system does, not **how** it's impleme
 **Include:** User actions, system responses, observable behavior, timing constraints  
 **Exclude:** Function names, cache layers, data structures → Technical requirements or Technical design sections
 
-**Format:** Em-dash pattern (see [Formatting standards](#formatting-standards))
+Use the shared requirement item format with prefix `F`.
 
 **Good examples:**
-- **F1.1. Contact sync** — Changes to contacts sync to mirror workspace within 2 seconds
-- **F1.2. Status tracking** — System tracks when contacts were last viewed by user
+- **F1.1. Contact sync**
+  - Mirror workspace changes within 2 seconds
+  - Applies to create, update, and archive actions
+- **F1.2. Status tracking**
+  - Show when a contact was last viewed
+  - Timestamp is visible to the current user
 
 **Bad examples (implementation details):**
-- **F1.1** `updateContact()` calls mirror function with `touchUpdatedAt: true`
-- **F1.2** Uses Redis cache with 5-minute TTL
+- **F1.1. Mirror call**
+  - `updateContact()` passes `touchUpdatedAt: true`
+  - Describes a function contract, not user-visible behaviour
+- **F1.2. Cache layer**
+  - Uses Redis cache with 5-minute TTL
+  - Describes implementation, not product behaviour
 
 **Test:** Mentions function names/parameters/cache? → Wrong section
 
@@ -48,12 +73,23 @@ System-level technical contracts, integration points, API specifications. Techni
 **Include:** API contracts, integration behaviors, WebSocket events, database triggers, third-party service calls, data sync specifications  
 **Exclude:** Implementation approach (→ Technical design sections), error handling strategies (→ Technical design sections), function internal logic (→ Technical design sections)
 
-**Format:** Em-dash pattern (see [Formatting standards](#formatting-standards))
+Use the shared requirement item format with prefix `TR`.
 
 **Boundary clarification:**
 - **Functional requirements** → User-observable behavior, product features, UI interactions ("User receives notification when...")
 - **Technical requirements** → System contracts, API specifications, integration points, data flows ("`updateContact()` accepts `touchUpdatedAt` parameter...")
 - **Technical design sections** → Implementation approach, function design, error handling strategies ("Use try/catch for database errors...")
+
+See [Example plan](#example-comprehensive-planning-document) for format.
+
+### Non-functional requirements
+
+Quality attributes and measurable system characteristics that define acceptable operation.
+
+**Include:** Performance targets, latency budgets, throughput expectations, scalability limits, reliability expectations, security expectations  
+**Exclude:** User-visible feature behaviour (→ Functional requirements), API contracts (→ Technical requirements), implementation approach (→ Technical design sections)
+
+Use the shared requirement item format with prefix `NF`.
 
 See [Example plan](#example-comprehensive-planning-document) for format.
 
@@ -64,7 +100,7 @@ Technology limitations and platform requirements that constrain implementation c
 **Include:** Tech stack requirements, platform limitations, browser support, library versions, infrastructure constraints, performance budgets  
 **Exclude:** System integration contracts (→ Technical requirements), implementation approach (→ Technical design sections)
 
-**Format:** Em-dash pattern (see [Formatting standards](#formatting-standards))
+Use the shared requirement item format with prefix `TC`.
 
 See [Example plan](#example-comprehensive-planning-document) for format.
 
@@ -78,7 +114,7 @@ See [Example plan](#example-comprehensive-planning-document) for format.
 
 Document important design decisions that don't fit into functional requirements.
 
-**Format:** Em-dash pattern with DC1, DC2... identifiers
+Use the shared requirement item format with prefix `DC`.
 
 See [Example plan](#example-comprehensive-planning-document) for format.
 
@@ -133,38 +169,68 @@ Users miss updates by manually checking task list.
 ## Functional requirements
 
 ### F1: Notification events
-- **F1.1. Task comments** — User receives notification when someone comments on watched task
-- **F1.2. Status changes** — User receives notification when task status changes
-- **F1.3. Mentions** — User receives notification when mentioned in comments/descriptions
-
-Each notification: event type, task title (linked), who triggered it, timestamp.
+- **F1.1. Task comments**
+  - Notify watchers when someone comments on a watched task
+  - Include event type, task title, actor, timestamp, and deep link
+- **F1.2. Status changes**
+  - Notify watchers when watched task status changes
+  - Include the previous and new status values
+- **F1.3. Mentions**
+  - Notify users when they are mentioned
+  - Applies to comments and task descriptions
 
 ### F2: Notification delivery
-- **F2.1. Real-time** — Notifications appear in-app within 2 seconds of event
-- **F2.2. Email** — Email notifications sent within 5 minutes for unwatched in-app notifications
-- **F2.3. Notification centre** — User can view all notifications in dedicated panel
+- **F2.1. Real-time delivery**
+  - Show in-app notifications within 2 seconds
+  - Applies while the user has an active session
+- **F2.2. Email fallback**
+  - Email unseen notifications within 5 minutes
+  - Skip email when the notification was already read in-app
+- **F2.3. Notification centre**
+  - Let users browse notification history
+  - Support opening the related task from each entry
 
 ## Technical requirements
 
 ### TR1: Real-time delivery
-- **TR1.1. WebSocket events** — Server emits `notification` event: `{userId, eventType, taskId, timestamp, triggeredBy}`
-- **TR1.2. Connection handling** — Client reconnects automatically on disconnect, fetches missed notifications
+- **TR1.1. Notification event**
+  - Emit `notification` events with the shared payload schema
+  - Payload includes `userId`, `eventType`, `taskId`, `timestamp`, `triggeredBy`
+- **TR1.2. Reconnect sync**
+  - Fetch missed notifications after reconnect
+  - Client reconnects automatically after disconnect
 
 ### TR2: Email queue
-- **TR2.1. Queue contract** — Accepts events via `emailQueue.add('notification', payload)` with notification schema
-- **TR2.2. Batch processing** — Groups notifications by user, sends max 1 email per 5 minutes per user
+- **TR2.1. Queue contract**
+  - Queue accepts notification payloads under one job type
+  - Use `emailQueue.add('notification', payload)`
+- **TR2.2. Batch window**
+  - Send at most one email every 5 minutes
+  - Group queued notifications by user
 
 ## Non-functional requirements
-- **NF1. Performance** — Real-time notifications delivered within 2 seconds
-- **NF2. Scalability** — Email queue handles 1000+ notifications/min
+- **NF1.1. Delivery latency**
+  - Deliver in-app notifications within 2 seconds
+  - Measure from event creation to client render
+- **NF1.2. Queue throughput**
+  - Handle 1000 notifications per minute
+  - Sustained bursts should not drop events
 
 ## Technical constraints
-- **TC1. WebSocket library** — Must use existing Socket.io v4 installation
-- **TC2. Email service** — Must use existing SendGrid integration
+- **TC1.1. WebSocket library**
+  - Use existing Socket.io v4 installation
+  - Do not introduce a second realtime transport
+- **TC1.2. Email service**
+  - Use existing SendGrid integration
+  - Reuse current authentication and sender configuration
 
 ## Design considerations
-- **DC1. Idempotency** — Duplicate events produce single notification
-- **DC2. Offline handling** — Missed notifications fetched on reconnect
+- **DC1.1. Idempotency**
+  - Collapse duplicate events into one notification
+  - Prevent repeated alerts for the same source action
+- **DC1.2. Offline recovery**
+  - Backfill missed notifications after reconnect
+  - Prefer server reconciliation over client-side guesswork
 
 ## Screen interactions
 
