@@ -90,6 +90,14 @@ List tests needed with run commands.
 
 **Format:** 1 line per test (name only). Add 1-line comment after if key info needed.
 
+### Alternate name ideas
+
+Include a list with some identifier names, along with proposals for alternatives. Use the format:
+```
+- **name 1** - short description
+  - `altName` (short explanation)
+```
+
 ## Examples
 
 ### Example: Comprehensive planning document
@@ -200,6 +208,10 @@ enqueueEmail(notification) # [🟢 NEW] [B]
 For UI work: Verify in browser via http://localhost:3000/notifications
 
 .
+.
+
+## Alternate name ideas
+
 .
 .
 ````
