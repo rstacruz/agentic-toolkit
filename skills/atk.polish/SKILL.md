@@ -11,7 +11,7 @@ description: "Use after implementation to simplify and review code. Provide: git
       - Set of commits (eg, `git diff commit1...commitN`)
 
 2. Simplify: launch review agents in parallel
-   Use the Agent tool to launch the first three agents concurrently in a single message. Pass each agent the change set information (eg, `git diff` command, or list of files and line ranges).
+   Use the Agent tool to launch the first @general-alpha agents concurrently in a single message. Pass each agent the change set information (eg, `git diff` command, or list of files and line ranges).
    If the change set includes added or modified test files, launch a fourth agent in parallel with the same change set information.
 
    **Agent 1: Code Reuse Review**

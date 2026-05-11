@@ -12,7 +12,7 @@ if [[ -d "${SOURCE_DIR}" ]]; then
   rm -rf \
     "$REPO_ROOT/skill/atk" \
     "$REPO_ROOT/skill/atk-extras"
-  rsync -av "$SOURCE_DIR/" "$REPO_ROOT/skills/" --include "atk.*" --exclude "*"
+  rsync -av "$SOURCE_DIR/" "$REPO_ROOT/skills/" --include "atk.*" --include "atk.*/***" --exclude "*"
 fi
 
 if [[ -d "${OPENCODE_AGENT_DIR}" ]]; then
