@@ -21,6 +21,7 @@ Visualizes how functions, modules, systems interconnect.
 **Structure:** Subgraphs (by file/module), nodes (functions/components), reference letters [A][B], status markers (🟢🟡🔴), arrows with descriptive labels ("uses", "calls", "renders via")
 
 **Include:** Changed functions/components, what uses them, integration points, data flow direction  
+
 **Exclude:** Internal implementation details, trivial helpers, standard library/framework functions, tests
 
 **Best practices:** Focus on changed components + immediate dependencies, search codebase for usage, trace to entry points (API calls, CLI actions), correlate nodes to pseudocode using reference letters
@@ -72,21 +73,19 @@ List new, modified, and removed files.
 
 **Format:** Use bold prefixes: `**New:**`, `**Modified:**`, `**Removed:**` followed by comma-separated file paths.
 
-See [Example plan](#example-comprehensive-planning-document) for format.
-
 ### CSS classes
 
 List CSS class names for UI features.
 
 **Format:** Dash-prefixed list with class name and brief description.
 
-See [Example plan](#example-comprehensive-planning-document) for format.
-
 ### Testing strategy
 
 List tests needed with run commands.
 
-**Include:** Test data/fixtures used, dependencies needing mocks + why (external APIs, databases, time-dependent), exact command to run tests
+**Include:** Test data/fixtures used, dependencies
+
+Identify which tests are TDD harness tests and which can be removed before shipping. This prevents us from polluting the codebase with low-value tests.
 
 **Format:** 1 line per test (name only). Add 1-line comment after if key info needed.
 
@@ -187,17 +186,17 @@ enqueueEmail(notification) # [🟢 NEW] [B]
 
 ## Testing strategy
 
-**Run:** `npx vitest src/notifications/`
-
-**Mocks:** `@/lib/prisma`, `email/queue`
 **Fixtures:** `PENDING_TASK`, `MOCK_USER`
 
-**Tests:**
+**Tests to ship - behavioural contracts:**
 - creates notification with correct fields
-- enqueues email after creating notification
-- returns all unread notifications for user
-- marks notification as read
-- handles duplicate events idempotently
+- …
+- …
+
+**TDD harness - test, then remove before shipping:**
+- …
+- …
+
 
 ## Quality gates
 
