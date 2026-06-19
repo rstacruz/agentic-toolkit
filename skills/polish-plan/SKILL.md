@@ -16,6 +16,5 @@ Notes:
 
 Reporting:
 
-- Make recommendation
-  - Consider options: Implement now, do more polish rounds, address [issue]
-  - If the last round still had changes to be done, suggest more polish rounds, there may be additional issues to find
+- Make recommendation. If the last round still had changes to be done, suggest more polish rounds, there may be additional issues to find
+
