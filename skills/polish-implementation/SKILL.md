@@ -30,4 +30,4 @@ Notes:
 Reporting:
 
 - Make recommendation. If the last round still had changes to be done, suggest more polish rounds, there may be additional issues to find
-- Summarise polishing done, and recommendations for future work.
+- Summarise work done, deferred work.
