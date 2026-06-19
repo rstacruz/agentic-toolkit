@@ -66,7 +66,7 @@ Consider structuring plan files like so. Feel free to add or omit sections as ne
 2. …
 
 ## Decisions
-- [list descisions here as user answers questions or steers the planning/brainstorming]
+- [list decisions here as user answers questions or steers the planning/brainstorming]
 
 ## Grounded facts
 

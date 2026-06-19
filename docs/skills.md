@@ -8,8 +8,7 @@ graph LR
   brainstorm --> triangulate-plan
   polish-plan --> polish-implementation
   triangulate-plan --> polish-implementation
-  polish-implementation --> pr-plan
-  pr-plan --> babysit-pr
+  polish-implementation --> babysit-pr
 ```
 
 ## Skills reference
@@ -29,5 +28,4 @@ graph LR
 
 ### Shipping
 
-- [`$pr-plan`](../skills/pr-plan/SKILL.md) — Break an existing plan into smaller, reviewable pull requests
 - [`$babysit-pr`](../skills/babysit-pr/SKILL.md) — Monitor a PR's CI status in a loop until it passes or needs human input

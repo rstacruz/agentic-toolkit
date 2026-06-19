@@ -9,16 +9,10 @@ Treat this repo as a glimpse into my setup, not a sealed product. Use the parts 
 Install [OpenCode](https://opencode.ai). Claude and Codex are also supported. Then:
 
 ```sh
-# If you use OpenCode, copy the `agent/` files into `~/.config/opencode/agent/`
-mkdir -p ~/.config/opencode/agent
-curl -L https://raw.githubusercontent.com/rstacruz/agentic-toolkit/main/agent/general-alpha.md -o ~/.config/opencode/agent/general-alpha.md
-curl -L https://raw.githubusercontent.com/rstacruz/agentic-toolkit/main/agent/general-beta.md  -o ~/.config/opencode/agent/general-beta.md
-
-# Finally, install the skills:
 npx skills add rstacruz/agentic-toolkit
 ```
 
-These skills use the [Agent Skills](https://agentskills.io/home) format, so they work across compatible tools. The `agent/` directory is OpenCode-specific.
+These skills use the [Agent Skills](https://agentskills.io/home) format, so they work across compatible tools.
 
 ## Contents
 
@@ -27,9 +21,7 @@ These skills use the [Agent Skills](https://agentskills.io/home) format, so they
 ## Quick start
 
 ```
-brainstorm → polish-plan / triangulate-plan → polish-implementation → pr-plan
-                                                              ↑
-                                                          babysit-pr
+brainstorm → polish-plan / triangulate-plan → polish-implementation → babysit-pr
 ```
 
 ### Starting from scratch
@@ -77,16 +69,6 @@ Use `$polish-implementation` to implement a plan.
 > Plan is done.
 
 use polish-implementation
-```
-
-### Break into PRs
-
-Use `$pr-plan` to split a plan into smaller, reviewable pull requests.
-
-*When to use:* once implementation is underway and you want to ship in reviewable chunks.
-
-```
-use pr-plan
 ```
 
 ### Watch CI

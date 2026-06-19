@@ -11,7 +11,7 @@ Run an iterative review loop on an implementation, auto-applying fixes each pass
   - Branch (eg, `git diff main...HEAD`)
   - Set of commits (eg, `git diff commit1...commitN`)
 
-2. **Subagent review.** Spawn a subagent (oracle, if available) with the change set from step 1. Ask it to return a prioritised list of issues covering:subagent if available
+2. **Subagent review.** Spawn a subagent (oracle, if available) with the change set from step 1. Ask it to return a prioritised list of issues covering:
   - Correctness (inaccuracies, edge cases, missing error handling)
   - Code reuse (existing utilities or helpers that could replace new code)
   - Code quality (redundant state, copy-paste variants, leaky abstractions, stringly-typed code)
