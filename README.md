@@ -21,14 +21,11 @@ Start with [`$brainstorm`](https://github.com/rstacruz/agentic-toolkit/blob/main
 - Asks questions relentlessly (inspired by [grill-me](https://github.com/mattpocock/skills/blob/main/skills/productivity/grill-me/))
 - Easily-skimmable output (Grounded facts, Steps, Risks)
 - Works for all agents (including Pi which has no plan mode)
+- Example: [example-plan.md](./docs/example-plan.md)
 
 ```
 /brainstorm i want to implement config via c12 npm package
 ```
-
-<!--
-*Example:* [`example-brainstorm-plan.md`](./docs/example-brainstorm-plan.md) — example plan produced by `$brainstorm`
--->
 
 ### Polish the plan
 
