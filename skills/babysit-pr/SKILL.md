@@ -25,6 +25,13 @@ bash "$SKILL_DIR/scripts/poll-pr.sh" [<pr-number-or-url>]
 
 Requires `gh` (≥ 2.32) and `jq`.
 
+After finding the PR, request a Copilot review using the GraphQL API (works for both initial requests and re-requests after pushes):
+```bash
+PR_NODE_ID=$(gh pr view <PR> --json id -q .id)
+gh api graphql -f query='mutation { requestReviews(input: { pullRequestId: "'"$PR_NODE_ID"'", botIds: ["BOT_kgDOCnlnWA"] }) { pullRequest { id } } }'
+```
+`BOT_kgDOCnlnWA` is the stable node ID for `copilot-pull-request-reviewer`. The `gh pr edit --add-reviewer @copilot` REST path does not support re-requests.
+
 ## Main loop
 
 ```
@@ -33,7 +40,8 @@ LOOP:
 
   status=merged  → "PR #<n> merged." — STOP
   status=closed  → "PR #<n> closed without merging." — STOP
-  status=passing → "CI green. PR #<n> is ready to merge." — STOP
+  status=passing →
+    Proceed to REVIEW-WAIT phase (see below)
 
   status=pending →
     unchanged_count += 1
@@ -42,7 +50,7 @@ LOOP:
 
   status=failing →
     unchanged_count = 0
-    Spawn ONE @general-alpha subagent with ALL failing_run_ids:
+    Spawn ONE subagent with ALL failing_run_ids:
       """
       Analyse CI failures for PR #{{PR_NUM}}.
       For each run ID in {{FAILING_RUN_IDS}}, run:
@@ -62,6 +70,7 @@ LOOP:
         Fix the code
         git add, commit, and push
         If push rejected (non-fast-forward, protected branch, etc.) → STOP, report
+        Re-request Copilot review (GraphQL mutation, same as Setup)
         unchanged_count = 0, loop
 
       flaky/infra →
@@ -71,6 +80,60 @@ LOOP:
         gh run rerun <run-id> --failed  (for each failing run)
         loop
 ```
+
+## Review-wait phase
+
+After CI goes green, poll for review feedback for up to 10 minutes.
+
+```
+REVIEW-WAIT:
+  deadline = now + 600s
+  poll_interval = 30s
+
+  LOOP until deadline:
+    reviews = gh pr view <PR> --json reviews
+    
+    new_reviews = reviews where state in [CHANGES_REQUESTED, COMMENTED]
+                  AND not already triaged this session
+    
+    if new_reviews → proceed to REVIEW-TRIAGE
+    
+    wait poll_interval, loop
+
+  if timeout → "CI green. No review feedback received in 10m. PR #<n> ready to merge." — STOP
+```
+
+## Review-triage phase
+
+Spawn ONE subagent with the full review payload:
+
+```
+Triage review comments for PR #{{PR_NUM}}.
+
+Fetch inline comments for each review:
+  gh api repos/{{OWNER}}/{{REPO}}/pulls/{{PR_NUM}}/reviews/{{REVIEW_ID}}/comments
+
+For each comment, classify:
+  APPLY   — clear, actionable code fix that is correct and in-scope
+  REPLY   — subjective, out-of-scope, already handled, or requires explanation
+
+Return a structured list:
+  [{review_id, comment_id, reviewer, file, line, body, classification, suggested_fix_or_reply}]
+```
+
+Act on results in order:
+
+- **APPLY items:**
+  - Edit the file as suggested
+  - `git add`, commit, push
+  - Reply to the comment via `gh api` POST: `"Applied in <commit-sha>."`
+  - After all APPLY items are pushed → `unchanged_count = 0`, loop back to MAIN LOOP
+
+- **REPLY items:**
+  - Post reply via `gh api repos/<owner>/<repo>/pulls/<PR>/comments/<comment_id>/replies` with the suggested reasoning
+  - Continue to next item
+
+After all items handled with no code changes → "CI green. Review feedback addressed. PR #<n> ready to merge." — STOP
 
 ## Git safety
 
@@ -88,8 +151,9 @@ LOOP:
 ## Stop conditions
 
 1. `merged` or `closed`
-2. `passing` — all checks green
-3. Branch-related failure where fix attempt fails or push is rejected
-4. Flaky retry budget (3) exhausted for any run
-5. Unrelated uncommitted changes in worktree
-6. Auth or permission failure (`gh` auth errors, push access denied)
+2. CI green + review-wait timeout (10m, no feedback)
+3. CI green + all review feedback addressed
+4. Branch-related failure where fix attempt fails or push is rejected
+5. Flaky retry budget (3) exhausted for any run
+6. Unrelated uncommitted changes in worktree
+7. Auth or permission failure (`gh` auth errors, push access denied)

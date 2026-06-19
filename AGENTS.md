@@ -8,7 +8,7 @@
 
 ### Skill references
 
-Use `` `$skill-name` `` format when referencing skills in prose: eg, `` `$brainstorm` ``, `` `$turbobuild` ``
+Use `` `$skill-name` `` format when referencing skills in prose: eg, `` `$brainstorm` ``, `` `$polish-implementation` ``
 
 ### Agent references
 
