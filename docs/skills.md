@@ -4,11 +4,11 @@
 
 ```mermaid
 graph LR
-  brainstorm --> polish-plan
-  brainstorm --> triangulate-plan
-  polish-plan --> polish-implementation
-  triangulate-plan --> polish-implementation
-  polish-implementation --> babysit-pr
+  brainstorm --> polish_plan["polish-plan"]
+  brainstorm --> triangulate_plan["triangulate-plan"]
+  polish_plan --> polish_implementation["polish-implementation"]
+  triangulate_plan --> polish_implementation
+  polish_implementation --> babysit_pr["babysit-pr"]
 ```
 
 ## Skills reference
