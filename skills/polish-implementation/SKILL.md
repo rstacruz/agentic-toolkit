@@ -11,7 +11,9 @@ Run an iterative review loop on an implementation, auto-applying fixes each pass
    - Branch (eg, `git diff main...HEAD`)
    - Set of commits (eg, `git diff commit1...commitN`)
 
-2. **Subagent review.** Spawn a subagent with the change set from step 1. Ask it to use `atk-code-review` skill. Pass the change set and the plan (if available).
+2. **Subagent review.** Spawn a subagent with the change set from step 1.
+   - Ask it to use `atk-code-review` skill.
+   - Pass the change set and the plan (if available).
 
 3. **Triage.** Apply necessary changes now; surface minor caveats to the user later.
    - Prefer surgical changes. Large scale change = defer later.
