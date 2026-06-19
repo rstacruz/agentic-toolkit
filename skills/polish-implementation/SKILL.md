@@ -15,7 +15,7 @@ Run an iterative review loop on an implementation, auto-applying fixes each pass
    - Ask it to use `atk-code-review` skill.
    - Pass the change set and the plan (if available).
 
-3. **Triage.** Apply necessary changes now; surface minor caveats to the user later.
+3. **Triage.** Decide on what changes are neccesary and apply them.
    - Prefer surgical changes. Large scale change = defer later.
   
 4. If changes were made, return to step 2. Repeat up to 7 times.
