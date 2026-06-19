@@ -46,8 +46,8 @@ Use `$polish-plan` or `$triangulate-plan` to improve a plan.
 
 *What they do:*
 
-- `$polish-plan` runs the plan through a subagent review loop (up to 3 passes), applying critical fixes until it converges.
-- `$triangulate-plan` generates an independent second opinion via a subagent and merges the best of both plans.
+- `$polish-plan` runs the plan through a subagent review loop (up to 3 passes), applying critical fixes until it converges into an implementation-ready plan.
+- `$triangulate-plan` generates an independent second opinion via a subagent and merges the best of both into an implementation-ready plan.
 
 ```
 > ...

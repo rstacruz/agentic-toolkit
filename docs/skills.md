@@ -19,8 +19,8 @@ graph LR
 
 ### Refining
 
-- [`$polish-plan`](../skills/polish-plan/SKILL.md) — Strengthen a plan via a subagent review loop, catching inaccuracies before execution
-- [`$triangulate-plan`](../skills/triangulate-plan/SKILL.md) — Generate an independent second opinion on a plan and merge the best of both
+- [`$polish-plan`](../skills/polish-plan/SKILL.md) — Strengthen a plan into an implementation-ready plan via a subagent review loop, catching inaccuracies before execution
+- [`$triangulate-plan`](../skills/triangulate-plan/SKILL.md) — Generate an independent second opinion on a plan and merge the best of both into an implementation-ready plan
 
 ### Implementing
 
