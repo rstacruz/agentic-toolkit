@@ -37,7 +37,7 @@ The user shares a rough idea. Guide them to a **plan**.
 
 **Plan formatting:**
 
-- Include repo grounded facts (if needed)
+- Include repo grounded facts (if needed) - place this last
 - Prefer code blocks to illustrate changes
 - Prefer headings and lists for scanability
 - Include post-implementation verification: things to do before merging or deploying to verify if implementation is correct
@@ -68,16 +68,6 @@ Consider structuring plan files like so. Feel free to add or omit sections as ne
 ## Decisions
 - [list decisions here as user answers questions or steers the planning/brainstorming]
 
-## Grounded facts
-
-### 1. [name]
-[context from the codebase and external sources]
-
-Sources:
-- [Filename or URL or name/identifier of source]
-
-### 2. [name]
-
 ## Implementation steps
 
 ### 1. [name]
@@ -90,5 +80,15 @@ Sources:
 ### 1. [name]
 
 ## Post-implementation verification
-```
 
+## Appendix: Grounded facts
+
+### 1. [name]
+[context from the codebase and external sources]
+
+Sources:
+- [Filename or URL or name/identifier of source]
+
+### 2. [name]
+
+```
