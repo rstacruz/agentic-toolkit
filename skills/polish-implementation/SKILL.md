@@ -25,7 +25,7 @@ Run an iterative review loop on an implementation, auto-applying fixes each pass
 
 Notes:
 
-- If available: for subagent, use *oracle* agent type, 20 max turns
+- If available: for subagent, use *oracle* agent type, 35 max turns
 
 Reporting:
 

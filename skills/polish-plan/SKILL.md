@@ -12,7 +12,7 @@ Strengthen this plan by incorporating feedback via subagents.
 
 Notes:
 
-- If available: for subagent, use *oracle* agent type, 20 max turns
+- If available: for subagent, use *oracle* agent type, 35 max turns
 
 Reporting:
 
