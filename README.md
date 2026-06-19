@@ -16,7 +16,7 @@ See [skills/](skills/) and [`docs/skills.md`](./docs/skills.md) for the full ski
 
 ### Plan it
 
-Start with `$brainstorm`. This is my replacement for plan mode.
+Start with [`$brainstorm`](https://github.com/rstacruz/agentic-toolkit/blob/main/skills/brainstorm/SKILL.md). This is my replacement for plan mode.
 
 - Asks questions relentlessly (inspired by [grill-me](https://github.com/mattpocock/skills/blob/main/skills/productivity/grill-me/))
 - Easily-skimmable output (Grounded facts, Steps, Risks)
@@ -32,21 +32,25 @@ Start with `$brainstorm`. This is my replacement for plan mode.
 
 ### Polish the plan
 
-Use `$polish-plan` after creating a plan.
+Use [`$polish-plan`](https://github.com/rstacruz/agentic-toolkit/blob/main/skills/polish-plan/SKILL.md) after creating a plan.
 
 - Runs the plan through a subagent review loop (up to 7 passes)
-- Applying fixes until it converges into an implementation-ready plan
+- Applying fixes until there are no more changes needed
+
+### Implement the plan
+
+Implement the plan as you normally would (I suggest `/goal implement this plan`, as supported by many harnesses by default). No skill here.
 
 ### Polish the implementation
 
-Implement the plan as you normally would (I suggest `/goal implement this plan`, as supported by many harnesses by default). Then use `$polish-implementation`.
+Use [`$polish-implementation`](https://github.com/rstacruz/agentic-toolkit/blob/main/skills/polish-implementation/SKILL.md) after implementing a plan.
 
 - Loops through Code review -> Apply -> Review again
-- Stops when there are no more comments to address
+- Stops when there are no more changes to do
 
 ### Watch CI
 
-Use `$babysit-pr` to monitor a PR until CI passes or needs intervention.
+Use [`$babysit-pr`](https://github.com/rstacruz/agentic-toolkit/blob/main/skills/babysit-pr/SKILL.md) to monitor a PR until CI passes or needs intervention.
 
 - Waits for CI to be green
 - Addresses CI failures automatically
