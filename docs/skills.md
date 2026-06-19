@@ -4,60 +4,28 @@
 
 ```mermaid
 graph LR
-  brainstorm --> turboplan["turboplan"]
-  turboplan --> spectech["spec-tech-design"]
-  turboplan --> refinespec["refine-spec"]
-  turboplan --> turbobuild["turbobuild"]
-  turbobuild --> specimpl["spec-implementation-plan"]
-  turbobuild --> implsubagent["implement-spec-subagent"]
-  turbobuild --> polish
-  implsubagent --> reviewchanges["review-changes"]
-  polish["polish"] --> reviewchanges
-
-  subgraph turboplan_group["turboplan"]
-    brainstorm
-    turboplan
-    spectech
-    refinespec
-  end
-  subgraph turbobuild_group["turbobuild"]
-    turbobuild
-    specimpl
-    implsubagent
-  end
-  subgraph polish_group["polish"]
-    polish
-    reviewchanges
-  end
-  subgraph other_group["other"]
-    mermaid["mermaid-diagrams"]
-  end
+  brainstorm --> polish_plan["polish-plan"]
+  brainstorm --> triangulate_plan["triangulate-plan"]
+  polish_plan --> polish_implementation["polish-implementation"]
+  triangulate_plan --> polish_implementation
+  polish_implementation --> babysit_pr["babysit-pr"]
 ```
 
 ## Skills reference
 
 ### Planning
 
-- [`$brainstorm`](../skills/atk.brainstorm/SKILL.md) — Develop a vague idea into a scoped, handoff-ready plan
+- [`$brainstorm`](../skills/brainstorm/SKILL.md) — Develop a vague idea into a scoped, handoff-ready plan
 
-### Turboplan
+### Refining
 
-- [`$turboplan`](../skills/atk.turboplan/SKILL.md) — Expand an approved plan with technical design, then refine it
-  - [`$spec-tech-design`](../skills/atk.spec-tech-design/SKILL.md) — Define technical design — call graphs, data models, pseudocode
-  - [`$refine-spec`](../skills/atk.refine-spec/SKILL.md) — Pressure-test a plan with independent critiques
+- [`$polish-plan`](../skills/polish-plan/SKILL.md) — Strengthen a plan into an implementation-ready plan via a subagent review loop, catching inaccuracies before execution
+- [`$triangulate-plan`](../skills/triangulate-plan/SKILL.md) — Generate an independent second opinion on a plan and merge the best of both into an implementation-ready plan
 
-### Turbobuild
+### Implementing
 
-- [`$turbobuild`](../skills/atk.turbobuild/SKILL.md) — Strengthen ticket planning when needed, then implement a plan ticket-by-ticket
-  - [`$spec-implementation-plan`](../skills/atk.spec-implementation-plan/SKILL.md) — Break features into smaller, reviewable tickets
-  - [`$implement-spec-subagent`](../skills/atk.implement-spec-subagent/SKILL.md) — Implement a single ticket; used by `$turbobuild` subagents
+- [`$polish-implementation`](../skills/polish-implementation/SKILL.md) — Iterative code review loop using a subagent; auto-applies fixes up to 3 passes
 
-### Polish
+### Shipping
 
-- [`$polish`](../skills/atk.polish/SKILL.md) — Simplify and review an implementation
-  - [`$review-changes`](../skills/atk.review-changes/SKILL.md) — Review code changes against the plan (P1/P2/P3 recommendations)
-
-### Other
-
-- [`$spec-product-requirements`](../skills/atk.spec-product-requirements/SKILL.md) — Define functional/technical requirements sections
-- [`$mermaid-diagrams`](../skills/atk.mermaid-diagrams/SKILL.md) — Create Mermaid diagrams and fix Mermaid syntax issues
+- [`$babysit-pr`](../skills/babysit-pr/SKILL.md) — Monitor a PR's CI status in a loop until it passes or needs human input

@@ -1,5 +1,21 @@
 # Changelog
 
+### [v4](https://github.com/rstacruz/agentic-toolkit/tree/v4)
+
+- Replaces the entire skill set with the atk4 family.
+- Drops turboplan, turbobuild, spec-tech-design, spec-product-requirements,
+  spec-implementation-plan, refine-spec, implement-spec-subagent,
+  review-changes, mermaid-diagrams, and polish.
+- Adds polish-implementation, polish-plan, triangulate-plan.
+- Updates brainstorm (adds related-resources search, post-implementation
+  verification, suggested plan structure) and babysit-pr (adds Copilot
+  review re-request and review-wait/triage phases).
+- Renames skill directories: drops the `atk.` prefix.
+- Rewrites docs around the new flow.
+- Removes `pull.sh` and `push.sh`; these were local sync tooling and are no longer published.
+- Removes the OpenCode-specific `agent/` directory and its install instructions.
+- Drops `pr-plan` (held back — not for general use yet).
+- Switches versioning to sequential (v4).
 
 ### [main](https://github.com/rstacruz/agentic-toolkit/tree/main)
 
