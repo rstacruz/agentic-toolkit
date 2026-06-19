@@ -40,7 +40,9 @@ Consider:
 - Code reuse (existing utilities or helpers that could replace new code)
 - Code quality (redundant state, copy-paste variants, leaky abstractions, stringly-typed code)
 - Code efficiency (redundant computations, N+1, missed concurrency, hot-path bloat)
+- Same pure expression (serialization, hashing, expensive call) duplicated in sibling branches of an if/else, switch, or create/update
 - Safety (TOCTOU existence checks, missing memory cleanup)
+- Claimed invariants: when a comment or commit message asserts a property ("last write wins", "idempotent", "safe to retry", "benign race"), verify the code actually upholds it under that condition. A comment asserting X is not evidence the code does X — if it doesn't, escalate severity.
 - Test quality (tests that don't verify behaviour)
 - Gaps: What happens in failure cases? Missing fallbacks?
 - Backward compatibility: Could these changes break existing behavior?
