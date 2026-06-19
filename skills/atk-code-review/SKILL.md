@@ -45,6 +45,8 @@ Consider:
 - Gaps: What happens in failure cases? Missing fallbacks?
 - Backward compatibility: Could these changes break existing behavior?
 - Test terseness: which tests are load bearing? which test the contract, and which test the implementation? are there redundant tests (eg, multiple tests per failure mode)? Could test code be simplified?
+- AGENTS.md / CLAUDE.md alignment (chages that contradict guidelines, incomplete work that docs imply)
+- Simplification opportunities
 
 ## Reporting results
 
