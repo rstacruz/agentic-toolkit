@@ -10,6 +10,10 @@ npx skills add rstacruz/agentic-toolkit
 
 Use it with [Pi](https://pi.dev/), [OpenCode](https://opencode.ai). Claude Code, Codex... pick your poison.
 
+- **Pi:** Subagents are used in the *polish* skills, and Pi has no subagents by default. Consider [@tintinweb/subagents](https://github.com/tintinweb/pi-subagents).
+
+- **OpenCode/Pi**: If you'd like to use a different model for polish reviews, create an agent with the name *"oracle"* and configure your preferred model for it. I personally use it with Opus, or GPT 5.5 high, or GLM 5.2 high. Otherwise, *polish* will default to whatever model you've got selected.
+
 ## Quick start
 
 See [skills/](skills/) and [`docs/skills.md`](./docs/skills.md) for the full skill reference.
