@@ -8,7 +8,7 @@ graph LR
   brainstorm --> triangulate_plan["triangulate-plan"]
   polish_plan --> polish_implementation["polish-implementation"]
   triangulate_plan --> polish_implementation
-  polish_implementation --> babysit_pr["babysit-pr"]
+  polish_implementation --> atk_pr_autofix["atk-pr-autofix"]
 ```
 
 ## Skills reference
@@ -28,4 +28,4 @@ graph LR
 
 ### Shipping
 
-- [`$babysit-pr`](../skills/babysit-pr/SKILL.md) — Monitor a PR's CI status in a loop until it passes or needs human input
+- [`$atk-pr-autofix`](../skills/atk-pr-autofix/SKILL.md) — Monitor a PR's CI status in a loop until it passes or needs human input

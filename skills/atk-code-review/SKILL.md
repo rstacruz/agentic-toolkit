@@ -36,18 +36,26 @@ Start from this baseline:
 
 Consider:
 
+**Behaviour/Correctness**
 - Correctness (inaccuracies, edge cases, missing error handling)
+- Same pure expression (serialization, hashing, expensive call) duplicated in sibling branches
+- Claimed invariants: when code asserts a property ("last write wins", "idempotent") verify the code actually upholds it — a comment is not evidence
+- Gaps: What happens in failure cases? Missing fallbacks?
+- Backward compatibility
+
+**Structure/Quality**
 - Code reuse (existing utilities or helpers that could replace new code)
 - Code quality (redundant state, copy-paste variants, leaky abstractions, stringly-typed code)
 - Code efficiency (redundant computations, N+1, missed concurrency, hot-path bloat)
-- Same pure expression (serialization, hashing, expensive call) duplicated in sibling branches of an if/else, switch, or create/update
 - Safety (TOCTOU existence checks, missing memory cleanup)
-- Claimed invariants: when a comment or commit message asserts a property ("last write wins", "idempotent", "safe to retry", "benign race"), verify the code actually upholds it under that condition. A comment asserting X is not evidence the code does X — if it doesn't, escalate severity.
+
+**Tests**
 - Test quality (tests that don't verify behaviour)
-- Gaps: What happens in failure cases? Missing fallbacks?
-- Backward compatibility: Could these changes break existing behavior?
-- Test terseness: which tests are load bearing? which test the contract, and which test the implementation? are there redundant tests (eg, multiple tests per failure mode)? Could test code be simplified?
-- AGENTS.md / CLAUDE.md alignment (chages that contradict guidelines, incomplete work that docs imply)
+- Test terseness: which tests are load bearing? which test the contract vs implementation?
+- Simplify: tests that validate library/stdlib behaviour (Zod's `optional()`, discriminated unions, `decodeURIComponent` throwing, string template content) — they catch nothing in *our* logic; cut them
+
+**Meta/Process**
+- AGENTS.md / CLAUDE.md alignment (changes that contradict guidelines, incomplete work that docs imply)
 - Simplification opportunities
 
 ## Reporting results
@@ -67,3 +75,7 @@ Severity: High
 [optional suggestion]
 ```
 ~~~
+
+Guidelines:
+
+- Ensure the last response has the feedback itself. This may have been envoked in a subagent where only the last reply is used.

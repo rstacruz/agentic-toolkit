@@ -8,7 +8,7 @@
   review-changes, mermaid-diagrams, and polish.
 - Adds polish-implementation, polish-plan, triangulate-plan.
 - Updates brainstorm (adds related-resources search, post-implementation
-  verification, suggested plan structure) and babysit-pr (adds Copilot
+  verification, suggested plan structure) and atk-pr-autofix (adds Copilot
   review re-request and review-wait/triage phases).
 - Renames skill directories: drops the `atk.` prefix.
 - Rewrites docs around the new flow.
@@ -33,7 +33,7 @@
 ### [v26.01](https://github.com/rstacruz/agentic-toolkit/tree/v26.01)
 
 - Introduces the skill-first workflow: `brainstorm -> spec-mode -> implement-spec -> refine/review`.
-- Adds the spec/refine/review family and newer operational skills like `babysit-pr`.
+- Adds the spec/refine/review family and newer operational skills like `atk-pr-autofix`.
 - README becomes much slimmer and points to `docs/skills.md` for the quick start.
 
 ### [v25.12](https://github.com/rstacruz/agentic-toolkit/tree/v25.12)

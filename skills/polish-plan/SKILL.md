@@ -12,7 +12,8 @@ Strengthen this plan by incorporating feedback via subagents.
 
 Notes:
 
-- If available: for subagent, use *oracle* agent type, 35 max turns
+- If using Claude Code: use *general-purpose* subagent with model=Opus
+- If *oracle* type is available: for Agent tool, use subagent_type=oracle max_turns=35
 
 Reporting:
 

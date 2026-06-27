@@ -51,7 +51,7 @@ Use [`$polish-implementation`](https://github.com/rstacruz/agentic-toolkit/blob/
 
 ### Watch CI
 
-Use [`$babysit-pr`](https://github.com/rstacruz/agentic-toolkit/blob/main/skills/babysit-pr/SKILL.md) to monitor a PR until CI passes or needs intervention.
+Use [`$atk-pr-autofix`](https://github.com/rstacruz/agentic-toolkit/blob/main/skills/atk-pr-autofix/SKILL.md) to monitor a PR until CI passes or needs intervention.
 
 - Waits for CI to be green
 - Addresses CI failures automatically

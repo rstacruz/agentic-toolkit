@@ -41,6 +41,7 @@ The user shares a rough idea. Guide them to a **plan**.
 - Prefer code blocks to illustrate changes
 - Prefer headings and lists for scanability
 - Include post-implementation verification: things to do before merging or deploying to verify if implementation is correct
+- Don't include "FAQ" question on first pass. Add it when the user asks a question.
 
 **General guidelines:**
 
@@ -80,6 +81,14 @@ Consider structuring plan files like so. Feel free to add or omit sections as ne
 ### 1. [name]
 
 ## Post-implementation verification
+
+## FAQ
+
+### [title]
+
+**Q: [question]?**
+
+[answer]
 
 ## Appendix: Grounded facts
 
