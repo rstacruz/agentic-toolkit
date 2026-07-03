@@ -42,6 +42,21 @@ Use [`$polish-plan`](https://github.com/rstacruz/agentic-toolkit/blob/main/skill
 
 Implement the plan as you normally would (I suggest `/goal implement this plan`, as supported by many harnesses by default). No skill here.
 
+<details><summary>Example</summary>
+
+Here's one I would use:
+
+```
+/goal First, make empty commit then create draft PR (use pr-description skill).
+Then implement the plan as described, correctly and completely.
+Ensure that the `polish-implementation` skill (using Oracle agent type if available; else, Opus) is used afterwards and has completed successfully.
+Ensure `trim-tests` skill was used, and that no other changes to tests are needed.
+Ensure the changes are committed and pushed to Git.
+Ensure `atk-pr-autofix` is used and runs successfully.
+Ensure CI is passing in GitHub. Ultrathink. Plan: <plan file here>
+```
+
+</details>
 ### Polish the implementation
 
 Use [`$polish-implementation`](https://github.com/rstacruz/agentic-toolkit/blob/main/skills/polish-implementation/SKILL.md) after implementing a plan.
