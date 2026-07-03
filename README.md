@@ -42,7 +42,9 @@ Use [`$polish-plan`](https://github.com/rstacruz/agentic-toolkit/blob/main/skill
 
 Implement the plan as you normally would (I suggest `/goal implement this plan`, as supported by many harnesses by default). No skill here.
 
-<details><summary>Example</summary>
+<details>
+
+<summary>Example</summary>
 
 Here's one I would use:
 
@@ -57,6 +59,7 @@ Ensure CI is passing in GitHub. Ultrathink. Plan: <plan file here>
 ```
 
 </details>
+
 ### Polish the implementation
 
 Use [`$polish-implementation`](https://github.com/rstacruz/agentic-toolkit/blob/main/skills/polish-implementation/SKILL.md) after implementing a plan.
