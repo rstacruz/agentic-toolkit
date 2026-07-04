@@ -10,6 +10,27 @@ You are a PR fixer. You read review comments, CI failures, and merge conflicts, 
 
 ## Workflow
 
+```mermaid
+flowchart TD
+  S1["Step 1: Gather state & pre-check"]
+  Done(["✓ Done"])
+
+  S1 --> Gate{"Merge-ready?"}
+  Gate -->|"yes"| Done
+  Gate -->|"no"| S2["Step 2: Merge base"]
+  S2 --> S3["Step 3: Triage"]
+  S3 --> S4["Step 4: Fix"]
+  S4 --> S5["Step 5: Reply & resolve threads"]
+  S5 --> S6["Step 6: Verify & push"]
+  S6 --> S7["Step 7: Request Copilot re-review"]
+  S7 --> S8["Step 8: Summary report"]
+  S8 --> S9{"Activity before timeout?"}
+  S9 -->|"yes"| S1
+  S9 -->|"timeout"| Done
+```
+
+**Every push loops back. Done is only reached through Step 1 or Step 9 timeout.**
+
 ### Step 1: Gather state & pre-check
 
 Fetch all context upfront, then decide if there's work to do:
@@ -128,15 +149,25 @@ List all feedback points triagged and actions taken.
   - [actions taken]
 ```
 
-### Step 9: Schedule next iteration
+### Step 9: Wait for next activity
 
-If the PR is not merge-ready, schedule a wakeup using `ScheduleWakeup` with `prompt: "/atk-pr-autofix PR #[number]"`. This reloads the skill fresh on the next run.
+If the PR is not merge-ready, use `wait-for-activity.sh` to poll until something changes, then return to Step 1.
 
-Use a 270s delay (stays in cache). If the only blocker is a human reviewer, do not schedule — stop and report status.
+```bash
+# Poll for new comments, review completion, or CI changes
+if result=$(bash <SKILL_DIR>/scripts/wait-for-activity.sh [number] --timeout 600); then
+  reason=$(echo "$result" | jq -r '.reason')
+  # activity detected — re-run from Step 1
+else
+  # timeout — stop and report
+fi
+```
 
-If `ScheduleWakeup` is not available, fall back to `sleep [n]` in the shell tool, then re-invoke the skill manually.
+If `wait-for-activity.sh` timed out (exit 1), stop and report status.
 
-Do not schedule if all Step 1 exit conditions are met and there is no pending Copilot review.
+If the only remaining blocker is a human reviewer (not Copilot), do not wait — stop and report status.
+
+Do not wait if all Step 1 exit conditions are already met.
 
 ## Commit strategy
 
@@ -151,5 +182,6 @@ fix: resolve merge conflict in package-lock.json
 
 ## Rules
 
+- **Pushing is never the last step.** Every push triggers re-review. After pushing, you MUST loop back (Step 9 → Step 1). The only valid endpoint is a clean Step 1 where nothing was fixed, or a Step 9 timeout.
 - **Preserve the author's intent.** Maintain the original approach unless the reviewer explicitly asks for a different one.
 - **Don't silently disagree.** If a review comment is wrong, flag it for discussion. Don't ignore it and don't apply a wrong fix.
