@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
-set -euo pipefail
 
 PR_NUMBER=""
 VERBOSE=false
+COMMENTS=false
 
 for arg in "$@"; do
   case "$arg" in
     --verbose|-v) VERBOSE=true ;;
+    --comments) COMMENTS=true ;;
     *) PR_NUMBER="$arg" ;;
   esac
 done
@@ -24,7 +25,7 @@ else
 fi
 OK="${GREEN}󰄬${RESET}"
 WARN="${YELLOW}󰀦${RESET}"
-FAIL="${RED}󰀦${RESET}"
+FAIL="${RED}󰜺${RESET}"
 PENDING="${ORANGE}󰏤${RESET}"
 
 # Resolve PR number from current branch if not given
@@ -57,6 +58,7 @@ is_draft=$(echo "$PR_DATA"        | jq -r '.isDraft')
 
 print_status() {
   local icon="$1" title="$2" desc="${3:-}"
+  echo
   if [[ -n "$desc" ]]; then
     printf -- "- %s ${BOLD}%s${RESET} · ${GRAY}%s${RESET}\n" "$icon" "$title" "$desc"
   else
@@ -73,11 +75,35 @@ print_threads() {
   ' 2>/dev/null || true
 }
 
-print_conflict_files() {
+header() {
+  echo "${BOLD}$1${RESET}"
+  printf -- '=%.0s' $(seq 1 ${#1})
+  echo
+}
+
+print_body() {
+  echo "${GREEN}~~~~~~~~~~${RESET}${GRAY}"
+  echo "$1"
+  echo "${GREEN}~~~~~~~~~~${RESET}"
+}
+
+print_comments() {
+  echo "$PR_DATA" | jq -c '.comments[]' 2>/dev/null | while IFS= read -r c; do
+    author=$(echo "$c" | jq -r '.author.login // "unknown"')
+    created=$(echo "$c" | jq -r '.createdAt')
+    echo "${GRAY}### ${author} · ${created}${RESET}"
+    echo
+    print_body "$(echo "$c" | jq -r '.body')"
+    echo
+  done || true
+}
+
+print_conflicts() {
   git fetch origin "$base_branch" "$branch" -q 2>/dev/null || return
-  local base; base=$(git merge-base "origin/$base_branch" "origin/$branch" 2>/dev/null) || return
-  git merge-tree "$base" "origin/$base_branch" "origin/$branch" 2>/dev/null \
-    | awk '/^changed in both/{getline; print "  - " $NF}'
+  local out; out=$(git merge-tree --write-tree --name-only --no-messages "origin/$branch" "origin/$base_branch" 2>/dev/null)
+  [[ $? -eq 1 ]] || return
+  print_status "$FAIL" "Conflicts" "this branch has conflicts to resolve"
+  echo "$out" | tail -n +2 | sed 's/^/  - /'
 }
 
 REPO_NWO="$(gh repo view --json nameWithOwner -q .nameWithOwner)"
@@ -121,13 +147,20 @@ echo
 echo "${BOLD}$title${RESET}"
 printf "${GRAY}%0.s=${RESET}" $(seq 1 ${#title})
 echo
-echo
 
 if [[ "$state" == "MERGED" ]]; then
   print_status "$OK" "Merged"
 
 elif [[ -n "$mq_state" ]]; then
-  print_status "$PENDING" "Merge queue" "${mq_state}${mq_pos:+ (position ${mq_pos})}"
+  case "$mq_state" in
+    QUEUED)          mq_desc="queued" ;;
+    AWAITING_CHECKS) mq_desc="running checks" ;;
+    MERGEABLE)       mq_desc="ready to merge" ;;
+    UNMERGEABLE)     mq_desc="blocked, won't merge" ;;
+    LOCKED)          mq_desc="locked" ;;
+    *)               mq_desc="$mq_state" ;;
+  esac
+  print_status "$PENDING" "Queued to merge" "${mq_desc}${mq_pos:+, position ${mq_pos}}"
 
 else
   case "$review_decision" in
@@ -138,12 +171,12 @@ else
       case "$merge_state" in
         BEHIND)   print_status "$FAIL" "Out of date"     "branch is behind the base branch and needs to be updated" ;;
         BLOCKED)  print_status "$FAIL" "Blocked"         "required reviews or checks are not satisfied" ;;
-        DIRTY)    print_status "$FAIL" "Dirty"           "branch has conflicts that must be resolved"; print_conflict_files ;;
+        DIRTY)    print_status "$FAIL" "Dirty"           "branch has conflicts that must be resolved" ;;
         UNKNOWN)  print_status "$FAIL" "Unknown"         "merge state not available" ;;
         UNSTABLE) print_status "$OK"   "Mergeable"       "with non-passing checks" ;;
         *) # CLEAN DRAFT HAS_HOOKS
           case "$mergeable" in
-            CONFLICTING) print_status "$FAIL" "Merge conflicts" "branch has conflicts with the base branch"; print_conflict_files ;;
+            CONFLICTING) print_status "$FAIL" "Merge conflicts" "branch has conflicts with the base branch" ;;
             MERGEABLE)   print_status "$OK"   "Mergeable"       "ready to merge" ;;
             UNKNOWN)     print_status "$WARN" "Unknown"         "status not available" ;;
           esac
@@ -158,6 +191,8 @@ else
     print_status "$WARN" "Out of date" "branch is ${behind} commit(s) behind ${base_branch}"
   fi
 
+  print_conflicts
+
   if [[ "$unresolved" -gt 0 ]]; then
     print_status "$WARN" "${unresolved} unresolved threads"
     print_threads
@@ -168,7 +203,7 @@ else
   if echo "$ci_checks" | grep -q $'^[^\t]*\tfail\t'; then
     print_status "$FAIL" "CI failing"
     echo "$ci_checks" | while IFS=$'\t' read -r name status duration url_check; do
-      [[ "$(echo "$status" | xargs)" == "fail" ]] && echo "  $(echo "$name" | xargs)"
+      [[ "$(echo "$status" | xargs)" == "fail" ]] && echo "  - $(echo "$name" | xargs)"
     done
   elif echo "$ci_checks" | grep -q $'^[^\t]*\tpending\t'; then
     pending_count=$(echo "$ci_checks" | grep -c $'^[^\t]*\tpending\t' || true)
@@ -185,12 +220,17 @@ echo "${GRAY}> 󰊤  $url${RESET}"
 echo
 
 if [[ "$VERBOSE" == true ]]; then
-  echo "${BOLD}PR description${RESET}"
-  printf '%0.s=' $(seq 1 14)
+  header "PR description"
   echo
+  print_body "$body"
   echo
-  echo "${GRAY}~~~~~~~~~~"
-  echo "$body"
-  echo "~~~~~~~~~~${RESET}"
-  echo
+fi
+
+if [[ "$COMMENTS" == true ]]; then
+  comments_count=$(echo "$PR_DATA" | jq '.comments | length' 2>/dev/null || echo 0)
+  if [[ "$comments_count" -gt 0 ]]; then
+    header "Comments (${comments_count})"
+    echo
+    print_comments
+  fi
 fi
