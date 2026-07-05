@@ -22,8 +22,8 @@ flowchart TD
   S3 --> S4["Step 4: Fix"]
   S4 --> S5["Step 5: Reply & resolve threads"]
   S5 --> S6["Step 6: Verify & push"]
-  S6 --> S7["Step 7: Request Copilot re-review"]
-  S7 --> S8["Step 8: Summary report"]
+  S6 --> S7["Step 7: Summary report"]
+  S7 --> S8["Step 8: Request Copilot re-review"]
   S8 --> S9{"Activity before timeout?"}
   S9 -->|"yes"| S1
   S9 -->|"timeout"| Done
@@ -33,49 +33,23 @@ flowchart TD
 
 ### Step 1: Gather state & pre-check
 
-Fetch all context upfront, then decide if there's work to do:
-
 ```sh
 bash <SKILL_DIR>/scripts/pr-status.sh --verbose [number]
-
-# Human review comments (full text)
-gh api repos/[owner]/[repo]/pulls/[number]/comments
-gh api repos/[owner]/[repo]/pulls/[number]/reviews
-
-# Copilot still pending (hasn't reviewed yet)?
-gh pr view [number] --json reviewRequests --jq '.reviewRequests[].login'
-
-# The diff
-gh pr diff [number]
 ```
 
-### Decision flow
+Read the output; act on the first match:
 
-1. **PR is merged** → exit (done, nothing to fix).
-
-2. **Copilot is pending** (shown as "Copilot pending" in pr-status) →
-   wait — don't proceed until the review lands. Report status, exit this iteration.
-
-3. **Exit** (PR is merge-ready, nothing to fix) only if **all** are true:
-   - CI is fully green
-   - No unresolved human review threads
-   - Copilot is not pending and has no unresolved findings
-   - No unresolved Copilot review threads
-
-4. **Otherwise** → proceed to Step 2.
-
-### Copilot state reference
-
-The Copilot check in condition 3 is satisfied by:
-- Approved, Commented, or never requested — nothing to wait for
-- Changes requested with all threads resolved — findings were addressed
-
-Not satisfied by:
-- Pending → caught by rule 2 (wait)
-- Changes requested with unresolved threads → proceeds to Step 2 (fix)
-
-"No Copilot review requested" and "Copilot outdated" are **not** reasons
-to wait or exit — proceed to Step 2 and fix what's actually broken.
+1. **Merged** → exit (done, nothing to fix).
+2. **Copilot pending** or **No Copilot review requested** → request Copilot
+   review (Step 8) if not yet requested, then wait. Report status, exit this
+   iteration. Don't fix code Copilot hasn't reviewed.
+3. **Merge-ready** → exit (done, nothing to fix). Requires all of:
+   - CI passing
+   - No `Changes requested` or `Review required`
+   - Zero unresolved threads (human or Copilot)
+   - Copilot `approved` or `reviewed` on the current commit (not `outdated`)
+4. **Otherwise** → proceed to Step 2. (If CI pending is the only blocker,
+   skip to Step 9 to wait — no point merging base or triaging nothing.)
 
 ### Step 2: Merge from base branch
 
@@ -146,17 +120,9 @@ Before pushing, verify:
 - No new warnings
 - Conflicts resolved cleanly
 
-### Step 7: Request Copilot re-review
+### Step 7: Summary report
 
-After every push, always re-request Copilot so it reviews the updated code. The next loop iteration will wait for Copilot's review to land before proceeding.
-
-```sh
-bash <SKILL_DIR>/scripts/request-copilot-review.sh [number]
-```
-
-### Step 8: Summary report
-
-List all feedback points triagged and actions taken.
+List all feedback points triaged and actions taken.
 
 ```markdown
 ## PR autofix report
@@ -166,6 +132,14 @@ List all feedback points triagged and actions taken.
 - `[FIXED|SKIPPED]` **[title: 5 words max](https://...)** → commithash
   - [short description]
   - [actions taken]
+```
+
+### Step 8: Request Copilot re-review
+
+After every push, always re-request Copilot so it reviews the updated code. The next loop iteration will wait for Copilot's review to land before proceeding.
+
+```sh
+bash <SKILL_DIR>/scripts/request-copilot-review.sh [number]
 ```
 
 ### Step 9: Wait for next activity
