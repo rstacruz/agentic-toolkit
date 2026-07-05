@@ -49,14 +49,33 @@ gh pr view [number] --json reviewRequests --jq '.reviewRequests[].login'
 gh pr diff [number]
 ```
 
-Exit only if **all** of the following are true:
+### Decision flow
 
-- CI is fully green
-- No unresolved human comments or reviews
-- Copilot has completed a review (not still in `reviewRequests`)
-- No unresolved Copilot findings
+1. **PR is merged** → exit (done, nothing to fix).
 
-If Copilot hasn't reviewed yet but was requested, wait — don't proceed until the review lands. Report status and exit this iteration.
+2. **Copilot is pending** (shown as "Copilot pending" in pr-status) →
+   wait — don't proceed until the review lands. Report status, exit this iteration.
+
+3. **Exit** (PR is merge-ready, nothing to fix) only if **all** are true:
+   - CI is fully green
+   - No unresolved human review threads
+   - Copilot is not pending and has no unresolved findings
+   - No unresolved Copilot review threads
+
+4. **Otherwise** → proceed to Step 2.
+
+### Copilot state reference
+
+The Copilot check in condition 3 is satisfied by:
+- Approved, Commented, or never requested — nothing to wait for
+- Changes requested with all threads resolved — findings were addressed
+
+Not satisfied by:
+- Pending → caught by rule 2 (wait)
+- Changes requested with unresolved threads → proceeds to Step 2 (fix)
+
+"No Copilot review requested" and "Copilot outdated" are **not** reasons
+to wait or exit — proceed to Step 2 and fix what's actually broken.
 
 ### Step 2: Merge from base branch
 
