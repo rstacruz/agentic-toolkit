@@ -15,21 +15,22 @@ flowchart TD
   S1["Step 1: Gather state & pre-check"]
   Done(["✓ Done"])
 
-  S1 --> Gate{"Merge-ready?"}
-  Gate -->|"yes"| Done
+  S1 --> Gate{"Merge-ready or merged?"}
+  Gate -->|"yes"| S9["Step 9: Summary report"]
+  S9 --> Done
   Gate -->|"no"| S2["Step 2: Merge base"]
   S2 --> S3["Step 3: Triage"]
   S3 --> S4["Step 4: Fix"]
   S4 --> S5["Step 5: Reply & resolve threads"]
   S5 --> S6["Step 6: Verify & push"]
-  S6 --> S7["Step 7: Summary report"]
-  S7 --> S8["Step 8: Request Copilot re-review"]
-  S8 --> S9{"Activity before timeout?"}
-  S9 -->|"yes"| S1
-  S9 -->|"timeout"| Done
+  S6 --> S7["Step 7: Request Copilot re-review"]
+  S7 --> S8{"Step 8: Activity before timeout?"}
+  S8 -->|"yes"| S1
+  S8 -->|"timeout"| S9
 ```
 
-**Every push loops back. Done is only reached through Step 1 or Step 9 timeout.**
+**Every push loops back. Step 1 (merge-ready/merged) or Step 8 timeout end the loop.
+All exits route through Step 9 (summary); Step 9 is a no-op if no fixes were applied.**
 
 ### Step 1: Gather state & pre-check
 
@@ -39,17 +40,17 @@ bash <SKILL_DIR>/scripts/pr-status.sh --verbose [number]
 
 Read the output; act on the first match:
 
-1. **Merged** → exit (done, nothing to fix).
+1. **Merged** → proceed to Step 9.
 2. **Copilot pending** or **No Copilot review requested** → request Copilot
-   review (Step 8) if not yet requested, then wait. Report status, exit this
+   review (Step 7) if not yet requested, then wait (Step 8). Report status, exit this
    iteration. Don't fix code Copilot hasn't reviewed.
-3. **Merge-ready** → exit (done, nothing to fix). Requires all of:
+3. **Merge-ready** → proceed to Step 9. Requires all of:
    - CI passing
    - No `Changes requested` or `Review required`
    - Zero unresolved threads (human or Copilot)
    - Copilot `approved` or `reviewed` on the current commit (not `outdated`)
 4. **Otherwise** → proceed to Step 2. (If CI pending is the only blocker,
-   skip to Step 9 to wait — no point merging base or triaging nothing.)
+   skip to Step 8 to wait — no point merging base or triaging nothing.)
 
 ### Step 2: Merge from base branch
 
@@ -120,21 +121,7 @@ Before pushing, verify:
 - No new warnings
 - Conflicts resolved cleanly
 
-### Step 7: Summary report
-
-List all feedback points triaged and actions taken.
-
-```markdown
-## PR autofix report
-
-> _Automated agent. Check for mistakes._
-
-- `[FIXED|SKIPPED]` **[title: 5 words max](https://...)** → commithash
-  - [short description]
-  - [actions taken]
-```
-
-### Step 8: Request Copilot re-review
+### Step 7: Request Copilot re-review
 
 After every push, always re-request Copilot so it reviews the updated code. The next loop iteration will wait for Copilot's review to land before proceeding.
 
@@ -142,7 +129,7 @@ After every push, always re-request Copilot so it reviews the updated code. The 
 bash <SKILL_DIR>/scripts/request-copilot-review.sh [number]
 ```
 
-### Step 9: Wait for next activity
+### Step 8: Wait for next activity
 
 If the PR is not merge-ready, use `wait-for-activity.sh` to poll until something changes, then return to Step 1.
 
@@ -152,15 +139,35 @@ if result=$(bash <SKILL_DIR>/scripts/wait-for-activity.sh [number] --timeout 600
   reason=$(echo "$result" | jq -r '.reason')
   # activity detected — re-run from Step 1
 else
-  # timeout — stop and report
+  # timeout — proceed to Step 9
 fi
 ```
 
-If `wait-for-activity.sh` timed out (exit 1), stop and report status.
+If `wait-for-activity.sh` timed out (exit 1), proceed to Step 9,
+then stop and report status.
 
 If the only remaining blocker is a human reviewer (not Copilot), do not wait — stop and report status.
 
 Do not wait if all Step 1 exit conditions are already met.
+
+### Step 9: Summary report
+
+List all feedback points triaged and actions taken. Post as a top-level PR comment.
+Skip this step if no fixes were applied across any iteration.
+If `gh pr comment` fails, output the summary inline as fallback.
+
+```sh
+gh pr comment [number] --body "$(cat <<'EOF'
+## PR autofix report
+
+> _Automated agent. Check for mistakes._
+
+- `[FIXED|SKIPPED]` **[title: 5 words max](https://...)** → commithash
+  - [short description]
+  - [actions taken]
+EOF
+)"
+```
 
 ## Commit strategy
 
@@ -175,6 +182,6 @@ fix: resolve merge conflict in package-lock.json
 
 ## Rules
 
-- **Pushing is never the last step.** Every push triggers re-review. After pushing, you MUST loop back (Step 9 → Step 1). The only valid endpoint is a clean Step 1 where nothing was fixed, or a Step 9 timeout.
+- **Pushing is never the last step.** Every push triggers re-review. After pushing, you MUST loop back (Step 8 → Step 1). All exit paths go through Step 9 (summary); Step 9 is a no-op if no fixes were applied.
 - **Preserve the author's intent.** Maintain the original approach unless the reviewer explicitly asks for a different one.
 - **Don't silently disagree.** If a review comment is wrong, flag it for discussion. Don't ignore it and don't apply a wrong fix.
