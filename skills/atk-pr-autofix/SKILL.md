@@ -15,7 +15,7 @@ flowchart TD
   S1["Step 1: Gather state & pre-check"]
   Done(["✓ Done"])
 
-  S1 --> Gate{"Merge-ready?"}
+  S1 --> Gate{"Merge-ready or merged?"}
   Gate -->|"yes"| S9["Step 9: Summary report"]
   S9 --> Done
   Gate -->|"no"| S2["Step 2: Merge base"]
@@ -42,7 +42,7 @@ Read the output; act on the first match:
 
 1. **Merged** → proceed to Step 9.
 2. **Copilot pending** or **No Copilot review requested** → request Copilot
-   review (Step 7) if not yet requested, then wait. Report status, exit this
+   review (Step 7) if not yet requested, then wait (Step 8). Report status, exit this
    iteration. Don't fix code Copilot hasn't reviewed.
 3. **Merge-ready** → proceed to Step 9. Requires all of:
    - CI passing
