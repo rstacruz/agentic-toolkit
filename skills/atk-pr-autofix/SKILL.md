@@ -154,10 +154,6 @@ Do not wait if all Step 1 exit conditions are already met.
 
 List all feedback points triaged and actions taken. Post as a top-level PR comment.
 Skip this step if no fixes were applied across any iteration.
-
-A fix was applied if the agent committed and pushed at least one change
-addressing review feedback during the loop. Track this in memory — if any
-commit was pushed in response to a finding, fixes were applied.
 If `gh pr comment` fails, output the summary inline as fallback.
 
 ```sh
