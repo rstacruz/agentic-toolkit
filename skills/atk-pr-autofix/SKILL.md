@@ -29,7 +29,7 @@ flowchart TD
   S8 -->|"timeout"| S9
 ```
 
-**Every push loops back. Done is only reached through Step 1 or Step 8 timeout.
+**Every push loops back. Step 1 (merge-ready/merged) or Step 8 timeout end the loop.
 All exits route through Step 9 (summary); Step 9 is a no-op if no fixes were applied.**
 
 ### Step 1: Gather state & pre-check
@@ -40,19 +40,17 @@ bash <SKILL_DIR>/scripts/pr-status.sh --verbose [number]
 
 Read the output; act on the first match:
 
-1. **Merged** → exit (done, nothing to fix).
+1. **Merged** → proceed to Step 9.
 2. **Copilot pending** or **No Copilot review requested** → request Copilot
    review (Step 7) if not yet requested, then wait. Report status, exit this
    iteration. Don't fix code Copilot hasn't reviewed.
-3. **Merge-ready** → exit (done, nothing to fix). Requires all of:
+3. **Merge-ready** → proceed to Step 9. Requires all of:
    - CI passing
    - No `Changes requested` or `Review required`
    - Zero unresolved threads (human or Copilot)
    - Copilot `approved` or `reviewed` on the current commit (not `outdated`)
 4. **Otherwise** → proceed to Step 2. (If CI pending is the only blocker,
    skip to Step 8 to wait — no point merging base or triaging nothing.)
-
-If exiting via "Merged" or "Merge-ready", proceed to Step 9 before exiting.
 
 ### Step 2: Merge from base branch
 
@@ -156,6 +154,10 @@ Do not wait if all Step 1 exit conditions are already met.
 
 List all feedback points triaged and actions taken. Post as a top-level PR comment.
 Skip this step if no fixes were applied across any iteration.
+
+A fix was applied if the agent committed and pushed at least one change
+addressing review feedback during the loop. Track this in memory — if any
+commit was pushed in response to a finding, fixes were applied.
 If `gh pr comment` fails, output the summary inline as fallback.
 
 ```sh
@@ -184,6 +186,6 @@ fix: resolve merge conflict in package-lock.json
 
 ## Rules
 
-- **Pushing is never the last step.** Every push triggers re-review. After pushing, you MUST loop back (Step 8 → Step 1). The only valid endpoints are Step 1 (merge-ready or merged) or Step 8 timeout. All exits route through Step 9; Step 9 is a no-op if no fixes were applied.
+- **Pushing is never the last step.** Every push triggers re-review. After pushing, you MUST loop back (Step 8 → Step 1). All exit paths go through Step 9 (summary); Step 9 is a no-op if no fixes were applied.
 - **Preserve the author's intent.** Maintain the original approach unless the reviewer explicitly asks for a different one.
 - **Don't silently disagree.** If a review comment is wrong, flag it for discussion. Don't ignore it and don't apply a wrong fix.
