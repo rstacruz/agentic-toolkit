@@ -164,7 +164,7 @@ across all iterations. Post as a top-level PR comment.
 
 ```sh
 gh pr comment [number] --body "$(cat <<'EOF'
-# PR autofix report
+## PR autofix report
 
 > _Automated agent. Check for mistakes._
 
@@ -190,6 +190,6 @@ fix: resolve merge conflict in package-lock.json
 
 ## Rules
 
-- **Pushing is never the last step.** Every push triggers re-review. After pushing, you MUST loop back (Step 8 → Step 1). The only valid endpoint is a clean Step 1 where nothing was fixed, or a Step 8 timeout.
+- **Pushing is never the last step.** Every push triggers re-review. After pushing, you MUST loop back (Step 8 → Step 1). The only valid endpoints are Step 1 (merge-ready or merged) or Step 8 timeout. If fixes were applied, emit Step 9 summary before Done.
 - **Preserve the author's intent.** Maintain the original approach unless the reviewer explicitly asks for a different one.
 - **Don't silently disagree.** If a review comment is wrong, flag it for discussion. Don't ignore it and don't apply a wrong fix.
