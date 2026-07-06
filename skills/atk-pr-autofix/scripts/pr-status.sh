@@ -4,7 +4,7 @@ print_status() {
   local icon="$1" title="$2" desc="${3:-}"
   echo
   if [[ -n "$desc" ]]; then
-    printf -- "· %s ${BOLD}%s ${RESET} · ${GRAY}%s${RESET}\n" "$icon" "$title" "$desc"
+    printf -- "· %s ${BOLD}%s${RESET} · ${GRAY}%s${RESET}\n" "$icon" "$title" "$desc"
   else
     printf -- "· %s ${BOLD}%s ${RESET}\n" "$icon" "$title"
   fi
@@ -282,42 +282,41 @@ relative_time() {
 
 print_author_info() {
   local when; when=$(relative_time "$created_at")
-  printf -- "█  %s opened %s\n" "$author_login" "$when"
+  printf -- "█  %s ${GRAY}opened %s${RESET}\n" "$author_login" "$when"
 }
 
 print_reviewers() {
   local approved changes pending summary_icon summary_text
 
-  IFS=$'\t' read -r approved changes pending < <(echo "$PR_DATA" | jq -r '
+  # Fields joined on ASCII unit separator (0x1F), not tab -- bash `read`
+  # strips/collapses leading and repeated IFS *whitespace* runs (tab
+  # counts), which silently shifts empty fields into the wrong variable
+  # whenever one is empty (the common case, e.g. no approvals yet).
+  IFS=$'\x1f' read -r approved changes pending < <(echo "$PR_DATA" | jq -r --arg sep $'\x1f' '
     [.latestReviews[]? | select(.state == "APPROVED" or .state == "CHANGES_REQUESTED") | .author.login] as $reviewed
-    | ([.latestReviews[]? | select(.state == "APPROVED")      | .author.login // "unknown"] | join(", ")) as $a
+    | ([.latestReviews[]? | select(.state == "APPROVED") | .author.login // "unknown"] | join(", ")) as $a
     | ([.latestReviews[]? | select(.state == "CHANGES_REQUESTED") | .author.login // "unknown"] | join(", ")) as $c
     | ([.reviewRequests[]? | (.login // .slug // .name) // empty] - $reviewed | join(", ")) as $p
-    | [$a, $c, $p] | @tsv
+    | [$a, $c, $p] | join($sep)
   ' 2>/dev/null)
 
   # Summary line (worst-first)
   if [[ -n "$changes" ]]; then
-    summary_icon="$FAIL"; summary_text="Changes requested"
+    print_status "$FAIL" "Changes requested" "changes have been requested by reviewers"
   elif [[ "$review_decision" == "REVIEW_REQUIRED" ]]; then
-    # REVIEW_REQUIRED must take priority over approved count:
-    # a single approval when branch protection needs 2 is still required
-    summary_icon="$FAIL"; summary_text="Review required"
+    print_status "$FAIL" "Review required" "approvals required to merge"
   elif [[ -n "$approved" ]]; then
-    summary_icon="$OK"; summary_text="Approved"
+    print_status "$OK" "Approved" "reviewers have approved this PR"
   elif [[ -n "$pending" ]]; then
-    summary_icon="$PENDING"; summary_text="Awaiting reviews"
+    print_status "$PENDING" "Awaiting reviews"
   else
-    return  # no review requirement at all — omit section (and no blank line)
+    return  # no review requirement at all — omit section
   fi
 
-  echo  # blank line before reviewer section
-  printf -- "· %s %s\n" "$summary_icon" "$summary_text"
-
   # Always show indented groups for each non-empty status
-  [[ -n "$approved" ]] && printf -- "  %s %s\n" "$OK" "$approved"
-  [[ -n "$changes" ]] && printf -- "  %s %s\n" "$FAIL" "$changes"
-  [[ -n "$pending" ]] && printf -- "  %s %s\n" "$PENDING" "$pending"
+  [[ -n "$approved" ]] && printf -- "  %s %s\n" "$OK" "approved: $approved"
+  [[ -n "$changes" ]] && printf -- "  %s %s\n" "$FAIL" "requested changes: $changes"
+  [[ -n "$pending" ]] && printf -- "  %s %s\n" "$PENDING" "waiting for: $pending"
 }
 
 print_ci_status() {
@@ -327,7 +326,7 @@ print_ci_status() {
 
   if echo "$ci_checks" | grep -q $'^[^\t]*\tfail\t'; then
     print_status "$FAIL" "CI failing"
-    echo "$ci_checks" | while IFS=$'\t' read -r name status duration url_check; do
+    echo "$ci_checks" | tr $'\t' $'\x1f' | while IFS=$'\x1f' read -r name status duration url_check; do
       [[ "$(echo "$status" | xargs)" == "fail" ]] && echo "  - $(echo "$name" | xargs)"
     done
   elif echo "$ci_checks" | grep -q $'^[^\t]*\tpending\t'; then
@@ -401,7 +400,7 @@ main() {
   # Title header (three echo lines, inline — too small to abstract)
   echo
   echo "█  ${BOLD}$title${RESET}"
-  echo "█  ${GRAY}${LINK_START}${url}${LINK_MID}#${number}${LINK_END}${GREEN} ${state} · ${GREEN}+${additions}${GRAY} ${RED}-${deletions} ${GRAY} · 󰘬  ${branch}${RESET}"
+  echo "█  ${GRAY}${LINK_START}${url}${LINK_MID}#${number}${LINK_END}${GRAY} · ${RESET}${GREEN} ${state}${RESET}${GRAY} · ${GREEN}+${additions}${GRAY} ${RED}-${deletions}${RESET}${GRAY} · 󰘬  ${branch}${RESET}"
   print_author_info
   print_reviewers
   print_merge_status
