@@ -154,10 +154,9 @@ Do not wait if all Step 1 exit conditions are already met.
 
 ### Step 9: Summary report
 
-Emitted once, after the loop exits (merge-ready, merged, or timeout).
+List all feedback points triaged and actions taken. Post as a top-level PR comment.
 Skip this step if no fixes were applied across any iteration.
-List all feedback points triaged and actions taken.
-Post as a top-level PR comment.
+If `gh pr comment` fails, output the summary inline as fallback.
 
 ```sh
 gh pr comment [number] --body "$(cat <<'EOF'
@@ -171,8 +170,6 @@ gh pr comment [number] --body "$(cat <<'EOF'
 EOF
 )"
 ```
-
-If `gh pr comment` fails, output the summary inline as fallback.
 
 ## Commit strategy
 
