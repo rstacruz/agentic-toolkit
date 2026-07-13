@@ -66,7 +66,7 @@ Incoming items get triaged with a concrete verdict:
 
 ## Completeness checklist
 
-Before marking `status: draft` and starting implementation:
+Before marking **Status:** draft and starting implementation:
 
 - **Ready to start** — enough detail to begin the first slice?
 - **Has work items** — every requirement mapped to a ticket; each reasonably sized?
@@ -182,4 +182,4 @@ Requests coming in that need triage. These will eventually be removed and turned
 ## Sources
 
 - ...
-```
+````
