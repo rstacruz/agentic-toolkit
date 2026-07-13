@@ -16,6 +16,7 @@ graph LR
 ### Planning
 
 - [`$brainstorm`](../skills/brainstorm/SKILL.md) — Develop a vague idea into a scoped, handoff-ready plan
+- [`$megaplan`](../skills/megaplan/SKILL.md) <sup>experimental</sup> — Living notebook for multi-slice projects spanning multiple tickets/PRs
 
 ### Refining
 
