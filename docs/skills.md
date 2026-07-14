@@ -16,6 +16,7 @@ graph LR
 ### Planning
 
 - [`$brainstorm`](../skills/brainstorm/SKILL.md) — Develop a vague idea into a scoped, handoff-ready plan
+- [`$megaplan`](../skills/megaplan/SKILL.md) <sup>experimental</sup> — Living notebook for multi-slice projects spanning multiple tickets/PRs
 
 ### Refining
 
@@ -24,7 +25,7 @@ graph LR
 
 ### Implementing
 
-- [`$polish-implementation`](../skills/polish-implementation/SKILL.md) — Iterative code review loop using a subagent; auto-applies fixes up to 3 passes
+- [`$polish-implementation`](../skills/polish-implementation/SKILL.md) — Iterative code review loop against a GitHub PR; self-review threads get fixed, replied to, and resolved, up to 10 passes
 
 ### Shipping
 

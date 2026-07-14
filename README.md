@@ -31,6 +31,14 @@ Start with [`$brainstorm`](https://github.com/rstacruz/agentic-toolkit/blob/main
 /brainstorm i want to implement config via c12 npm package
 ```
 
+### For larger projects → megaplan <sup>experimental</sup>
+
+Use [`$megaplan`](https://github.com/rstacruz/agentic-toolkit/blob/main/skills/megaplan/SKILL.md) when the work spans multiple slices (4+ tickets, evolving requirements, decisions you'll revisit weeks later).
+
+- Living notebook that accumulates as work progresses
+- Numbered requirements, decisions, risks, and grounded facts with cross-references
+- Work-plan tracker with ticket/PR statuses
+
 ### Polish the plan
 
 Use [`$polish-plan`](https://github.com/rstacruz/agentic-toolkit/blob/main/skills/polish-plan/SKILL.md) after creating a plan.
@@ -64,8 +72,9 @@ Ensure CI is passing in GitHub. Ultrathink. Plan: <plan file here>
 
 Use [`$polish-implementation`](https://github.com/rstacruz/agentic-toolkit/blob/main/skills/polish-implementation/SKILL.md) after implementing a plan.
 
-- Loops through Code review -> Apply -> Review again
-- Stops when there are no more changes to do
+- Requires a PR for the branch (creates a draft one automatically if missing)
+- Findings are posted as self-review threads on the PR, then fixed, replied to, and resolved — durable across passes, unlike a purely local review loop
+- Stops when a pass finds nothing new, up to 10 passes
 
 ### Watch CI
 

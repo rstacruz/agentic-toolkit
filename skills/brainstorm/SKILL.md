@@ -13,6 +13,8 @@ The user shares a rough idea. Guide them to a **plan**.
 - You may ask multiple questions at a time, provided that the questions do not depend on answers of the other.
 - If a question can be answered by exploring the codebase, explore the codebase instead.
 
+**Escalate to megaplan** — If the interview reveals this is a multi-slice project (4+ tickets, evolving requirements, decisions you'll revisit weeks later), offer to switch to [`$megaplan`](../megaplan/SKILL.md). Megaplan produces a living notebook that accumulates over time, with numbered requirements/decisions/risks and a work-plan tracker — better than cramming a project into a one-shot plan doc.
+
 **Proactive researching** - Research facts proactively to gather facts needed for planning. Such as:
 
 - Do repo/codebase inspection needed to learn readily discoverable facts.
@@ -23,7 +25,7 @@ The user shares a rough idea. Guide them to a **plan**.
 - If Linear tools are available, see if there are any linear tickets that are along these lines. 
 - If Slack tools are available, See if there are any Slack discussions that may be related.
 
-**Finishing a plan** - upon reaching a plan:
+**Finishing a plan** - upon reaching a plan (skip this if you escalated to megaplan — megaplan handles its own completion flow):
 
 - Write to `~/.artefacts/plan-<yyyy>-<mmdd>-<ticket>-<title>.md` (omit *ticket* if not known).
 - Reply with the filename, then use the `question` tool to ask what's next, include options:
