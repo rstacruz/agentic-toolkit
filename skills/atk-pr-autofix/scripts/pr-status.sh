@@ -166,9 +166,11 @@ fetch_graphql() {
           headRefOid
           reviewThreads(first: 100) {
             nodes {
+              id
               isResolved
               comments(first: 50) {
                 nodes {
+                  databaseId
                   body
                   path
                   line

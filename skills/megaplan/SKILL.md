@@ -88,6 +88,18 @@ Keep each entry to one line: **status emoji · ticket · short title · (require
 - **Cut the history.** No merge dates, "merged 9 Jul 03:01", "was stuck In Progress", superseded-branch trivia, CI-green/red narration, who-approved-what, diff stats (`+14/-2`). That belongs in git/Linear, not the living plan.
 - A done item (✅) needs only the PR link — no story of how it got there.
 - If a status note isn't something a reader would *act on*, delete it.
+- Assign IDs to work items as `W01`, `W02`, … — when a work item is turned into a ticket, replace the `W0x` ID with the ticket ID.
+
+```
+❯ **Work item (pre-ticket):**
+  - 🟡 W01 — **Add contact merge endpoint** (R01, R02)
+    - POST /contacts/:id/merge, accepts target+source IDs, moves all related records
+    - dedup logic reuses existing MergeService from ContactMerge.ts
+
+❯ **After ticket created, PR up:**
+  - ✏️ [ABC-123](url) — **Add contact merge endpoint** (R01, R02) — [PR #14670](url)
+    - ...
+```
 
 ## Template
 
@@ -141,7 +153,7 @@ Keep each entry to one line: **status emoji · ticket · short title · (require
 
 - ...
 
-Legend: 🟡 To do, ✏️ Draft PR, 👀 Ready for review, ✅ Done
+Legend: 🟡 To do, ✏️ Draft PR, 🟢 Ready for review, ✅ Done
 
 ## Decisions
 
