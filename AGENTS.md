@@ -6,6 +6,5 @@
 
 ## Conventions
 
-### Skill references
-
-Use `` `$skill-name` `` format when referencing skills in prose: eg, `` `$brainstorm` ``, `` `$polish-implementation` ``
+- Skill references: Use `` `$skill-name` `` format when referencing skills in prose: eg, `` `$brainstorm` ``, `` `$polish-implementation` ``
+- Some skills have duplicated `scripts/`. This is intentional: this allows scripts to be standalone and installed in isolation.
