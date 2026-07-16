@@ -27,7 +27,10 @@ The user shares a rough idea. Guide them to a **plan**.
 
 **Finishing a plan** - upon reaching a plan (skip this if you escalated to megaplan — megaplan handles its own completion flow):
 
-- Write to `~/.artefacts/plan-<yyyy>-<mmdd>-<ticket>-<title>.md` (omit *ticket* if not known).
+- Write to file:
+  - Filename: `plan-<yyyy>-<mmdd>-<ticket>-<title>.md` (omit *ticket* if not known).
+  - If a megaplan is known, write in the same folder (eg, `~/.notebooks/<path>/`)
+  - Otherwise, place in `~/.artefacts/`
 - Reply with the filename, then use the `question` tool to ask what's next, include options:
   - Polish plan (`$polish-plan` skill)
 - Continue brainstorm mode - don't end it. User may still have feedback.
