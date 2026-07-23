@@ -28,6 +28,7 @@ Sections in order. Tagged sections use short IDs so others can cross-reference t
 - **Work plan**
   - Slices, each with its tickets in dependency order; include PRs and statuses if known.
   - Keep entries lean — see Work plan hygiene below.
+  - **Integration branches** (optional H3, add when relevant) — branches merging several in-flight PRs together for combined manual verification; not meant to land on `main` themselves.
 - **Decisions** (`D01`, `D02`, ...)
   - Decision, why, implication.
   - For each design fork: lay out 2–3 options with trade-offs. Recommend one.
@@ -38,6 +39,9 @@ Sections in order. Tagged sections use short IDs so others can cross-reference t
   - Is there an existing pattern in the codebase to reuse?
   - Does it interact with another requirement? Resolve ordering first.
   - Can it be illustrated with a worked example (input → output)?
+- **Design** (`E01`, `E02`, ...)
+  - Things that define the contract of how pieces operate together
+  - eg: API schema, database data model, URL structure
 - **Risks** (`I01`, `I02`, ...)
   - Known gaps accepted as out-of-scope; include mitigations.
   - What's explicitly out-of-scope that could bite us?
@@ -48,6 +52,11 @@ Sections in order. Tagged sections use short IDs so others can cross-reference t
   - Research relevant to task. eg: real API responses, third-party docs, source code findings.
 - **Sources**
   - File paths and functions consulted, for traceability; live docs links used as reference.
+
+Guidelines:
+
+- Place some sections inside `<details>` — they are too noisy for a regular review.
+- Use nested bullet styles (eg Requirements) for readability
 
 ## Filling sections
 
@@ -118,7 +127,8 @@ Keep each entry to one line: **status emoji · ticket · short title · (require
 
 ## Summary
 
-...
+- ...
+- ...
 
 ## Scope
 
@@ -153,6 +163,12 @@ Keep each entry to one line: **status emoji · ticket · short title · (require
 
 - ...
 
+### Integration branches
+
+> Branches that merge several in-flight PRs together for combined manual verification — not meant to be merged to `main` themselves; superseded once the real PRs land.
+
+- `<branch-name>` — merges PRs for combined testing: [#<n>](<url>) (<TICKET-ID>), [#<n>](<url>) (<TICKET-ID>), ... PR: <url or "not yet opened">.
+
 Legend: 🟡 To do, ✏️ Draft PR, 🟢 Ready for review, ✅ Done
 
 ## Decisions
@@ -173,13 +189,20 @@ Requests coming in that need triage. These will eventually be removed and turned
 
 ### <Requirement title> (R0N)
 
+  - **<short name>**
+    - ...details...
+    - ...
+  - ...
+
+## Design
+
+### <Area title> (E0N)
+
 - ...
 
-## Risks
-
-### <Risk title> (I0N)
-
-- ...
+```
+...
+```
 
 ## Open questions
 
@@ -187,13 +210,34 @@ Requests coming in that need triage. These will eventually be removed and turned
 
 - ...
 
+## Risks
+
+<details>
+<summary>Expand</summary>
+
+### <Risk title> (I0N)
+
+- ...
+
+</details>
+
 ## Appendix: Grounded facts
+
+<details>
+<summary>Expand</summary>
 
 ### <Fact title> (F0N)
 
 - ...
 
+</details>
+
 ## Sources
 
+<details>
+<summary>Expand</summary>
+
 - ...
+
+</details>
 ````

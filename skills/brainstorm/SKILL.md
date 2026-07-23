@@ -47,6 +47,7 @@ The user shares a rough idea. Guide them to a **plan**.
 - Prefer headings and lists for scanability
 - Include post-implementation verification: things to do before merging or deploying to verify if implementation is correct
 - Don't include "FAQ" question on first pass. Add it when the user asks a question.
+- Place some sections inside `<details>` — they are too noisy for a regular review.
 
 **General guidelines:**
 
@@ -81,10 +82,6 @@ Consider structuring plan files like so. Feel free to add or omit sections as ne
 
 ### 2. [name]
 
-## Risks
-
-### 1. [name]
-
 ## Post-implementation verification
 
 ## FAQ
@@ -95,7 +92,19 @@ Consider structuring plan files like so. Feel free to add or omit sections as ne
 
 [answer]
 
+## Risks
+
+<details>
+<summary>Expand</summary>
+
+### 1. [name]
+
+</details>
+
 ## Appendix: Grounded facts
+
+<details>
+<summary>Expand</summary>
 
 ### 1. [name]
 [context from the codebase and external sources]
@@ -105,4 +114,5 @@ Sources:
 
 ### 2. [name]
 
+</details>
 ```
