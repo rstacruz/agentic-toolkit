@@ -1,6 +1,6 @@
 ---
 name: megaplan
-description: Write a "megaplan" planning notebook — a long-form Markdown doc for a multi-slice project that tracks scope, decisions, requirements, risks, and grounded research facts with cross-referenced IDs. Use when the user asks to write up a project plan, planning notebook, or "megaplan" doc, especially one spanning multiple tickets/PRs where decisions and raw research need to be preserved for later reference. Also use when bootstrapping a new megaplan from a vague idea.
+description: Write a "megaplan" planning notebook — a long-form Markdown doc for a multi-slice project that tracks scope, decisions, requirements, risks, and grounded research facts with cross-referenced IDs. Use when the user asks to write up a project plan, planning notebook, or "megaplan" doc, especially one spanning multiple tickets/PRs where decisions and raw research need to be preserved for later reference. Also use when bootstrapping a new megaplan from a vague idea. Use this skill every time you work on a `*.megaplan.md` file, or a Markdown file that has a work plan with tickets.
 ---
 
 ## What this is
@@ -10,7 +10,7 @@ description: Write a "megaplan" planning notebook — a long-form Markdown doc f
 
 ## Getting started
 
-1. Ask the user for the subject matter. Derive a slug, create `~/.notebooks/<yy><mm>-<slug>/index.md`.
+1. Ask the user for the subject matter. Derive a slug, create `~/.notebooks/<yy><mm>-<slug>/index.megaplan.md`.
 2. Populate from the template below: title, one-line summary, `**Status:** seed`. All other sections empty — fill them as you go using the interview loop (see **Filling sections**).
 3. Once the completeness checklist passes, flip to `**Status:** draft`.
 
@@ -98,6 +98,15 @@ Keep each entry to one line: **status emoji · ticket · short title · (require
 - A done item (✅) needs only the PR link — no story of how it got there.
 - If a status note isn't something a reader would *act on*, delete it.
 - Assign IDs to work items as `W01`, `W02`, … — when a work item is turned into a ticket, replace the `W0x` ID with the ticket ID.
+- When an agent is working an item in a worktree, append the branch, labelled:
+
+  ```
+  - ✏️ [ABC-123](url) — **Authentication API** (R14) — [#14999](url) — Branch: `feat/auth-api`
+  ```
+
+  Record the branch alongside the PR link (never the worktree path or a muxer handle) —
+  the path is derivable (`wt list --format json`) and muxer handles go stale (indexes get reused).
+- **Strip the branch once the item is ✅.** A done item needs only the PR link.
 
 ```
 ❯ **Work item (pre-ticket):**
@@ -123,7 +132,7 @@ Keep each entry to one line: **status emoji · ticket · short title · (require
 
 - [Linear project](<url>)
 - [Notion one-pager](<url>)
-- [Repo](<url>)
+- [Repo](<url>) — optionally `owner/name — ~/local/path` when agents need a working directory
 
 ## Summary
 
@@ -155,7 +164,7 @@ Keep each entry to one line: **status emoji · ticket · short title · (require
 - 🟡 [<TICKET-ID>](<url>) — **<short title>**
   - ...
   - ...
-- ✅ [<TICKET-ID>](<url>) — **<short title>** — [PR #<n>](<url>)
+- ✅ [<TICKET-ID>](<url>) — **<short title>** — [PR #<n>](<url>) — Branch: `...`
   - ...
   - ...
 
