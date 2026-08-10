@@ -29,6 +29,11 @@ Sections in order. Tagged sections use short IDs so others can cross-reference t
   - Slices, each with its tickets in dependency order; include PRs and statuses if known.
   - Keep entries lean — see Work plan hygiene below.
   - **Integration branches** (optional H3, add when relevant) — branches merging several in-flight PRs together for combined manual verification; not meant to land on `main` themselves.
+- **Solution options** (optional, add when a problem space has multiple viable approaches to weigh before deciding)
+  - One H3 per problem space, one bold line per option (`**Option A**`, `**Option B**`, ...).
+  - Tag each H3 with what raised it and what it feeds, `(<source ID> → <outcome ID>, ...)`: source is the `Q0N`/`N0N` that prompted it (omit if none — e.g. it surfaced during design, not from a question or inbox item); outcomes are the `D0N`/`W0N`/`I0N`/etc it resolves into once decided.
+  - Update the outcome refs once the option is picked — don't leave them pointing at IDs that no longer exist.
+  - Once resolved, fold the chosen option into a Decision and remove this section (or leave it as a record of what was considered).
 - **Decisions** (`D01`, `D02`, ...)
   - Decision, why, implication.
   - For each design fork: lay out 2–3 options with trade-offs. Recommend one.
@@ -41,7 +46,7 @@ Sections in order. Tagged sections use short IDs so others can cross-reference t
   - Can it be illustrated with a worked example (input → output)?
 - **Design** (`E01`, `E02`, ...)
   - Things that define the contract of how pieces operate together
-  - eg: API schema, database data model, URL structure
+  - eg: data models (types + example + invariants), state machines with transition tables, API schemas, storage keys, repo layout, component trees
 - **Risks** (`I01`, `I02`, ...)
   - Known gaps accepted as out-of-scope; include mitigations.
   - What's explicitly out-of-scope that could bite us?
@@ -119,6 +124,18 @@ Keep each entry to one line: **status emoji · ticket · short title · (require
     - ...
 ```
 
+### Design entries
+
+Design entries are contracts, not prose. Typical entries:
+
+- **Data model** — type definitions, one concrete example value, invariants (rules a lint/test must enforce)
+- **State machine** — state + action types, then a transition table (action × guard → result); guards capture the edge cases
+- **Storage** — keys, shape, access rules (eg effects-only for `localStorage` in SSR apps)
+- **Repo layout** — file tree mapping each artifact to its work item
+- **Component tree** — component hierarchy with who owns state and how events flow up
+
+Use code blocks and markdown tables over paragraphs. If a data model has a design fork (eg a field that could be two shapes), record it as a Decision with options + recommendation, and reference it from the Design entry (D10).
+
 ## Template
 
 ````markdown
@@ -146,6 +163,7 @@ Keep each entry to one line: **status emoji · ticket · short title · (require
 - **<Goal>** (G01)
   - ...
   - ...
+
 - ...
 
 ### Non-goals
@@ -164,6 +182,7 @@ Keep each entry to one line: **status emoji · ticket · short title · (require
 - 🟡 [<TICKET-ID>](<url>) — **<short title>**
   - ...
   - ...
+
 - ✅ [<TICKET-ID>](<url>) — **<short title>** — [PR #<n>](<url>) — Branch: `...`
   - ...
   - ...
@@ -178,7 +197,25 @@ Keep each entry to one line: **status emoji · ticket · short title · (require
 
 - `<branch-name>` — merges PRs for combined testing: [#<n>](<url>) (<TICKET-ID>), [#<n>](<url>) (<TICKET-ID>), ... PR: <url or "not yet opened">.
 
-Legend: 🟡 To do, ✏️ Draft PR, 🟢 Ready for review, ✅ Done
+Legend: 🟡 To do (no PR), ✏️ Has a PR (draft or not, commits or not), 🟢 Ready for review, ✅ Done
+
+## Solution options
+
+> Optional — only add when a problem space has multiple viable approaches worth weighing before deciding.
+
+### <problem space> (<source ID, eg Q0N/N0N> → <outcome ID(s), eg D0N/W0N/I0N>)
+
+**Option A** 🟡
+
+- ...
+
+**Option B** ⭐
+
+- ...
+
+Legend: 🟡 Pending, ⭐ Recommended (not yet decided), ✅ Accepted, ❌ Rejected — <reason> after the em dash.
+
+Once a problem space is decided, mark the winner ✅ and the rest ❌, and fold the outcome into a Decision.
 
 ## Decisions
 
