@@ -241,6 +241,10 @@ Once a problem space is decided, mark the winner ✅ and the rest ❌, and fold 
 
 - ...
 
+**Alternatives:**
+
+- ✗ <runner-up> — <why it lost>
+
 ## Inbox
 
 Requests coming in that need triage. These will eventually be removed and turned into requirements as we learn more.

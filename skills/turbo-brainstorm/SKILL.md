@@ -1,81 +1,79 @@
 ---
 name: turbo-brainstorm
 description: >
-  Turn a vague idea into a plan fast by making judgement calls instead of interviewing the user. Use when the user says $turbo-brainstorm, wants a plan quickly, or is unwilling to be interviewed. Every judgement call is documented under '## Decisions' so it can be vetoed. Prefer this over brainstorm when the user values speed over consultation.
+  Turns a rough idea into an actionable plan quickly by making reasonable decisions instead of interviewing the user. Use when the user invokes `$turbo-brainstorm`, wants a plan quickly, or prefers minimal back-and-forth. Records judgement calls under `## Decisions` for later review or veto.
 ---
 
-**Turn a rough idea into a plan. Ask as few questions as possible.**
+**Turn a rough idea into an actionable plan quickly, asking questions only when needed.**
 
-## Turbo workflow
+## Workflow
 
 **Decide first, ask last.**
 
-- Walk the design tree yourself — make a judgement call per branch, don't interview.
-- Document every call under `## Decisions` (see Suggested plan structure) — each entry needs **Chosen**, **Why**, **Alternatives**. The user can veto at review — that safety net replaces the interview.
+- Walk the design tree yourself — make a judgement call per branch; don't interview.
+- Document every call under `## Decisions` — each entry needs **Chosen**, **Why**, and **Alternatives**.
 
-**Rung 0 — confirm understanding, only if it's genuinely ambiguous.**
+1. **Confirm understanding only if genuinely ambiguous.**
+   - Before walking the tree, check whether the idea's scope or goal is unclear enough that a wrong read would derail the plan.
+   - If ambiguous, use `ask_user_question` to confirm the scope/goal reading before research or decisions.
+   - If clear enough, skip to next.
 
-Before walking the tree, check if the idea's scope or goal is unclear enough that a wrong read would derail the whole plan (eg, could mean two different features, target audience unstated, "fix X" without saying what broken looks like).
+2. **Check relevant context.**
+   - Inspect related files, plans, tickets, or discussions when available.
 
-- Ambiguous → `AskUserQuestion` once, confirming the scope/goal reading before doing any research or decisions.
-- Clear enough → skip this, go straight into the ladder below.
+3. **Resolve open decisions.** At each branch, run the decide-first ladder:
 
-Don't restate an idea that's already unambiguous — that's an interview, not a confirmation.
+   1. If research can answer the branch, find the fact first; it is not itself a judgement call. Then choose the simplest reasonable default unless the findings support another option.
+   2. If a reasonable default exists, one option is cheaply reversible, or no option clearly wins, choose the most reasonable default, document it, and move on.
+   3. If the choice is costly or irreversible, has no signal, and does not block the plan, decide, document, and mark `⚠️ revisit` so review can catch it.
+   4. If all options are costly or irreversible, there is no signal, and the choice blocks the plan, ask the user with `ask_user_question`.
 
-**At each branch, run the decide-first ladder:**
+   - If research affects the plan, record it under `## Appendix: Grounded facts`.
 
-1. Research answers it → not a decision, just find the fact.
-2. Reasonable default exists, or one option is cheaply reversible, or no option clearly wins → decide on the most reasonable default, document, move on.
-3. Costly/irreversible + no signal, but doesn't block the plan → decide, document, flag it clearly (eg, `⚠️ revisit`) so the veto step catches it.
-4. All options costly/irreversible + no signal + blocks the plan → ask.
+4. **Draft and validate the plan.**
+   - [ ] Every decision has **Chosen**, **Why**, and **Alternatives**.
+   - [ ] Non-goals are explicit.
+   - [ ] Post-implementation verification states what to check before merging or deploying.
+   - [ ] Apply the `$skimmable` skill if available.
+
+5. **Write the plan.**
+   - Filename: `plan-<yyyy>-<mmdd>-<ticket>-<title>.md`; omit `<ticket>-` when unknown. Use lowercase kebab-case for `<ticket>` and `<title>`.
+   - Save it beside the relevant `*.metaplan.md`, or under `~/.artefacts/`.
+   - Reply with the filename.
+
+6. **Ask what's next.** Use `ask_user_question` with these options:
+   - **Start implementing** — begin the work described in the plan
+   - **Polish the plan** — run the `$polish-plan` skill first
+   - **Review decisions** — check `## Decisions` for weak assumptions or missed alternatives
 
 ## General guidelines
 
-- **Do NOT modify files other than Markdown** until the user asks to start implementing. Goal: a plan to expand and implement later.
-- Use `AskUserQuestion` for user input, never open-ended prose. Ask only per ladder rung 4.
+- During brainstorming, write or edit Markdown files only; leave source code untouched until the user chooses **Start implementing**.
+- Do not add speculative implementation details or dependencies that the plan does not need.
+- Use `ask_user_question` for user input, never open-ended prose. Ask about the plan only for genuine ambiguity or when the final ladder rung blocks it.
 
-## Look for related resources
+### Design entries
 
-**Before finishing a plan, check for related work.** Use the `Explore` agent type (or `general-purpose` if unavailable):
+Design entries are contracts, not prose. Typical entries:
 
-- Linear tickets along these lines (if Linear tools available)
-- Slack discussions that may be related (if Slack tools available)
+- **Data model** — type definitions, one concrete example value, invariants (rules a lint/test must enforce)
+- **State machine** — state + action types, then a transition table (action × guard → result); guards capture the edge cases
+- **Storage** — keys, shape, access rules (eg effects-only for `localStorage` in SSR apps)
+- **Repo layout** — file tree mapping each artifact to its work item
+- **Component tree** — component hierarchy with who owns state and how events flow up
 
-## Finishing a plan
-
-**Checklist before writing to file:**
-- [ ] Every `## Decisions` entry has all three fields: `Chosen`, `Why`, `Alternatives` (name the runner-up and why it lost — one line each), plus a `[decided]`/`[asked]` tag
-- [ ] Non-goals listed
-- [ ] Post-implementation verification present (what to check before merging or deploying)
-- [ ] Noisy sections wrapped in `<details>` (see Suggested plan structure)
-- [ ] Formatted with `/skimmable` skill if available
-
-Missing any item → fix the plan, don't write it.
-
-**Write to file:**
-
-- Filename: `plan-<yyyy>-<mmdd>-<ticket>-<title>.md` (omit *ticket* if unknown)
-- Save location, in order:
-  1. Same folder as an existing `*.metaplan.md` for this project, if one exists (eg, `~/.notebooks/<path>/`).
-  2. Else, `~/.artefacts/`.
-
-**Then:**
-
-- Reply with the filename
-- Use `AskUserQuestion` for what's next, options:
-  - Start implementing
-  - Polish plan (`$polish-plan` skill)
-  - Review the judgement calls — spawn a subagent to veto-check `## Decisions`
+Use code blocks and markdown tables over paragraphs. If a data model has a design fork (eg a field that could be two shapes), record it as a Decision with options + recommendation, and reference it from the Design entry (D10).
 
 ## Suggested plan structure
 
-Consider structuring plan files like so. Feel free to add or omit sections as needed.
+Consider structuring plan files like so. Feel free to add or omit sections as needed:
 
-```
+``````
 # Title
 
 - **Date:** yyyy-mm-dd
-- **Ticket:** [link](...)
+- **Ticket:** [link](...) or `None`
+- **Metaplan:** [link](...) (only if available)
 
 ## Context
 
@@ -83,25 +81,36 @@ Consider structuring plan files like so. Feel free to add or omit sections as ne
 1. …
 
 **Non-goals:**
+
 1. …
 
 ## Decisions
 
 ### 1. <decision> — `[auto-decided]` or `[user-confirmed]`
 
-- **Chosen:** <answer>
+- **Chosen:** <option>
 - **Why:** <one-line rationale>
 
 **Alternatives:**
 
-- ✗ <alternative considered, and why it lost>
+- ✗ <runner-up> — <why it lost>
 
 ### 2. <decision>
+
+## Design
+
+### <Area title>
+
+- ...
+
+```
+...
+```
 
 ## Implementation steps
 
 ### 1. [name]
-[include codeblocks whenever possible]
+[include code blocks when useful]
 
 ### 2. [name]
 
@@ -125,9 +134,9 @@ Consider structuring plan files like so. Feel free to add or omit sections as ne
 [context from the codebase and external sources]
 
 Sources:
-- [Filename or URL or name/identifier of source]
+- [Filename, URL, or identifier]
 
 ### 2. [name]
 
 </details>
-```
+``````
