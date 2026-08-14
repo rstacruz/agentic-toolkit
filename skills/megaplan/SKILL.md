@@ -29,6 +29,7 @@ Sections in order. Tagged sections use short IDs so others can cross-reference t
   - Slices, each with its tickets in dependency order; include PRs and statuses if known.
   - Keep entries lean — see Work plan hygiene below.
   - **Integration branches** (optional H3, add when relevant) — branches merging several in-flight PRs together for combined manual verification; not meant to land on `main` themselves.
+  - **Ordering** — dependency graph; keep it simple, no descriptions
 - **Solution options** (optional, add when a problem space has multiple viable approaches to weigh before deciding)
   - One H3 per problem space, one bold line per option (`**Option A**`, `**Option B**`, ...).
   - Tag each H3 with what raised it and what it feeds, `(<source ID> → <outcome ID>, ...)`: source is the `Q0N`/`N0N` that prompted it (omit if none — e.g. it surfaced during design, not from a question or inbox item); outcomes are the `D0N`/`W0N`/`I0N`/etc it resolves into once decided.
@@ -198,6 +199,23 @@ Use code blocks and markdown tables over paragraphs. If a data model has a desig
 - `<branch-name>` — merges PRs for combined testing: [#<n>](<url>) (<TICKET-ID>), [#<n>](<url>) (<TICKET-ID>), ... PR: <url or "not yet opened">.
 
 Legend: 🟡 To do (no PR), ✏️ Has a PR (draft or not, commits or not), 🟢 Ready for review, ✅ Done
+
+### Ordering
+
+```mermaid
+graph LR
+  classDef inprogress fill:#fde68a,stroke:#f59e0b,color:#000
+  classDef ready fill:#bbf7d0,stroke:#16a34a,color:#000
+  classDef blocked fill:#fecaca,stroke:#dc2626,color:#000
+
+  W01["W01 <br> Schema migrations"]:::ready --> W02["W02 <br> Create-contact lib"]:::inprogress --> W03["W03 <br> Enqueue mutation"] & W04["W04 <br> Per-row button"]
+  ...
+
+```
+
+Colour: 🟨 in progress · 🟩 ready-for-review or done · 🟥 blocked · uncoloured = to-do
+
+Node labels: `ID["ID <br> short title"]`, **4 words max**. Define the label on the node's first mention; later edges reference the bare ID.
 
 ## Solution options
 

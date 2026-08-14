@@ -4,55 +4,66 @@ description: Help the user develop a vague idea into a "plan" — a scoped, hand
 # inspired by https://github.com/mattpocock/skills/blob/main/skills/productivity/grill-me/SKILL.md
 ---
 
-The user shares a rough idea. Guide them to a **plan**.
+**The user shares a rough idea. Guide them to a plan.**
 
-**Brainstorm workflow:**
+## Brainstorm workflow
 
-- Interview the user relentlessly about every aspect of this plan until you both reach a shared understanding.
+**Interview the user until you both reach a shared understanding.**
+
+- Interview relentlessly about every aspect of the plan.
 - Walk down each branch of the design tree, resolving dependencies between decisions one-by-one. For each question, provide your recommended answer.
-- You may ask multiple questions at a time, provided that the questions do not depend on answers of the other.
-- If a question can be answered by exploring the codebase, explore the codebase instead.
+- Ask multiple questions at a time, provided they don't depend on each other's answers.
+- If a question can be answered by exploring the codebase, explore instead.
 
-**Escalate to megaplan** — If the interview reveals this is a multi-slice project (4+ tickets, evolving requirements, decisions you'll revisit weeks later), offer to switch to [`$megaplan`](../megaplan/SKILL.md). Megaplan produces a living notebook that accumulates over time, with numbered requirements/decisions/risks and a work-plan tracker — better than cramming a project into a one-shot plan doc.
+## Proactive researching
 
-**Proactive researching** - Research facts proactively to gather facts needed for planning. Such as:
+**Research facts proactively to gather facts needed for planning:**
 
-- Do repo/codebase inspection needed to learn readily discoverable facts.
+- Do repo/codebase inspection to learn readily discoverable facts.
 - Do web research as needed.
 
-**Look for related resources** - before finishing a plan, use the Agent tool to find related resources. Use a *research* agent type if available.
+## Look for related resources
 
-- If Linear tools are available, see if there are any linear tickets that are along these lines. 
-- If Slack tools are available, See if there are any Slack discussions that may be related.
+**Before finishing a plan, check for related work.** Use the `Explore` agent type (or `general-purpose` if unavailable):
 
-**Finishing a plan** - upon reaching a plan (skip this if you escalated to megaplan — megaplan handles its own completion flow):
+- Linear tickets along these lines (if Linear tools available)
+- Slack discussions that may be related (if Slack tools available)
 
-- Write to file:
-  - Filename: `plan-<yyyy>-<mmdd>-<ticket>-<title>.md` (omit *ticket* if not known).
-  - If a megaplan is known, write in the same folder (eg, `~/.notebooks/<path>/`)
-  - Otherwise, place in `~/.artefacts/`
-- Reply with the filename, then use the `question` tool to ask what's next, include options:
+## Finishing a plan
+
+Skip if you escalated to megaplan — megaplan handles its own completion flow.
+
+**Write to file:**
+
+- Filename: `plan-<yyyy>-<mmdd>-<ticket>-<title>.md` (omit *ticket* if unknown)
+- Same folder as megaplan if known (eg, `~/.notebooks/<path>/`)
+- Otherwise `~/.artefacts/`
+
+**Then:**
+
+- Reply with the filename
+- Use `AskUserQuestion` for what's next, options:
   - Polish plan (`$polish-plan` skill)
-- Continue brainstorm mode - don't end it. User may still have feedback.
+- Continue brainstorm mode — don't end it. User may still have feedback.
 
-**Working with brainstorm mode:**
+## Working with brainstorm mode
 
-- When brainstorming session starts, acknowledge with **Brainstorm mode: on**.
-- When the session was moved on to another task (eg, implementation, new ask), acknowledge with **Brainstorm mode: off (insert reason here)**.
+- **Start:** acknowledge **Brainstorm mode: on**.
+- **Move on:** acknowledge **Brainstorm mode: off (insert reason here)**.
 
-**Plan formatting:**
+## Plan formatting
 
-- Include repo grounded facts (if needed) - place this last
-- Prefer code blocks to illustrate changes
-- Prefer headings and lists for scanability
-- Include post-implementation verification: things to do before merging or deploying to verify if implementation is correct
-- Don't include "FAQ" question on first pass. Add it when the user asks a question.
-- Place some sections inside `<details>` — they are too noisy for a regular review.
+- Repo grounded facts last, if needed
+- Code blocks to illustrate changes
+- Headings and lists for scanability
+- Post-implementation verification: things to do before merging or deploying
+- Some sections inside `<details>` — too noisy for regular review
+- Use `/skimmable` skill if available
 
-**General guidelines:**
+## General guidelines
 
-- Important: do NOT modify files other than Markdown files until the user specifically asks to start implementing. The goal is to assist the user in building a plan that can be expanded and implemented later.
-- Always use the `question` tool whenever you need user input.
+- **Do NOT modify files other than Markdown** until the user specifically asks to start implementing. Goal: a plan that can be expanded and implemented later.
+- Always use `AskUserQuestion` whenever you need user input.
 
 ## Suggested plan structure
 
@@ -70,10 +81,18 @@ Consider structuring plan files like so. Feel free to add or omit sections as ne
 1. …
 
 **Non-goals:**
-2. …
+1. …
 
 ## Decisions
-- [list decisions here as user answers questions or steers the planning/brainstorming]
+
+### 1. <decision> [list decisions here as user answers questions or steers the planning/brainstorming]
+
+- **Chosen:** <answer>
+- **Why:** <one-line rationale>
+
+**Alternatives:**
+
+- <alternative considered, and why it lost>
 
 ## Implementation steps
 
@@ -83,14 +102,6 @@ Consider structuring plan files like so. Feel free to add or omit sections as ne
 ### 2. [name]
 
 ## Post-implementation verification
-
-## FAQ
-
-### [title]
-
-**Q: [question]?**
-
-[answer]
 
 ## Risks
 
