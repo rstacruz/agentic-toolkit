@@ -17,7 +17,7 @@ graph LR
 
 - [`$brainstorm`](../skills/brainstorm/SKILL.md) — Develop a vague idea into a scoped, handoff-ready plan
 - [`$turbo-brainstorm`](../skills/turbo-brainstorm/SKILL.md) <sup>experimental</sup> — Fast brainstorm variant: judgement calls instead of relentless interviewing, every call documented under `## Decisions` for veto at review
-- [`$megaplan`](../skills/megaplan/SKILL.md) <sup>experimental</sup> — Living notebook for multi-slice projects spanning multiple tickets/PRs
+- [`$metaplan`](../skills/metaplan/SKILL.md) <sup>experimental</sup> — Living notebook for multi-slice projects spanning multiple tickets/PRs
 
 ### Refining
 

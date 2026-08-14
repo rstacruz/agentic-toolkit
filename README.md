@@ -31,9 +31,9 @@ Start with [`$brainstorm`](https://github.com/rstacruz/agentic-toolkit/blob/main
 /brainstorm i want to implement config via c12 npm package
 ```
 
-### For larger projects → megaplan <sup>experimental</sup>
+### For larger projects → metaplan <sup>experimental</sup>
 
-Use [`$megaplan`](https://github.com/rstacruz/agentic-toolkit/blob/main/skills/megaplan/SKILL.md) when the work spans multiple slices (4+ tickets, evolving requirements, decisions you'll revisit weeks later).
+Use [`$metaplan`](skills/metaplan/SKILL.md) when the work spans multiple slices (4+ tickets, evolving requirements, decisions you'll revisit weeks later).
 
 - Living notebook that accumulates as work progresses
 - Numbered requirements, decisions, risks, and grounded facts with cross-references

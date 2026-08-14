@@ -55,7 +55,9 @@ Missing any item → fix the plan, don't write it.
 **Write to file:**
 
 - Filename: `plan-<yyyy>-<mmdd>-<ticket>-<title>.md` (omit *ticket* if unknown)
-- Same folder as an existing megaplan for this project, if one exists (eg, `~/.notebooks/<path>/`) — otherwise `~/.artefacts/`
+- Save location, in order:
+  1. Same folder as an existing `*.metaplan.md` for this project, if one exists (eg, `~/.notebooks/<path>/`).
+  2. Else, `~/.artefacts/`.
 
 **Then:**
 

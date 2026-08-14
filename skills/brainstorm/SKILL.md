@@ -31,13 +31,14 @@ description: Help the user develop a vague idea into a "plan" — a scoped, hand
 
 ## Finishing a plan
 
-Skip if you escalated to megaplan — megaplan handles its own completion flow.
+Skip if you escalated to metaplan — metaplan handles its own completion flow.
 
 **Write to file:**
 
 - Filename: `plan-<yyyy>-<mmdd>-<ticket>-<title>.md` (omit *ticket* if unknown)
-- Same folder as megaplan if known (eg, `~/.notebooks/<path>/`)
-- Otherwise `~/.artefacts/`
+- Save location, in order:
+  1. Same folder as an existing `*.metaplan.md` for this project, if one exists (eg, `~/.notebooks/<path>/`).
+  2. Else, `~/.artefacts/`.
 
 **Then:**
 
