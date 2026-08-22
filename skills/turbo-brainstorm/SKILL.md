@@ -1,10 +1,10 @@
 ---
 name: turbo-brainstorm
 description: >
-  Turns a rough idea into an actionable plan quickly by making reasonable decisions instead of interviewing the user. Use when the user invokes `$turbo-brainstorm`, wants a plan quickly, or prefers minimal back-and-forth. Records judgement calls under `## Decisions` for later review or veto.
+  Turns a rough idea into an actionable plan quickly by making reasonable decisions instead of interviewing the user.
 ---
 
-**Turn a rough idea into an actionable plan quickly, asking questions only when needed.**
+**Turn a rough idea into an actionable Markdown plan.**
 
 ## Workflow
 
@@ -50,6 +50,7 @@ description: >
 
 - During brainstorming, write or edit Markdown files only; leave source code untouched until the user chooses **Start implementing**.
 - Do not add speculative implementation details or dependencies that the plan does not need.
+- Try not to duplicate content; consider using "Refer to <section>" in later sections when something is mentioned earlier in the doc.
 - Use `ask_user_question` for user input, never open-ended prose. Ask about the plan only for genuine ambiguity or when the final ladder rung blocks it.
 
 ### Design entries
@@ -63,6 +64,43 @@ Design entries are contracts, not prose. Typical entries:
 - **Component tree** — component hierarchy with who owns state and how events flow up
 
 Use code blocks and markdown tables over paragraphs. If a data model has a design fork (eg a field that could be two shapes), record it as a Decision with options + recommendation, and reference it from the Design entry (D10).
+
+### Decision stakes
+
+Tag every entry under `## Decisions` with a **stakes** level — a proxy for how much review attention *the decision itself* needs, not how much code it touches. This is distinct from `### Review effort` below, which grades the diff.
+
+| Tag | Means | Reviewer does |
+|---|---|---|
+| 🟢 `[low stakes]` | Contained, reversible, no security/persistence angle | Read once, move on |
+| 🟡 `[mid stakes]` | Coupled to other code, moderate blast radius | Verify the reasoning holds |
+| 🔴 `[high stakes]` | Security-critical, expensive to reverse once shipped, or evidence is thin | Argue it now, before code ships |
+
+Place it as a bullet inside the decision, not in the heading:
+
+```
+### 3. Alias key namespace — `[auto-decided]`
+
+- **Stakes:** 🔴 `[high stakes]` — the wrong keyspace opens a hijack path.
+- **Chosen:** ...
+```
+
+### Review effort
+
+Read [`$pr-risk-assessment`](../pr-risk-assessment/SKILL.md) and apply it.
+
+- Use level names verbatim: 🟢 L1 glance, 🟢 L2 skim, 🟡 L3 spot-check, 🟠 L4 audit, 🔴 L5 war room.
+- Format as a nested list, not a paragraph.
+- When the plan ships as more than one PR, assess each PR separately.
+
+```
+**🔴 L5 — war room.** <one line: why this level, and why the PRs differ>
+
+- **PR-A — <scope>: 🟢 L2 skim**
+  - <reason>
+  - <reason>
+- **PR-B — <scope>: 🔴 L5 war room**
+  - <reason>
+```
 
 ## Suggested plan structure
 
@@ -84,18 +122,16 @@ Consider structuring plan files like so. Feel free to add or omit sections as ne
 
 1. …
 
-## Decisions
+## Review effort
 
-### 1. <decision> — `[auto-decided]` or `[user-confirmed]`
+**🟢 L2 — skim.** <verbatim level name; rationale as a nested list; per-PR when the plan splits>
 
-- **Chosen:** <option>
-- **Why:** <one-line rationale>
+## Implementation steps
 
-**Alternatives:**
+### 1. [name]
+[include code blocks when useful]
 
-- ✗ <runner-up> — <why it lost>
-
-### 2. <decision>
+### 2. [name]
 
 ## Design
 
@@ -107,14 +143,32 @@ Consider structuring plan files like so. Feel free to add or omit sections as ne
 ...
 ```
 
-## Implementation steps
+## Decisions
 
-### 1. [name]
-[include code blocks when useful]
+### 1. <decision> — `[auto-decided]` or `[user-confirmed]`
 
-### 2. [name]
+- **Stakes:** 🔴 `[high stakes]`
+- **Chosen:** <option>
+- **Why:** <one-line rationale>
+
+**Alternatives:**
+
+- ✗ <runner-up> — <why it lost>
+
+**Affects:**
+
+- `path/file2.ts` → `symbolName`, `name2`
+
+### 2. <decision>
 
 ## Post-implementation verification
+
+<details>
+<summary>Expand</summary>
+
+...
+
+</details>
 
 ## Risks
 
