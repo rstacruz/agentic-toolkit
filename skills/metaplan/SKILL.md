@@ -137,6 +137,25 @@ Design entries are contracts, not prose. Typical entries:
 
 Use code blocks and markdown tables over paragraphs. If a data model has a design fork (eg a field that could be two shapes), record it as a Decision with options + recommendation, and reference it from the Design entry (D10).
 
+### Decision stakes
+
+Tag every entry under `## Decisions` with a **stakes** level — a proxy for how much review attention *the decision itself* needs, not how much code it touches. This is distinct from `### Review effort` below, which grades the diff.
+
+| Tag | Means | Reviewer does |
+|---|---|---|
+| 🟢 `[low stakes]` | Contained, reversible, no security/persistence angle | Read once, move on |
+| 🟡 `[mid stakes]` | Coupled to other code, moderate blast radius | Verify the reasoning holds |
+| 🔴 `[high stakes]` | Security-critical, expensive to reverse once shipped, or evidence is thin | Argue it now, before code ships |
+
+Place it as a bullet inside the decision, not in the heading — pair it with a short reason:
+
+```
+### Alias key namespace (D03)
+
+- **Stakes:** 🔴 `[high stakes]` — the wrong keyspace opens a hijack path.
+- ...
+```
+
 ## Template
 
 ````markdown
@@ -239,6 +258,7 @@ Once a problem space is decided, mark the winner ✅ and the rest ❌, and fold 
 
 ### <Decision title> (D0N)
 
+- **Stakes:** 🔴 `[high stakes]` — <short reason>
 - ...
 
 **Alternatives:**

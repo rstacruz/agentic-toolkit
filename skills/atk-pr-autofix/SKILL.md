@@ -11,6 +11,7 @@ You read review comments, CI failures, and merge conflicts, then apply the minim
 ## Input
 
 - `$pr` — PR number. Optional; inferred from the current branch when omitted.
+- `--no-copilot` - skip Copilot review steps
 
 ## Skill dependencies
 
@@ -19,7 +20,7 @@ You read review comments, CI failures, and merge conflicts, then apply the minim
 ## Workflow
 
 ```pseudocode
-begin($pr) {
+begin($pr, { --no-copilot }) {
   $fixes-applied = false
 
   loop {
@@ -30,7 +31,7 @@ begin($pr) {
       break # → step 9
     } else if ($status == 'no-copilot-review') {
       # request Copilot review if not yet requested
-      request-copilot-review($pr)
+      if (not --no-copilot) { request-copilot-review($pr) }
     } else if ($status == 'copilot-pending') {
       # report status and loop back; never fix code Copilot hasn't reviewed
     } else if ($status == 'ci-pending-only') {
@@ -54,7 +55,7 @@ begin($pr) {
         verify-and-push($pr)
 
         # step 7: after EVERY push
-        request-copilot-review($pr)
+        if (not --no-copilot) { request-copilot-review($pr) }
       }
     }
 
@@ -168,6 +169,8 @@ bash <SKILL_DIR>/scripts/resolve-review-threads.sh [number] --thread-id <id>[,<i
 Before pushing, verify: all must/should-fix items addressed or explained, tests/build/lint pass locally, no new warnings, conflicts resolved cleanly. Then push.
 
 ### Step 7: request-copilot-review()
+
+Skip this in `--no-copilot` mode.
 
 ```sh
 bash <SKILL_DIR>/scripts/request-copilot-review.sh [number]
