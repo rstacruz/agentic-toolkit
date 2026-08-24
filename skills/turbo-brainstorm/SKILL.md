@@ -51,6 +51,7 @@ description: >
 - During brainstorming, write or edit Markdown files only; leave source code untouched until the user chooses **Start implementing**.
 - Do not add speculative implementation details or dependencies that the plan does not need.
 - Try not to duplicate content; consider using "Refer to <section>" in later sections when something is mentioned earlier in the doc.
+- Prefer to have code blocks in `## Implementation steps`. Plans are easier to review with code to illustrate the changes.
 - Use `ask_user_question` for user input, never open-ended prose. Ask about the plan only for genuine ambiguity or when the final ladder rung blocks it.
 
 ### Design entries

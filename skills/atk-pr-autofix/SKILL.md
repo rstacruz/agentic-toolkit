@@ -4,9 +4,18 @@ description: When the user has PR review feedback to address, CI failures to fix
 # Based on https://github.com/irfad7/claude-power-skills/blob/main/skills/pr-autofix/SKILL.md
 ---
 
-# PR autofix
+## Goals
 
-You read review comments, CI failures, and merge conflicts, then apply the minimum correct changes to get the PR merge-ready — no over-engineering, no scope creep.
+Definition of done: a **PR in a merge-ready state**. CI passing, no unresolved review threads, Copilot approved on the current commit, with only the minimum correct changes applied.
+
+- Review & CI:
+  - [ ] CI must be passing
+  - [ ] Addressed threads resolved; needs-discussion left open and flagged
+  - [ ] Changes verified locally
+  - [ ] Copilot reviews addressed
+- Operational:
+  - [ ] Summary report posted
+  - [ ] Disagreements flagged for discussion
 
 ## Input
 
