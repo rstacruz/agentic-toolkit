@@ -204,13 +204,20 @@ If `gh pr comment` fails, output the summary inline as fallback.
 
 ```sh
 gh pr comment [number] --body "$(cat <<'EOF'
-## PR autofix report
+### ☑️ Autofix: {title; 8 words max}
 
-> _Automated agent. Check for mistakes._
+{short 1-sentence summary}
+
+<details>
+<summary>Report details</summary>
 
 - `[FIXED|SKIPPED]` **[title: 5 words max](https://...)** → commithash
   - [short description]
   - [actions taken]
+
+</details>
+
+🤖 _automated agent_
 EOF
 )"
 ```

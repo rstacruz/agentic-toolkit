@@ -35,7 +35,7 @@ This skill pushes commits and posts/resolves GitHub PR comments autonomously acr
 Notes:
 
 - If using Claude Code: use *general-purpose* subagent with model=Opus
-- If *oracle* type is available: for Agent tool, use subagent_type=oracle max_turns=35
+- If *agent="reviewer"* is available, use that
 
 Reporting:
 

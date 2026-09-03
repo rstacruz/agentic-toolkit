@@ -18,8 +18,8 @@ Structural checks (when the plan extends an existing system — rules engine, en
 
 Notes:
 
+- If *agent="reviewer"* is available, use that
 - If using Claude Code: use *general-purpose* subagent with model=Opus
-- If *oracle* type is available: for Agent tool, use subagent_type=oracle max_turns=35
 
 Reporting:
 

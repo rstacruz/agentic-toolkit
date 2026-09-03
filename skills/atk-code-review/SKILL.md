@@ -95,7 +95,7 @@ Severity: High
 1. Split non-duplicate findings by whether they land on a line in the PR's diff (`gh pr diff [number]` — a finding about unchanged code, eg. an unused existing helper elsewhere in the codebase, does not):
    - **In-diff findings** → one entry each in a `comments` JSON array: `{"path": "...", "line": ..., "body": "**[severity]**\n\n[description]\n\n```suggestion\n[optional]\n```\n\n_🤖 automated agent_"}`. GitHub's create-review endpoint 422s the *entire* batch if any comment's line falls outside the diff, so keep this array strictly diff-only.
    - **Out-of-diff findings** → fold into the review's top-level `body` text instead (still posted, just not as an inline thread).
-2. Tag the review body with `_🤖 self-review (atk-code-review)_`, so `polish-implementation` (and any human skimming the PR) can tell these apart from human/Copilot threads.
+2. Tag the review body with `_🤖 automated agent (atk-code-review)_`, so `polish-implementation` (and any human skimming the PR) can tell these apart from human/Copilot threads.
 3. Post one review:
 
     ```sh
@@ -108,8 +108,34 @@ Severity: High
 
 4. Re-run the Step 2 GraphQL query and diff its thread IDs against the "before" snapshot — the new IDs are the threads this review just created. No comment-ID bookkeeping needed.
 5. Return to the caller: the list of newly created thread IDs (empty if every finding was a duplicate) plus a one-line summary.
-6. Always post a review — even with zero findings. An empty-findings review (body with the `_🤖 self-review (atk-code-review)_` tag but no inline comments) serves as a convergence marker: it tells `polish-implementation` the review ran and found nothing, so the loop can stop.
+6. Always post a review — even with zero findings. An empty-findings review (body with the `_🤖 automated agent (atk-code-review)_` tag but no inline comments) serves as a convergence marker: it tells `polish-implementation` the review ran and found nothing, so the loop can stop.
 
-Guidelines:
+**For top level comment** (REVIEW_BODY):
+
+- Ensure its formatted in `/skimmable` format.
+- Make a judgement call between:
+  - "🟢 Approval recommended" (no comments, or nitpicks only)
+  - "🔵 Needs a closer look"
+  - "🟡 Changes recommended" (wrong behaviour, data loss, unhandled real failures)
+
+Example top level body comment format:
+
+~~~
+### 🟢 Approval recommended | 🔵 Needs a closer look | 🟡 Changes recommended
+
+{short 1-sentence summary}
+
+<details>
+<summary>Review details</summary>
+
+{rest of details here}
+
+</details>
+
+_🤖 automated agent (atk-code-review)_
+~~~
+
+**General guidelines:**
 
 - Ensure the last response has the outcome itself (thread IDs + summary, or the text report). This may have been invoked in a subagent where only the last reply is used.
+
