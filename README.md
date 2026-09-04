@@ -20,15 +20,16 @@ See [skills/](skills/) and [`docs/skills.md`](./docs/skills.md) for the full ski
 
 ### Plan it
 
-Start with [`$brainstorm`](https://github.com/rstacruz/agentic-toolkit/blob/main/skills/brainstorm/SKILL.md). This is my replacement for plan mode.
+Start with [`$atk-plan`](https://github.com/rstacruz/agentic-toolkit/blob/main/skills/atk-plan/SKILL.md). This is my replacement for plan mode.
 
-- Asks questions relentlessly (inspired by [grill-me](https://github.com/mattpocock/skills/blob/main/skills/productivity/grill-me/))
+- Makes reasonable judgement calls instead of interviewing you; every call is
+  documented under `## Decisions` for your veto at review
 - Easily-skimmable output (Grounded facts, Steps, Risks)
 - Works for all agents (including Pi which has no plan mode)
 - Example: [example-plan.md](./docs/example-plan.md)
 
 ```
-/brainstorm i want to implement config via c12 npm package
+/atk-plan i want to implement config via c12 npm package
 ```
 
 ### For larger projects → metaplan <sup>experimental</sup>

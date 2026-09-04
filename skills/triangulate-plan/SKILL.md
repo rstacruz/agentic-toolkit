@@ -25,9 +25,9 @@ Do **not** include: implementation steps, tests to write, or any detail that was
 
 ### 3. Delegate to a subagent
 
-Use the *brainstorm* skill to generate an independent plan from the same brief:
+Use the *atk-plan* skill to generate an independent plan from the same brief:
 
-> Use *brainstorm* skill. Formulate a plan. Do not write a Markdown file — reply with the plan itself.
+> Use *atk-plan* skill. Formulate a plan. Do not write a Markdown file — reply with the plan itself.
 > Brief: {brief contents}
 
 ### 4. Compare and recommend

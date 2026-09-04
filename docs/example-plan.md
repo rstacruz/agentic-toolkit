@@ -1,4 +1,4 @@
-> **Note:** This is an example plan produced by the brainstorm skill.
+> **Note:** This is an example plan. The `atk-plan` skill's suggested structure (see its SKILL.md) is authoritative — this example predates per-decision **Chosen/Why/Alternatives** entries and a `## Review effort` section.
 
 ---
 

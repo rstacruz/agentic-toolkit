@@ -4,8 +4,8 @@
 
 ```mermaid
 graph LR
-  brainstorm --> polish_plan["polish-plan"]
-  brainstorm --> triangulate_plan["triangulate-plan"]
+  atk_plan["atk-plan"] --> polish_plan["polish-plan"]
+  atk_plan["atk-plan"] --> triangulate_plan["triangulate-plan"]
   polish_plan --> polish_implementation["polish-implementation"]
   triangulate_plan --> polish_implementation
   polish_implementation --> atk_pr_autofix["atk-pr-autofix"]
@@ -15,8 +15,7 @@ graph LR
 
 ### Planning
 
-- [`$brainstorm`](../skills/brainstorm/SKILL.md) — Develop a vague idea into a scoped, handoff-ready plan
-- [`$turbo-brainstorm`](../skills/turbo-brainstorm/SKILL.md) <sup>experimental</sup> — Fast brainstorm variant: judgement calls instead of relentless interviewing, every call documented under `## Decisions` for veto at review
+- [`$atk-plan`](../skills/atk-plan/SKILL.md) — Turns a rough idea into an actionable plan: judgement calls instead of interviewing, every call documented under `## Decisions` for veto at review
 - [`$metaplan`](../skills/metaplan/SKILL.md) <sup>experimental</sup> — Living notebook for multi-slice projects spanning multiple tickets/PRs
 
 ### Refining
