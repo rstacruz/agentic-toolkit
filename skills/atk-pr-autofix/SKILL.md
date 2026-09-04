@@ -206,7 +206,7 @@ If `gh pr comment` fails, output the summary inline as fallback.
 gh pr comment [number] --body "$(cat <<'EOF'
 ### ☑️ Autofix: {title; 8 words max}
 
-{short 1-sentence summary}
+{short 1-sentence summary} 🤖 _(automated agent: atk-pr-autofix)_
 
 <details>
 <summary>Report details</summary>
@@ -216,8 +216,6 @@ gh pr comment [number] --body "$(cat <<'EOF'
   - [actions taken]
 
 </details>
-
-🤖 _automated agent_
 EOF
 )"
 ```

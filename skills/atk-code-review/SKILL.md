@@ -123,7 +123,7 @@ Example top level body comment format:
 ~~~
 ### 🟢 Approval recommended | 🔵 Needs a closer look | 🟡 Changes recommended
 
-{short 1-sentence summary}
+{short 1-sentence summary} _🤖 (automated agent: atk-code-review)_
 
 <details>
 <summary>Review details</summary>
@@ -131,8 +131,6 @@ Example top level body comment format:
 {rest of details here}
 
 </details>
-
-_🤖 automated agent (atk-code-review)_
 ~~~
 
 **General guidelines:**
