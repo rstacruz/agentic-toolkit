@@ -88,7 +88,7 @@ Run the status script; act on the first match. Returns `'merged' | 'merge-ready'
 bash <SKILL_DIR>/scripts/pr-status.sh --verbose [number]
 ```
 
-**Merge-ready** = CI passing, no `Changes requested` / `Review required`, zero unresolved threads (human or Copilot), Copilot `approved` or `reviewed` or `🟢 Approval recommended` on the current commit (not `outdated`).
+**Merge-ready** = CI passing, no `Changes requested` / `Review required`, zero unresolved threads (human or Copilot), Copilot `approved` or `reviewed` on the current commit (not `outdated`), or a top-level `🟢 Approval recommended` verdict comment from `$atk-code-review` (read the review body — `pr-status.sh --comments` surfaces it; it is not a Copilot review state).
 
 ### Step 2: merge-from-base()
 
