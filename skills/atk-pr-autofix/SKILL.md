@@ -88,7 +88,9 @@ Run the status script; act on the first match. Returns `'merged' | 'merge-ready'
 bash <SKILL_DIR>/scripts/pr-status.sh --verbose [number]
 ```
 
-**Merge-ready** = CI passing, no `Changes requested` / `Review required`, zero unresolved threads (human or Copilot), Copilot `approved` or `reviewed` on the current commit (not `outdated`).
+**Merge-ready** = CI passing, no `Changes requested` / `Review required`, zero unresolved threads (human or Copilot), Copilot `approved` or `reviewed` or an `$atk-code-review` `🟢 Approval recommended` verdict on the current commit (not `outdated`). The verdict is read from review bodies by `pr-status.sh` — it is not a Copilot review state.
+
+If no Copilot review was requested but an up-to-date `$atk-code-review` `🟢 Approval recommended` verdict exists, treat the PR as `merge-ready` — not `no-copilot-review`.
 
 ### Step 2: merge-from-base()
 

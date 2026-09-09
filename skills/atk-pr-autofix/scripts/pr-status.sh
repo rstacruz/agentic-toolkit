@@ -196,6 +196,7 @@ fetch_graphql() {
             nodes {
               author { login }
               state
+              body
               submittedAt
               commit { oid }
               isMinimized
@@ -239,6 +240,35 @@ fetch_graphql() {
     copilot_state=""
     copilot_stale=false
   fi
+
+  # atk-code-review verdict — read from review bodies, not a Copilot state
+  atk_review=$(echo "$gql_data" | jq -c '
+    .data.repository.pullRequest.reviews.nodes
+    | map(select(.isMinimized == false
+        and .state != "DISMISSED"
+        and .author.login != "copilot-pull-request-reviewer"
+        and (.body // "" | contains("_🤖 automated agent (atk-code-review)_"))))
+    | sort_by(.submittedAt) | last // empty
+  ' 2>/dev/null)
+
+  if [[ -n "$atk_review" && "$atk_review" != "null" ]]; then
+    atk_review_oid=$(echo "$atk_review" | jq -r '.commit.oid // ""')
+    if [[ "$atk_review_oid" != "$head_oid" ]]; then
+      atk_stale=true
+    else
+      atk_stale=false
+    fi
+    atk_verdict=$(echo "$atk_review" | jq -r '
+      (.body // "") | split("\n") | map(select(startswith("### "))) | first // ""
+      | if . == "### 🟢 Approval recommended" then "🟢 Approval recommended"
+        elif . == "### 🔵 Needs a closer look" then "🔵 Needs a closer look"
+        elif . == "### 🟡 Changes recommended" then "🟡 Changes recommended"
+        else "reviewed" end
+    ')
+  else
+    atk_stale=false
+    atk_verdict=""
+  fi
 }
 
 print_copilot_status() {
@@ -254,6 +284,21 @@ print_copilot_status() {
     esac
   else
     print_status "$INFO" "No Copilot review requested"
+  fi
+}
+
+print_atk_review_status() {
+  if [[ "$atk_stale" == "true" ]]; then
+    print_status "$INFO" "atk-code-review outdated" "verdict is for an older commit"
+  elif [[ -n "$atk_verdict" ]]; then
+    case "$atk_verdict" in
+      "🟢 Approval recommended") print_status "$OK"   "atk-code-review: 🟢 Approval recommended" ;;
+      "🟡 Changes recommended")  print_status "$FAIL" "atk-code-review: 🟡 Changes recommended" ;;
+      "🔵 Needs a closer look")  print_status "$WARN" "atk-code-review: 🔵 Needs a closer look" ;;
+      *)                         print_status "$INFO" "atk-code-review: reviewed" ;;
+    esac
+  else
+    print_status "$INFO" "No atk-code-review review"
   fi
 }
 
@@ -383,6 +428,7 @@ print_merge_status() {
     fi
 
     print_copilot_status
+    print_atk_review_status
 
     if [[ "$unresolved" -gt 0 ]]; then
       print_status "$WARN" "${unresolved} unresolved threads"
