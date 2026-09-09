@@ -246,6 +246,7 @@ fetch_graphql() {
     .data.repository.pullRequest.reviews.nodes
     | map(select(.isMinimized == false
         and .state != "DISMISSED"
+        and .author.login != "copilot-pull-request-reviewer"
         and (.body // "" | contains("_🤖 automated agent (atk-code-review)_"))))
     | sort_by(.submittedAt) | last // empty
   ' 2>/dev/null)
