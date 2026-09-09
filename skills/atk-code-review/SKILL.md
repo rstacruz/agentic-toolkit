@@ -129,7 +129,7 @@ Example top level body comment format:
 - {one bullet per verified fix / claim / finding}
 - {…}
 
-_🤖 (automated agent: atk-code-review)_
+_🤖 automated agent (atk-code-review)_
 
 <details>
 <summary>Review details</summary>
