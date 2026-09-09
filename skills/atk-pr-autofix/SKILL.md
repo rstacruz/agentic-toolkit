@@ -90,6 +90,8 @@ bash <SKILL_DIR>/scripts/pr-status.sh --verbose [number]
 
 **Merge-ready** = CI passing, no `Changes requested` / `Review required`, zero unresolved threads (human or Copilot), Copilot `approved` or `reviewed` or an `$atk-code-review` `🟢 Approval recommended` verdict on the current commit (not `outdated`). The verdict is read from review bodies by `pr-status.sh` — it is not a Copilot review state.
 
+If no Copilot review was requested but an up-to-date `$atk-code-review` `🟢 Approval recommended` verdict exists, treat the PR as `merge-ready` — not `no-copilot-review`.
+
 ### Step 2: merge-from-base()
 
 Pull in the base branch before fixing anything. This ensures fixes aren't chasing problems the base branch already solved:
