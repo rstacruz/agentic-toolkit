@@ -113,6 +113,7 @@ Severity: High
 **For top level comment** (REVIEW_BODY):
 
 - Ensure its formatted in `/skimmable` format.
+- Break long prose into list bullets: a paragraph that packs multiple items with commas/semicolons ("all fixed (a, b, c); re-audited (d, e, f)… all check out") is not skimmable. Write a one-line lead-in, then one `-` bullet per item (fixed thread, verified claim, finding), nesting `- item: detail` where a bullet needs elaboration. Apply the same rule inside the `<details>` body — no prose walls anywhere.
 - Make a judgement call between:
   - "🟢 Approval recommended" (no comments, or nitpicks only)
   - "🔵 Needs a closer look"
@@ -123,12 +124,18 @@ Example top level body comment format:
 ~~~
 ### 🟢 Approval recommended | 🔵 Needs a closer look | 🟡 Changes recommended
 
-{short 1-sentence summary} _🤖 (automated agent: atk-code-review)_
+{short 1-sentence summary}
+
+- {one bullet per verified fix / claim / finding}
+- {…}
+
+_🤖 (automated agent: atk-code-review)_
 
 <details>
 <summary>Review details</summary>
 
-{rest of details here}
+- {file/verification details, one bullet per item}
+- {…}
 
 </details>
 ~~~

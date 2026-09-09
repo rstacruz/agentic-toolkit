@@ -6,52 +6,117 @@ description: >
 
 **Turn a rough idea into an actionable Markdown plan.**
 
+## Input
+
+- `$request` — the rough idea to turn into a plan
+- `--interactive` — ask the user before proceeding on 🟡 mid-stakes or 🔴 high-stakes decisions
+
+## Skill dependencies
+
+Read first:
+
+- `/pr-risk-assessment` — grades the `## Review effort` section
+- `/skimmable` — apply to the plan doc when available
+
 ## Workflow
 
 **Decide first, ask last.**
 
-- Walk the design tree yourself — make a judgement call per branch; don't interview.
-- Document every call under `## Decisions` — each entry needs **Chosen**, **Why**, and **Alternatives**.
+```pseudocode
+begin($request, { --interactive }) {
+  # -- phase 1: understand --
+  if (scope or goal genuinely ambiguous) {
+    ask_user_question("confirm the scope/goal reading")
+  }
 
-1. **Confirm understanding only if genuinely ambiguous.**
-   - Before walking the tree, check whether the idea's scope or goal is unclear enough that a wrong read would derail the plan.
-   - If ambiguous, use `ask_user_question` to confirm the scope/goal reading before research or decisions.
-   - If clear enough, skip to next.
+  # -- phase 2: gather --
+  $facts = gather-context()
 
-2. **Check relevant context.**
-   - Inspect related files, plans, tickets, or discussions when available.
+  # -- phase 3: decide --
+  $decisions = decide($request, $facts, { --interactive })
 
-3. **Resolve open decisions.** At each branch, run the decide-first ladder:
+  # -- phase 4: draft --
+  $plan = draft($request, $decisions)
+  validate($plan)
+  if (skimmable available) { /skimmable($plan) }
 
-   1. If research can answer the branch, find the fact first; it is not itself a judgement call. Then choose the simplest reasonable default unless the findings support another option.
-   2. If a reasonable default exists, one option is cheaply reversible, or no option clearly wins, choose the most reasonable default, document it, and move on.
-   3. If the choice is costly or irreversible, has no signal, and does not block the plan, decide, document, and mark `⚠️ revisit` so review can catch it.
-   4. If all options are costly or irreversible, there is no signal, and the choice blocks the plan, ask the user with `ask_user_question`.
+  # -- phase 5: write --
+  $path = save-plan($request)
+  reply with $path
+}
+```
 
-   - If research affects the plan, record it under `## Appendix: Grounded facts`.
+### gather-context()
 
-4. **Draft and validate the plan.**
-   - [ ] Every decision has **Chosen**, **Why**, and **Alternatives**.
-   - [ ] Non-goals are explicit.
-   - [ ] Post-implementation verification states what to check before merging or deploying.
-   - [ ] Apply the `$skimmable` skill if available.
+Inspect related files, plans, tickets, or discussions when available. If research affects the plan, record it under `## Appendix: Grounded facts`.
 
-5. **Write the plan.**
-   - Filename: `plan-<yyyy>-<mmdd>-<ticket>-<title>.md`; omit `<ticket>-` when unknown. Use lowercase kebab-case for `<ticket>` and `<title>`.
-   - Save it beside the relevant `*.metaplan.md`, or under `~/.artefacts/`.
-   - Reply with the filename.
+### decide()
 
-6. **Ask what's next.** Use `ask_user_question` with these options:
-   - **Start implementing** — begin the work described in the plan
-   - **Polish the plan** — run the `$polish-plan` skill first
-   - **Review decisions** — check `## Decisions` for weak assumptions or missed alternatives
+Walk the design tree yourself — make a judgement call per branch; don't interview. At each branch, run the decide-first ladder:
 
-## General guidelines
+```pseudocode
+def decide($request, $facts, { --interactive }) {
+  for each ($branch in the design tree) {
+    $asked = false
+
+    if (research can answer $branch) {
+      find the fact first      # the fact is not itself a judgement call
+      choose the simplest reasonable default unless findings support another option
+      record the fact under `## Appendix: Grounded facts` if it affects the plan
+    } else if (a reasonable default exists
+        or one option is cheaply reversible
+        or no option clearly wins) {
+      choose the most reasonable default
+    } else if (not blocking the plan) {
+      decide and mark "⚠️ revisit"   # costly/irreversible, no signal — review catches it
+    } else {
+      $answer = ask_user_question($branch)  # all costly/irreversible, no signal, blocks the plan
+      $asked = true
+    }
+
+    assign a stakes level — see Decision stakes
+    document under `## Decisions`: Chosen + Why + Alternatives
+
+    if (not $asked and --interactive and stakes in [🟡 mid, 🔴 high]) {
+      $answer = ask_user_question("confirm Chosen, or pick an alternative")
+      apply $answer
+      $asked = true
+    }
+
+    tag `[user-confirmed]` if $asked, else `[auto-decided]`
+  }
+  return { decisions: ... }
+}
+```
+
+### draft()
+
+- Design entries are contracts, not prose (data model, state machine, storage, repo layout, component tree).
+- For code changes, include code blocks in `## Implementation steps`.
+- Assess `## Review effort` per `/pr-risk-assessment()`.
+
+### validate()
+
+- [ ] every decision has Chosen, Why, Alternatives
+- [ ] non-goals are explicit
+- [ ] post-implementation verification states what to check before merging or deploying
+
+### save-plan()
+
+```pseudocode
+def save-plan($request) {
+  $filename = "plan-<yyyy>-<mmdd>-<ticket>-<title>.md"
+  # omit <ticket>- when unknown; lowercase kebab-case for <ticket> and <title>
+  save beside the relevant *.metaplan.md, or under ~/.artefacts/
+  return { path: $filename }
+}
+```
+
+## Guidelines
 
 - During brainstorming, write or edit Markdown files only; leave source code untouched until the user chooses **Start implementing**.
 - Do not add speculative implementation details or dependencies that the plan does not need.
 - Try not to duplicate content; consider using "Refer to <section>" in later sections when something is mentioned earlier in the doc.
-- For code changes, ensure there are code blocks in `## Implementation steps`. Plans are easier to review with code to illustrate the changes.
 - Use `ask_user_question` for user input, never open-ended prose. Ask about the plan only for genuine ambiguity or when the final ladder rung blocks it.
 
 ### Design entries
