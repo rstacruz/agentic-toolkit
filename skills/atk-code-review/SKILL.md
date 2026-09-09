@@ -122,7 +122,7 @@ Severity: High
 Example top level body comment format:
 
 ~~~
-### 🟢 Approval recommended | 🔵 Needs a closer look | 🟡 Changes recommended
+### 🟢 Approval recommended
 
 {short 1-sentence summary}
 
