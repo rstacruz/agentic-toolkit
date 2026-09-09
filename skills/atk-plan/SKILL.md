@@ -16,7 +16,7 @@ description: >
 Read first:
 
 - `/pr-risk-assessment` — grades the `## Review effort` section
-- `/skimmable` (github.com/rstacruz/skimmable) — optional dependency; apply to the plan doc when available
+- `/skimmable` — apply to the plan doc when available
 
 ## Workflow
 
