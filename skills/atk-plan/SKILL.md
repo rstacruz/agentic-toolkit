@@ -38,7 +38,7 @@ begin($request, { --interactive }) {
   # -- phase 4: draft --
   $plan = draft($request, $decisions)
   validate($plan)
-  if (skimmable available) { /skimmable($plan) }
+  if (skimmable available) { apply /skimmable formatting to $plan }
 
   # -- phase 5: write --
   $path = save-plan($request)
@@ -93,7 +93,7 @@ def decide($request, $facts, { --interactive }) {
 
 - Design entries are contracts, not prose (data model, state machine, storage, repo layout, component tree).
 - For code changes, include code blocks in `## Implementation steps`.
-- Assess `## Review effort` per `/pr-risk-assessment()`.
+- Assess `## Review effort` per `/pr-risk-assessment`.
 
 ### validate()
 
