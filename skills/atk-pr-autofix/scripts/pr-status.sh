@@ -258,10 +258,10 @@ fetch_graphql() {
       atk_stale=false
     fi
     atk_verdict=$(echo "$atk_review" | jq -r '
-      .body // ""
-      | if contains("🟢 Approval recommended") then "🟢 Approval recommended"
-        elif contains("🟡 Changes recommended") then "🟡 Changes recommended"
-        elif contains("🔵 Needs a closer look") then "🔵 Needs a closer look"
+      (.body // "") | split("\n") | map(select(startswith("### "))) | first // ""
+      | if . == "### 🟢 Approval recommended" then "🟢 Approval recommended"
+        elif . == "### 🔵 Needs a closer look" then "🔵 Needs a closer look"
+        elif . == "### 🟡 Changes recommended" then "🟡 Changes recommended"
         else "reviewed" end
     ')
   else
