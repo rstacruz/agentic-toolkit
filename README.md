@@ -32,14 +32,6 @@ Start with [`$atk-plan`](https://github.com/rstacruz/agentic-toolkit/blob/main/s
 /atk-plan i want to implement config via c12 npm package
 ```
 
-### For larger projects → metaplan <sup>experimental</sup>
-
-Use [`$metaplan`](skills/metaplan/SKILL.md) when the work spans multiple slices (4+ tickets, evolving requirements, decisions you'll revisit weeks later).
-
-- Living notebook that accumulates as work progresses
-- Numbered requirements, decisions, risks, and grounded facts with cross-references
-- Work-plan tracker with ticket/PR statuses
-
 ### Polish the plan
 
 Use [`$polish-plan`](https://github.com/rstacruz/agentic-toolkit/blob/main/skills/polish-plan/SKILL.md) after creating a plan.
