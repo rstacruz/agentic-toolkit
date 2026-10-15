@@ -370,3 +370,4 @@ Example format:
 - See: `blog/types.ts:12`
 - `post.scheduledDate` is optional but `scheduleForPublication()` doesn't validate it
 - Could result in runtime errors - add validation or make type non-nullable
+````
