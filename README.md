@@ -61,7 +61,7 @@ Here's one I would use:
 /goal First, make empty commit then create draft PR (use pr-description skill).
 Then implement the plan as described, correctly and completely.
 Ensure that the `polish-implementation` skill (using Oracle agent type if available; else, Opus) is used afterwards and has completed successfully.
-Ensure `trim-tests` skill was used, and that no other changes to tests are needed.
+Ensure `trim-tests-and-comments` skill was used, and that no other changes to tests are needed.
 Ensure the changes are committed and pushed to Git.
 Ensure `atk-pr-autofix` is used and runs successfully.
 Ensure CI is passing in GitHub. Ultrathink. Plan: <plan file here>
@@ -88,7 +88,7 @@ Use [`$atk-pr-autofix`](https://github.com/rstacruz/agentic-toolkit/blob/main/sk
 
 Prefer to skip the manual steps above? Run the whole pipeline from one open-ended request with [`$ship`](https://github.com/rstacruz/agentic-toolkit/blob/main/skills/ship/SKILL.md).
 
-- Reframes the request, creates a fresh worktree + draft PR, then plans, implements, polishes, and waits on CI — unattended by default
+- Reframes the request, sets up a worktree + draft PR, then plans, implements, polishes, and waits on CI — unattended by default
 - `--max` adds the extra rigor passes: `$polish-plan` and `$polish-implementation`
 - Uses the repo's other skills along the way (`$atk-plan`, `$implement-plan`, `$polish-implementation`, `$atk-pr-autofix`, `$pr-description`, …), plus Worktrunk for worktrees when available
 

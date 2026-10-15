@@ -19,7 +19,7 @@ graph LR
 
 ### Orchestration
 
-- [`$ship`](../skills/ship/SKILL.md) — Runs an open-ended request through the whole pipeline unattended: reframe → plan → implement → polish → CI, on a fresh worktree and branch with a draft PR
+- [`$ship`](../skills/ship/SKILL.md) — Runs an open-ended request through the whole pipeline unattended: reframe → plan → implement → polish → CI, in a worktree and branch with a draft PR
 
 ### Planning
 

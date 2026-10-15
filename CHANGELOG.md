@@ -5,7 +5,7 @@
 ### Added
 
 - `ship` — end-to-end orchestrator for an open-ended request: reframe → plan
-  → implement → polish → CI, in a fresh worktree and draft PR. `--max`
+  → implement → polish → CI, in a worktree with a draft PR. `--max`
   enables the `polish-plan` / `polish-implementation` rigor passes.
 - `implement-plan` — implements a plan's PR breakdown via subagents, one
   worktree per PR, unblocking dependents as their base branch lands code.
