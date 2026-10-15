@@ -20,9 +20,9 @@ while true; do
     [[ -n "${LANDED[$id]:-}" ]] && continue
     all_landed=0
     rc=0
-    git -C "$dir" diff --quiet "$base" "$branch" -- 2>/dev/null || rc=$?
-    # rc 0: no diff yet; rc 1: the branch has a real commit (LANDED); anything
-    # else: unresolved refs or base — not landed, keep waiting
+    git -C "$dir" diff --quiet "$base...$branch" -- 2>/dev/null || rc=$?
+    # three-dot: only commits the branch added count. rc 0: nothing yet;
+    # rc 1: real work (LANDED); anything else: unresolved refs — keep waiting
     if [[ "$rc" -eq 1 ]]; then
       echo "LANDED $id $branch"
       LANDED[$id]=1
