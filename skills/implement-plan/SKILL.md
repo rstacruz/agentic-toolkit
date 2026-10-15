@@ -35,6 +35,7 @@ begin {
 Find each plan's PR breakdown — there may be one plan or several, merge them into a single graph.
 
 - Look for a "Ship as N PRs" / "Implementation steps" section per plan — eg. `### PR-A`, `### PR-B` headings with "Requires PR-X merged first".
+- **Plan does not state dependencies?** Treat PRs as independent (base = default branch), unless the plan's ordering or the code makes the dependency obvious (eg, one PR calls something another adds).
 - **Not split into PRs?** Treat the whole plan as a single PR — no `depends_on`, base = default branch.
 - **Multiple plans?** Keep ids unambiguous across plans; cross-plan `depends_on` is fine.
 
@@ -105,7 +106,7 @@ bash <SKILL_DIR>/scripts/monitor.sh <tracking-file> [poll-seconds]
 On each `LANDED` event:
 
 - Re-scan the graph for any not-yet-spawned PR whose `depends_on` is now fully landed.
-- Spawn it (step 3), and add it to the tracking file so the running monitor picks it up too.
+- Spawn it (step 3), then append it to the tracking file so the running monitor picks it up too. If the monitor already exited (it stops once every id it has seen has landed), start it again.
 
 **Stuck detection:** implementation runs take roughly 5min–1hr. Past that with no diff → flag as stuck in the final report, don't let it block the others.
 
