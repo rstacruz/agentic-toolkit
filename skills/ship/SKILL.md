@@ -47,7 +47,7 @@ Read these to understand context:
 - `$minimise-pr-comments`
 - `$trim-tests-and-comments`
 - `$prose-deslop`
-- `$skimmable`
+- `$skimmable` - optional; formatting guidelines when available
 - `$pr-review-guide`
 - `references/impact-analysis.md` - guidelines for `impact-analysis()`
 
@@ -66,6 +66,7 @@ begin({ $request, $plan_file, … }) {
   prepare-worktree()
   create-draft-pr()
   notify(PR created, planning now)
+  status-loop() # every ~15m while work is in flight; no-op without a loop tool
 
   unless (--skip-plan) {
     if (sufficiently-scoped plan already exists in context or tickets) {
@@ -94,7 +95,7 @@ begin({ $request, $plan_file, … }) {
   }
 
   # -- implement phase --
-  if (plan has multiple PR's) {
+  if ($plan_file and it is split into multiple PR's) {
       Close original PR
       /implement-plan $plan_file
       # /implement-plan only waits for code to land, not CI — each spawned
@@ -182,6 +183,13 @@ For final notification, give when available:
 - PR link, plan file location, worktree path, branch name, env `$CLAUDE_CODE_SESSION_ID`
 - If using Claude Code: "Resume with cd <dir> && claude --resume <session-id>"
 
+### status-loop()
+
+While the run is in flight, notify the user a short status update every ~15m (Slack or chat, when available).
+
+- Needs a loop/cron tool (Claude Code: `/loop`, CronCreate); skip it when the harness has none — see Guidelines.
+- Keep it one line: what step is running, and what is pending.
+
 ### plan()
 
 ```
@@ -218,7 +226,8 @@ def implement() {
       /polish-implementation
     }
 
-    # ensure tests and comments are lean; use fresh subagent
+    # ensure tests and comments are lean; use fresh subagent.
+    # unattended runs skip its approval gate — the PR is the review surface
     subagent { apply /trim-tests-and-comments }
 
     prose-deslop()
