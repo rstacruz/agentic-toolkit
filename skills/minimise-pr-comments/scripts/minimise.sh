@@ -68,10 +68,12 @@ rows=$(jq -r --arg author "$author" --arg keepbots "$keepbots" --arg keepauthor 
           # inline PullRequestReviewComments have their own isMinimized flag and are NOT
           # cascaded when the parent review is minimized — so each
           # one must inherit the review verdict and get its own mutation call.
-          # Keep-ids only protect the exact listed nodes — inline comments are classified
-          # on their own merits (Copilot inlines follow their parent review recency).
+          # Keep-ids protect the exact listed nodes, inline or top-level. Other inline
+          # comments are classified on their own merits (Copilot inlines follow their
+          # parent review recency).
           ($rev.comments.nodes[] | . as $c |
             (if $c.isMinimized then {v:"skip",r:"already minimized"}
+             elif ($keepids_list | index($c.id)) != null then {v:"keep",r:"kept by keep-ids"}
              elif $rev.author.login=="copilot-pull-request-reviewer" then
                (if $rev.id==$latest then {v:"keep",r:"latest Copilot review inline"} else {v:"minimize",r:"superseded Copilot review inline"} end)
              else vd($c) end) as $cv
