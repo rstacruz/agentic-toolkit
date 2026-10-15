@@ -67,7 +67,7 @@ Applies only to comments that passed the keep list.
 - State the fact, not the instruction. Cut "don't change this without re-measuring", keep the measurement (see Examples).
 - Prefer one concrete example over prose (see Examples).
 - Date empirical claims with a month or date.
-- Avoid non-ascii characters like em dashes and emoji's.
+- Avoid non-ascii characters like em dashes and emojis.
 - Comments shouldn't end with a `.`. Internal sentence periods stay (see Examples).
 - Avoid diff-relative language ("now", "no longer", "previously", "used to"). Describe the current state, not the change (see Examples).
 - Single-line separator labels only across several parallel blocks, short and consistent. Never a lone trivial line.

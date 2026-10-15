@@ -29,14 +29,16 @@ For rule 4: group Copilot's reviews by submission time, keep only the last one (
 1. **Run the script** — it fetches, classifies, and prints the table in one shot. `owner`/`repo`/`pr-number` are optional; omitted ones default to the current repo/PR (via `gh`):
 
    ```sh
-   scripts/minimise.sh [owner] [repo] [pr-number]
+   bash <SKILL_DIR>/scripts/minimise.sh [owner] [repo] [pr-number]
    ```
 
    Review the printed table. Then apply:
 
    ```sh
-   scripts/minimise.sh [owner] [repo] [pr-number] --apply
+   bash <SKILL_DIR>/scripts/minimise.sh [owner] [repo] [pr-number] --apply
    ```
+
+   `MINIMISE_KEEP_IDS` (comma-separated comment/review IDs) forces specific items to be kept, whatever the classifier decides.
 
 The script encodes the default rule deterministically (structural checks for reviewer/author/Copilot-recency, a login allowlist for deploy/preview bots) — no body-reading judgement needed except one narrow regex for PR-author manual-verification keywords. If a PR surfaces a bot or phrasing the script misclassifies, fix the regex/allowlist in `scripts/minimise.sh` rather than falling back to manual mutation calls.
 
