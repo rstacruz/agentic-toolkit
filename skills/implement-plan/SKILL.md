@@ -66,7 +66,9 @@ A PR is unblocked once every `depends_on` entry has landed (step 4).
 ```sh
 # one worktree per PR (Worktrunk when available; else `git worktree add <dir> -b <branch>`)
 wt switch --create <branch> --base <base-branch> --no-cd --no-hooks
-# in that worktree: empty commit + push, so gh has something to open a PR against
+# --no-cd leaves you in the caller's directory: enter the new worktree first
+cd <worktree-dir>
+# empty commit + push, so gh has something to open a PR against
 git commit --allow-empty -m "start <id>" && git push -u origin HEAD
 gh pr create --draft --title "<title>" --body ""
 ```
@@ -84,14 +86,14 @@ and `$atk-pr-autofix` — see `$ship`'s implement() for the sequence.
 - Omit `--base` for PRs with no dependency (default branch).
 - Get `<worktree-dir>` from the `wt switch` output or `wt list`.
 - Append a line to a tracking file: `<id> <base> <branch> <worktree-dir>`
-- **Don't** let the subagent tool create its own isolated worktree (Claude Code: `Agent({isolation: "worktree"})`) — it keys the worktree to the harness's internal agent id on a throwaway branch, not `<branch>`. Pre-create each worktree (the `/worktrunk` skill's "Parallel sub-Agents" pattern, when available) so path and branch stay aligned.
+- **Don't** let the subagent tool create its own isolated worktree (Claude Code: `Agent({isolation: "worktree"})`) — it keys the worktree to the harness's internal agent id on a throwaway branch, not `<branch>`. Pre-create each worktree (the `$worktrunk` skill's "Parallel sub-Agents" pattern, when available) so path and branch stay aligned.
 
 ## 4. Monitor for activity
 
 Every branch starts with one empty commit (step 3) — branch existence isn't "landed", a non-empty diff is.
 
 ```sh
-bash <skill-dir>/scripts/monitor.sh <tracking-file> [poll-seconds]
+bash <SKILL_DIR>/scripts/monitor.sh <tracking-file> [poll-seconds]
 ```
 
 - Emits one `LANDED <id> <branch>` line per PR as it lands.
