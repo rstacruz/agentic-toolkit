@@ -9,12 +9,12 @@ Definition of done: an open-ended request delivered as a verified result via a r
 
 - Plans:
   - [ ] Plan created for human review
-  - [ ] Plan is in `/atk-plan` format (Implementation steps, Decisions, etc)
-  - [ ] Plan polished via `/polish-plan` (only with `--max`, and not for trivial plans)
+  - [ ] Plan is in `$atk-plan` format (Implementation steps, Decisions, etc)
+  - [ ] Plan polished via `$polish-plan` (only with `--max`, and not for trivial plans)
 - Code changes:
   - [ ] Worked on in a worktree (not the main working copy)
   - [ ] Worked on in a branch
-  - [ ] Verified through `/atk-pr-autofix`; plus `/polish-implementation` when `--max` (unconditional on task size or review-effort)
+  - [ ] Verified through `$atk-pr-autofix`; plus `$polish-implementation` when `--max` (unconditional on task size or review-effort)
   - [ ] Impact on real production data analysed and posted (only when relevant; see `impact-analysis()`)
   - [ ] Added prose (markdown and code comments) is concise, non-repetitive, and readable
   - [ ] Readable PR description
@@ -26,29 +26,29 @@ Definition of done: an open-ended request delivered as a verified result via a r
 ## Input
 
 - `$request` - required
-- `$plan_file` - (required) use given plan; else make it
+- `$plan_file` - path to an existing plan; otherwise one is made first
 - Options:
   - `--interactive` - pause at confirmation gates for human review; default is unattended
   - `--skip-plan` - no need to plan
-  - `--max` - enable the extra rigor passes: `/polish-plan` and `/polish-implementation`. Off by default
+  - `--max` - enable the extra rigor passes: `$polish-plan` and `$polish-implementation`. Off by default
 
 ## Skill dependencies
 
 Read these to understand context:
 
-- `/atk-plan`
-- `/polish-plan`
-- `/polish-implementation`
-- `/atk-pr-autofix`
-- `/pr-description` - for PR description
-- `/pr-risk-assessment` - effort level
-- `/worktrunk` - optional; used by prepare-worktree() when available
-- `/implement-plan` - builds the PR graph, spawns unblocked PRs, monitors until all land
-- `/minimise-pr-comments`
-- `/trim-tests-and-comments`
-- `/prose-deslop`
-- `/skimmable`
-- `/pr-review-guide`
+- `$atk-plan`
+- `$polish-plan`
+- `$polish-implementation`
+- `$atk-pr-autofix`
+- `$pr-description` - for PR description
+- `$pr-risk-assessment` - effort level
+- `$worktrunk` - optional; used by prepare-worktree() when available
+- `$implement-plan` - builds the PR graph, spawns unblocked PRs, monitors until all land
+- `$minimise-pr-comments`
+- `$trim-tests-and-comments`
+- `$prose-deslop`
+- `$skimmable`
+- `$pr-review-guide`
 - `references/impact-analysis.md` - guidelines for `impact-analysis()`
 
 ## Workflow
@@ -87,13 +87,13 @@ begin({ $request, $plan_file, … }) {
       /polish-plan
     }
 
-    # -- implement phase --
     # interactive mode pauses for review; default mode continues automatically
     if (review-effort >= L3) {
       confirm-with-user("Ready to implement?")
     }
   }
 
+  # -- implement phase --
   if (plan has multiple PR's) {
       Close original PR
       /implement-plan $plan_file
@@ -130,7 +130,7 @@ This workflow is intended for shipping PR's.
 However, this skill tends to be requested for things better handled by other workflows. Pass it off if needed.
 
 - Short question --> answer right away
-- Review a pull request --> `/atk-code-review` skill
+- Review a pull request --> `$atk-code-review` skill
 
 ### prepare-worktree()
 
@@ -144,7 +144,7 @@ If pwd is:
 
 ...then use it. Otherwise, prepare a worktree:
 
-- Use the `/worktrunk` skill's `wt switch --create $branch-name` when available; otherwise `git worktree add`.
+- Use the `$worktrunk` skill's `wt switch --create $branch-name` when available; otherwise `git worktree add`.
 - For branch name, use format `<handle>/<three-word-max>`, where `<handle>` is the user's GitHub login (eg, `gh api user -q .login`).
 
 ### reframe-request($request)
@@ -233,10 +233,10 @@ def implement() {
 
 ### prose-deslop()
 
-Spawn a subagent that edits only lines added on this branch (diff against the base):
+Spawn a subagent that edits only lines added on this branch (diff against the base), fixing what `$prose-deslop` finds:
 
-- Markdown prose: apply `/prose-deslop` and `/skimmable`.
-- Inline code comments: apply `/prose-deslop`.
+- Markdown prose: apply `$prose-deslop` and `$skimmable`.
+- Inline code comments: apply `$prose-deslop`.
 
 Commit and push the result.
 
@@ -282,7 +282,7 @@ Read <PR URL> and <GitHub comment URL> for context, let's continue work from her
 - Use subagents liberally. Act as an orchestrator.
 - If Slack tools are not available, ignore all Slack directives in this skill.
 - If `/loop` tools (eg, CronCreate) are unavailable, ignore those — loops are a Claude Code feature.
-- When invoking subagents, ask them to read this `/ship` skill so they understand context.
+- When invoking subagents, ask them to read this `$ship` skill so they understand context.
 - When invoking subagents, pass `--max` through if it was given.
 - Planning subagent:
   - If using Claude Code: use *general-purpose* subagent with model=Opus
