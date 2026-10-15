@@ -40,7 +40,7 @@ Read these to understand context:
 - `$polish-plan`
 - `$polish-implementation`
 - `$atk-pr-autofix`
-- `$pr-description` - for PR description
+- `$pr-description` - optional; PR title/description guidelines when available
 - `$pr-risk-assessment` - effort level
 - `$worktrunk` - optional; used by prepare-worktree() when available
 - `$implement-plan` - builds the PR graph, spawns unblocked PRs, monitors until all land
@@ -112,7 +112,7 @@ begin({ $request, $plan_file, … }) {
     subagent { impact-analysis() }
   }
 
-  update PR title and description based on plan via `/pr-description` skill
+  update PR title and description via `/pr-description` (plain summary when unavailable)
 
   sanity-check()
   subagent { apply /minimise-pr-comments } # keep it easy to read

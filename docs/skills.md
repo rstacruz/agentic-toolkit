@@ -48,3 +48,11 @@ graph LR
 
 - [`$atk-code-review`](../skills/atk-code-review/SKILL.md) — Structured code review that posts findings as GitHub PR review threads (or plain text when no PR exists)
 - [`$pr-risk-assessment`](../skills/pr-risk-assessment/SKILL.md) — Rates PRs on a 5-level risk scale to triage how carefully they need reviewing
+
+## Optional dependencies
+
+Used when present, with fallbacks otherwise:
+
+- [`$pr-description`](../skills/pr-description/SKILL.md) — `$ship` writes a plain summary when it is missing
+- `$worktrunk` <sup>external</sup> — worktree management for `$ship` and `$implement-plan`; plain `git worktree add` otherwise
+- `$skimmable` <sup>external</sup> — formatting guidelines for `$ship`, `$atk-plan`, and `$atk-code-review`
