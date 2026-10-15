@@ -107,7 +107,7 @@ def decide($request, $facts, { --interactive }) {
 def save-plan($request) {
   $filename = "plan-<yyyy>-<mmdd>-<ticket>-<title>.md"
   # omit <ticket>- when unknown; lowercase kebab-case for <ticket> and <title>
-  save beside the relevant *.metaplan.md, or under ~/.artefacts/
+  save under ~/.artefacts/
   return { path: $filename }
 }
 ```
@@ -177,7 +177,6 @@ Consider structuring plan files like so. Feel free to add or omit sections as ne
 
 - **Date:** yyyy-mm-dd
 - **Ticket:** [link](...) or `None`
-- **Metaplan:** [link](...) (only if available)
 
 ## Context
 
