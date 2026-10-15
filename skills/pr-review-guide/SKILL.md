@@ -92,7 +92,7 @@ Example format:
 ~~~~~
 ## Call graph
 
-\``mermaid
+```mermaid
 graph LR
   subgraph "file.ts"
     A["item1"]
@@ -282,7 +282,7 @@ Example format:
 
 Decision points are the "why" of the change. A reviewer reads code and asks "why not X?" — the guide should answer before they ask.
 
-**Source:** pull decisions from the PR's plan/metaplan doc (usually records stakes, chosen, why, alternatives). If none exists, reconstruct from the diff and commit messages. Re-ground every decision in the actual code — the plan may have drifted.
+**Source:** pull decisions from the PR's plan doc (usually records stakes, chosen, why, alternatives). If none exists, reconstruct from the diff and commit messages. Re-ground every decision in the actual code — the plan may have drifted.
 
 Each decision needs:
 

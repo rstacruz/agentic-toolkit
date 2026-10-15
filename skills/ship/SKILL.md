@@ -95,7 +95,7 @@ begin({ $request, $plan_file, … }) {
   }
 
   # -- implement phase --
-  if ($plan_file and it is split into multiple PR's) {
+  if ($plan_file and it is split into multiple PRs) {
       Close original PR
       /implement-plan $plan_file
       # /implement-plan only waits for code to land, not CI — each spawned
@@ -127,7 +127,7 @@ begin({ $request, $plan_file, … }) {
 
 ### reroute-if-needed()
 
-This workflow is intended for shipping PR's.
+This workflow is intended for shipping PRs.
 However, this skill tends to be requested for things better handled by other workflows. Pass it off if needed.
 
 - Short question --> answer right away

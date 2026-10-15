@@ -68,7 +68,7 @@ Examples:
 [Chore] Build: fix type checking script
 ```
 
-For stacked PR's, include PR number:
+For stacked PRs, include PR number:
 
 ```
 [ABC-123] [1] Add data model
