@@ -1,6 +1,6 @@
 ---
 name: implement-plan
-description: Implements a plan via subagents — one worktree per PR (or a single PR if the plan isn't split), starting with unblocked PRs and unblocking dependents as their base branch lands a real commit. Use for implementing a plan/metaplan, especially with multiple stacked/dependent PRs. Stops once every PR has landed code.
+description: Implements a plan via subagents — one worktree per PR (or a single PR if the plan isn't split), starting with unblocked PRs and unblocking dependents as their base branch lands a real commit. Use for implementing a plan, especially with multiple stacked/dependent PRs. Stops once every PR has landed code.
 ---
 
 **Scope: get code written, in parallel, across every PR in a plan.**
@@ -121,6 +121,6 @@ State explicitly: this only covers implementation. Nothing further to do or reco
 ## Guidelines
 
 - Review, CI, merge are not this skill's job. Don't recommend a next step for them — the spawned agent's own run handles whatever comes after.
-- Runs entirely as in-process subagents — no terminal multiplexer (tmux, zellij, …) required. If a metaplan is known, update its work-item status/PR link after each spawn.
+- Runs entirely as in-process subagents — no terminal multiplexer (tmux, zellij, …) required. If the plan tracks work items, update their status/PR link after each spawn.
 - Tradeoff vs a terminal-pane design: each PR now runs as a subagent of this session, not a detached pane. If this session ends mid-run, in-flight subagents end with it — there's nothing surviving independently to reattach to.
 
