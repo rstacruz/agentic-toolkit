@@ -49,7 +49,7 @@ Use [`$polish-plan`](https://github.com/rstacruz/agentic-toolkit/blob/main/skill
 
 ### Implement the plan
 
-Implement the plan as you normally would (I suggest `/goal implement this plan`, as supported by many harnesses by default). No skill here.
+Implement the plan as you normally would (I suggest `/goal implement this plan`, as supported by many harnesses by default) — a single PR needs no skill. When the plan is split across several PRs, [`$implement-plan`](https://github.com/rstacruz/agentic-toolkit/blob/main/skills/implement-plan/SKILL.md) spawns a subagent per worktree and unblocks dependents as their base branch lands code.
 
 <details>
 
@@ -83,3 +83,15 @@ Use [`$atk-pr-autofix`](https://github.com/rstacruz/agentic-toolkit/blob/main/sk
 
 - Waits for CI to be green
 - Addresses CI failures automatically
+
+### Ship it
+
+Prefer to skip the manual steps above? Run the whole pipeline from one open-ended request with [`$ship`](https://github.com/rstacruz/agentic-toolkit/blob/main/skills/ship/SKILL.md).
+
+- Reframes the request, creates a fresh worktree + draft PR, then plans, implements, polishes, and waits on CI — unattended by default
+- `--max` adds the extra rigor passes: `$polish-plan` and `$polish-implementation`
+- Uses the repo's other skills along the way (`$atk-plan`, `$implement-plan`, `$polish-implementation`, `$atk-pr-autofix`, `$pr-description`, …), plus Worktrunk for worktrees when available
+
+```
+/ship i want to implement config via c12 npm package
+```
