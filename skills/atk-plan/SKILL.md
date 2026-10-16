@@ -38,7 +38,7 @@ begin($request, { --interactive }) {
   # -- phase 4: draft --
   $plan = draft($request, $decisions)
   validate($plan)
-  if (skimmable available) { apply /skimmable formatting to $plan }
+  if (the /skimmable skill is available) { apply /skimmable formatting to $plan }
 
   # -- phase 5: write --
   $path = save-plan($request)

@@ -99,12 +99,12 @@ begin({ $request, $plan_file, … }) {
       Close original PR
       follow <skill-dir>/implement-plan.md
       # that reference only waits for code to land, not CI — each spawned
-      # worker's #implement step must still run atk-pr-autofix (and
-      # polish-implementation if --max) before this counts as "ready".
+      # worker's #implement step must still run /atk-pr-autofix (and
+      # /polish-implementation if --max) before this counts as "ready".
       # Pass --max through to workers.
   } else {
       subagent { implement() }
-      # implement() can run long (atk-pr-autofix polls CI), up to 1h in some cases
+      # implement() can run long (/atk-pr-autofix polls CI), up to 1h in some cases
   }
 
   # skip silently otherwise; see the `/impact-analysis` skill when available
@@ -233,7 +233,7 @@ def implement() {
     deslop-prose()
 
     /atk-pr-autofix
-    # atk-pr-autofix polls CI, which can run long. Whatever happens, end
+    # /atk-pr-autofix polls CI, which can run long. Whatever happens, end
     # with a concrete report: files changed, test/type-check results, and
     # current CI state (pass/fail/pending — name what's still pending). A
     # bare "waiting on CI" with no data is not an acceptable final report.
