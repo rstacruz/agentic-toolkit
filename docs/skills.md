@@ -16,7 +16,6 @@ graph LR
 ### Planning
 
 - [`$atk-plan`](../skills/atk-plan/SKILL.md) — Turns a rough idea into an actionable plan: judgement calls instead of interviewing, every call documented under `## Decisions` for veto at review
-- [`$metaplan`](../skills/metaplan/SKILL.md) <sup>experimental</sup> — Living notebook for multi-slice projects spanning multiple tickets/PRs
 
 ### Refining
 
