@@ -9,8 +9,7 @@
   enables the `polish-plan` / `polish-implementation` rigor passes, and its
   `implement-plan.md` reference fans multi-PR plans out across subagent
   worktrees.
-- `pr-description`, `pr-review-guide` — PR title/body guidelines and the
-  reviewer walkthrough guide.
+- `pr-review-guide` — the reviewer walkthrough guide.
 - `minimise-pr-comments`, `trim-tests-and-comments`, `prose-deslop` — PR
   comment cleanup, lean tests/comments, and prose review.
 

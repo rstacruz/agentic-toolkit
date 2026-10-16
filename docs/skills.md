@@ -35,7 +35,6 @@ graph LR
 ### Shipping
 
 - [`$atk-pr-autofix`](../skills/atk-pr-autofix/SKILL.md) — Monitor a PR's CI status in a loop until it passes or needs human input
-- [`$pr-description`](../skills/pr-description/SKILL.md) — Guidelines for PR titles and bodies: lead-in statement, call graph, dependency-update analysis
 - [`$pr-review-guide`](../skills/pr-review-guide/SKILL.md) — Reviewer walkthrough narrative: call graph, chapters, sequence diagrams, decision points
 - [`$trim-tests-and-comments`](../skills/trim-tests-and-comments/SKILL.md) — Reports, then cuts, weak tests and low-value comments added on the branch
 - [`$prose-deslop`](../skills/prose-deslop/SKILL.md) — Flags AI-sounding prose, clichés, filler, and unnatural phrasing in added prose and code comments
@@ -50,7 +49,11 @@ graph LR
 
 Used when present, with fallbacks otherwise:
 
-- [`$pr-description`](../skills/pr-description/SKILL.md) — `$ship` writes a plain summary when it is missing
+- `$pr-description` <sup>external</sup> — PR title/body guidelines for `$ship`; a plain summary is written when it is missing
 - `$impact-analysis` <sup>external</sup> — production-data estimates for `$ship`; the analysis is skipped when it is missing
 - `$worktrunk` <sup>external</sup> — worktree management for `$ship`'s implement-plan.md; plain `git worktree add` otherwise
 - `$skimmable` <sup>external</sup> — formatting guidelines for `$ship`, `$atk-plan`, and `$atk-code-review`
+
+## Make them your own
+
+These skills are starting points, not sealed products: copy them into your setup and rewrite them for your conventions, tooling, and review process. The [optional dependencies](#optional-dependencies) above are the most personal of the lot — write your own versions of those rather than importing mine.

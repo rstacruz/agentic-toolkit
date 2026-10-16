@@ -40,14 +40,14 @@ Read these to understand context:
 - `$polish-plan`
 - `$polish-implementation`
 - `$atk-pr-autofix`
-- `$pr-description` - optional; PR title/description guidelines when available
+- `$pr-description` - optional, external; PR title/description guidelines when available
 - `$pr-risk-assessment` - effort level
-- `$worktrunk` - optional; used by prepare-worktree() when available
+- `$worktrunk` - optional, external; used by prepare-worktree() when available
 - `<skill-dir>/implement-plan.md` - builds the PR graph, spawns unblocked PRs, monitors until all land
 - `$minimise-pr-comments`
 - `$trim-tests-and-comments`
 - `$prose-deslop`
-- `$skimmable` - optional; formatting guidelines when available
+- `$skimmable` - optional, external; formatting guidelines when available
 - `$pr-review-guide`
 - `$impact-analysis` - optional, external; guidelines for `impact-analysis()`
 

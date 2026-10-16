@@ -20,7 +20,7 @@ Start here. [`$ship`](https://github.com/rstacruz/agentic-toolkit/blob/main/skil
 
 - Reframes the request, sets up a worktree + draft PR, then plans, implements, polishes, and waits on CI
 - `--max` adds the extra rigor passes: `$polish-plan` and `$polish-implementation`
-- Uses the other skills in this repo along the way (`$atk-plan`, `$polish-implementation`, `$atk-pr-autofix`, `$pr-description`, …), plus optional dependencies when you have them
+- Uses the other skills in this repo along the way (`$atk-plan`, `$polish-implementation`, `$atk-pr-autofix`, …), plus optional dependencies when you have them
 
 ```
 /ship i want to implement config via c12 npm package
