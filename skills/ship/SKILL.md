@@ -43,7 +43,7 @@ Read these to understand context:
 - `$pr-description` - optional; PR title/description guidelines when available
 - `$pr-risk-assessment` - effort level
 - `$worktrunk` - optional; used by prepare-worktree() when available
-- `$implement-plan` - builds the PR graph, spawns unblocked PRs, monitors until all land
+- `<skill-dir>/implement-plan.md` - builds the PR graph, spawns unblocked PRs, monitors until all land
 - `$minimise-pr-comments`
 - `$trim-tests-and-comments`
 - `$prose-deslop`
@@ -97,8 +97,8 @@ begin({ $request, $plan_file, … }) {
   # -- implement phase --
   if ($plan_file and it is split into multiple PRs) {
       Close original PR
-      /implement-plan $plan_file
-      # /implement-plan only waits for code to land, not CI — each spawned
+      follow <skill-dir>/implement-plan.md
+      # that reference only waits for code to land, not CI — each spawned
       # worker's #implement step must still run atk-pr-autofix (and
       # polish-implementation if --max) before this counts as "ready".
       # Pass --max through to workers.

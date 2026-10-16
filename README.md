@@ -20,7 +20,7 @@ Start here. [`$ship`](https://github.com/rstacruz/agentic-toolkit/blob/main/skil
 
 - Reframes the request, sets up a worktree + draft PR, then plans, implements, polishes, and waits on CI
 - `--max` adds the extra rigor passes: `$polish-plan` and `$polish-implementation`
-- Uses the other skills in this repo along the way (`$atk-plan`, `$implement-plan`, `$polish-implementation`, `$atk-pr-autofix`, `$pr-description`, …), plus optional dependencies when you have them
+- Uses the other skills in this repo along the way (`$atk-plan`, `$polish-implementation`, `$atk-pr-autofix`, `$pr-description`, …), plus optional dependencies when you have them
 
 ```
 /ship i want to implement config via c12 npm package
@@ -53,7 +53,7 @@ Use [`$polish-plan`](https://github.com/rstacruz/agentic-toolkit/blob/main/skill
 
 ### Implement the plan
 
-Implement the plan as you normally would (I suggest `/goal implement this plan`, as supported by many harnesses by default) — a single PR needs no skill. When the plan is split across several PRs, [`$implement-plan`](https://github.com/rstacruz/agentic-toolkit/blob/main/skills/implement-plan/SKILL.md) spawns a subagent per worktree and unblocks dependents as their base branch lands code.
+Implement the plan as you normally would (I suggest `/goal implement this plan`, as supported by many harnesses by default). When the plan is split across several PRs, `$ship` fans the work out itself — one worktree per PR, unblocking dependents as their base branch lands code (see its [`implement-plan.md`](https://github.com/rstacruz/agentic-toolkit/blob/main/skills/ship/implement-plan.md)).
 
 <details>
 

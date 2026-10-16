@@ -5,13 +5,11 @@
 ```mermaid
 graph LR
   ship["ship"] --> atk_plan["atk-plan"]
-  ship --> implement_plan["implement-plan"]
   ship --> atk_pr_autofix["atk-pr-autofix"]
   atk_plan --> polish_plan["polish-plan"]
   atk_plan --> triangulate_plan["triangulate-plan"]
   polish_plan --> polish_implementation["polish-implementation"]
   triangulate_plan --> polish_implementation
-  implement_plan --> polish_implementation
   polish_implementation --> atk_pr_autofix
 ```
 
@@ -32,7 +30,6 @@ graph LR
 
 ### Implementing
 
-- [`$implement-plan`](../skills/implement-plan/SKILL.md) — Implements a plan's PR breakdown via subagents, one worktree and PR per slice; starting unblocked slices and unblocking dependents as their base branch lands code
 - [`$polish-implementation`](../skills/polish-implementation/SKILL.md) — Iterative code review loop against a GitHub PR; self-review threads get fixed, replied to, and resolved, up to 10 passes
 
 ### Shipping
@@ -55,5 +52,5 @@ Used when present, with fallbacks otherwise:
 
 - [`$pr-description`](../skills/pr-description/SKILL.md) — `$ship` writes a plain summary when it is missing
 - `$impact-analysis` <sup>external</sup> — production-data estimates for `$ship`; the analysis is skipped when it is missing
-- `$worktrunk` <sup>external</sup> — worktree management for `$ship` and `$implement-plan`; plain `git worktree add` otherwise
+- `$worktrunk` <sup>external</sup> — worktree management for `$ship`'s implement-plan.md; plain `git worktree add` otherwise
 - `$skimmable` <sup>external</sup> — formatting guidelines for `$ship`, `$atk-plan`, and `$atk-code-review`

@@ -1,7 +1,6 @@
----
-name: implement-plan
-description: Implements a plan via subagents — one worktree per PR (or a single PR if the plan isn't split), starting with unblocked PRs and unblocking dependents as their base branch lands a real commit. Use for implementing a plan, especially with multiple stacked/dependent PRs. Stops once every PR has landed code.
----
+# Implement a plan
+
+Fan a plan's PRs out across subagents — one worktree per PR, or a single PR if the plan isn't split. Dependents start as their base branch lands code. Stops once every PR has landed code.
 
 **Scope: get code written, in parallel, across every PR in a plan.**
 
