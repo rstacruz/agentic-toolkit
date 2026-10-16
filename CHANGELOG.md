@@ -10,7 +10,7 @@
   `implement-plan.md` reference fans multi-PR plans out across subagent
   worktrees.
 - `pr-review-guide` — the reviewer walkthrough guide.
-- `minimise-pr-comments`, `trim-tests-and-comments`, `prose-deslop` — PR
+- `minimise-pr-comments`, `trim-tests-and-comments`, `deslop-prose` — PR
   comment cleanup, lean tests/comments, and prose review.
 
 ## v2026.09.04

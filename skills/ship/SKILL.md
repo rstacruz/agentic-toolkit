@@ -46,7 +46,7 @@ Read these to understand context:
 - `<skill-dir>/implement-plan.md` - builds the PR graph, spawns unblocked PRs, monitors until all land
 - `$minimise-pr-comments`
 - `$trim-tests-and-comments`
-- `$prose-deslop`
+- `$deslop-prose`
 - `$skimmable` - optional, external; formatting guidelines when available
 - `$pr-review-guide`
 - `$impact-analysis` - optional, external; guidelines for `impact-analysis()`
@@ -230,7 +230,7 @@ def implement() {
     # unattended runs skip its approval gate — the PR is the review surface
     subagent { apply /trim-tests-and-comments }
 
-    prose-deslop()
+    deslop-prose()
 
     /atk-pr-autofix
     # atk-pr-autofix polls CI, which can run long. Whatever happens, end
@@ -240,12 +240,12 @@ def implement() {
 }
 ```
 
-### prose-deslop()
+### deslop-prose()
 
-Spawn a subagent that edits only lines added on this branch (diff against the base), fixing what `$prose-deslop` finds:
+Spawn a subagent that edits only lines added on this branch (diff against the base), fixing what `$deslop-prose` finds:
 
-- Markdown prose: apply `$prose-deslop` and `$skimmable`.
-- Inline code comments: apply `$prose-deslop`.
+- Markdown prose: apply `$deslop-prose` and `$skimmable`.
+- Inline code comments: apply `$deslop-prose`.
 
 Commit and push the result.
 

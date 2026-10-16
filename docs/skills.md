@@ -37,7 +37,7 @@ graph LR
 - [`$atk-pr-autofix`](../skills/atk-pr-autofix/SKILL.md) — Monitor a PR's CI status in a loop until it passes or needs human input
 - [`$pr-review-guide`](../skills/pr-review-guide/SKILL.md) — Reviewer walkthrough narrative: call graph, chapters, sequence diagrams, decision points
 - [`$trim-tests-and-comments`](../skills/trim-tests-and-comments/SKILL.md) — Reports, then cuts, weak tests and low-value comments added on the branch
-- [`$prose-deslop`](../skills/prose-deslop/SKILL.md) — Flags AI-sounding prose, clichés, filler, and unnatural phrasing in added prose and code comments
+- [`$deslop-prose`](../skills/deslop-prose/SKILL.md) — Flags AI-sounding prose, clichés, filler, and unnatural phrasing in added prose and code comments
 - [`$minimise-pr-comments`](../skills/minimise-pr-comments/SKILL.md) — Hides low-signal PR comments and reviews (bot noise, superseded review passes) while keeping signal
 
 ### Reviewing
@@ -52,7 +52,7 @@ Used when present, with fallbacks otherwise:
 - `$pr-description` <sup>external</sup> — PR title/body guidelines for `$ship`; a plain summary is written when it is missing
 - `$impact-analysis` <sup>external</sup> — production-data estimates for `$ship`; the analysis is skipped when it is missing
 - `$worktrunk` <sup>external</sup> — worktree management for `$ship`'s implement-plan.md; plain `git worktree add` otherwise
-- `$skimmable` <sup>external</sup> — formatting guidelines for `$ship`, `$atk-plan`, and `$atk-code-review`
+- [`$skimmable`](https://github.com/rstacruz/skimmable) <sup>external</sup> — formatting guidelines for `$ship`, `$atk-plan`, and `$atk-code-review`
 
 ## Make them your own
 

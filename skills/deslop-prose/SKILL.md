@@ -1,5 +1,5 @@
 ---
-name: prose-deslop
+name: deslop-prose
 description: Use to remove AI-sounding prose, clichés, filler, and unnatural phrasing.
 ---
 
