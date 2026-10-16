@@ -54,5 +54,6 @@ graph LR
 Used when present, with fallbacks otherwise:
 
 - [`$pr-description`](../skills/pr-description/SKILL.md) — `$ship` writes a plain summary when it is missing
+- `$impact-analysis` <sup>external</sup> — production-data estimates for `$ship`; the analysis is skipped when it is missing
 - `$worktrunk` <sup>external</sup> — worktree management for `$ship` and `$implement-plan`; plain `git worktree add` otherwise
 - `$skimmable` <sup>external</sup> — formatting guidelines for `$ship`, `$atk-plan`, and `$atk-code-review`

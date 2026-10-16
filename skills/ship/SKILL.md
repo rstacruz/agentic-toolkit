@@ -49,7 +49,7 @@ Read these to understand context:
 - `$prose-deslop`
 - `$skimmable` - optional; formatting guidelines when available
 - `$pr-review-guide`
-- `references/impact-analysis.md` - guidelines for `impact-analysis()`
+- `$impact-analysis` - optional, external; guidelines for `impact-analysis()`
 
 ## Workflow
 
@@ -107,7 +107,7 @@ begin({ $request, $plan_file, … }) {
       # implement() can run long (atk-pr-autofix polls CI), up to 1h in some cases
   }
 
-  # skip silently otherwise; see references/impact-analysis.md
+  # skip silently otherwise; see the `$impact-analysis` skill when available
   if (change affects behavior that production data can measure over the last 30 days) {
     subagent { impact-analysis() }
   }
@@ -251,7 +251,7 @@ Commit and push the result.
 
 ### impact-analysis()
 
-Estimate how many production records the change affects, positively and negatively (last 30 days). Follow `references/impact-analysis.md`; post the result on the PR and the linked ticket.
+Estimate how many production records the change affects, positively and negatively (last 30 days), following the external `$impact-analysis` skill. Post the result on the PR and the linked ticket; skip the analysis when the skill is not available.
 
 - If the result shows the change is riskier or less useful than assumed, say so in the PR description and `notify()`.
 - Link the comment from `write-handover()`; don't repeat the numbers.
