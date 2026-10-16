@@ -14,9 +14,21 @@ Use it with [Pi](https://pi.dev/), [OpenCode](https://opencode.ai). Claude Code,
 
 - **OpenCode/Pi**: If you'd like to use a different model for polish reviews, create an agent with the name *"oracle"* and configure your preferred model for it. I personally use it with Opus, or GPT 5.5 high, or GLM 5.2 high. Otherwise, *polish* will default to whatever model you've got selected.
 
-## Quick start
+## Ship it
 
-See [skills/](skills/) and [`docs/skills.md`](./docs/skills.md) for the full skill reference.
+Start here. [`$ship`](https://github.com/rstacruz/agentic-toolkit/blob/main/skills/ship/SKILL.md) takes an open-ended request all the way to a landed PR — unattended.
+
+- Reframes the request, sets up a worktree + draft PR, then plans, implements, polishes, and waits on CI
+- `--max` adds the extra rigor passes: `$polish-plan` and `$polish-implementation`
+- Uses the other skills in this repo along the way (`$atk-plan`, `$implement-plan`, `$polish-implementation`, `$atk-pr-autofix`, `$pr-description`, …), plus optional dependencies when you have them
+
+```
+/ship i want to implement config via c12 npm package
+```
+
+## Doing it by hand
+
+Every step `$ship` automates can also be run yourself. See [skills/](skills/) and [`docs/skills.md`](./docs/skills.md) for the full skill reference.
 
 ### Plan it
 
@@ -75,15 +87,3 @@ Use [`$atk-pr-autofix`](https://github.com/rstacruz/agentic-toolkit/blob/main/sk
 
 - Waits for CI to be green
 - Addresses CI failures automatically
-
-### Ship it
-
-Prefer to skip the manual steps above? Run the whole pipeline from one open-ended request with [`$ship`](https://github.com/rstacruz/agentic-toolkit/blob/main/skills/ship/SKILL.md).
-
-- Reframes the request, sets up a worktree + draft PR, then plans, implements, polishes, and waits on CI — unattended by default
-- `--max` adds the extra rigor passes: `$polish-plan` and `$polish-implementation`
-- Uses the repo's other skills along the way (`$atk-plan`, `$implement-plan`, `$polish-implementation`, `$atk-pr-autofix`, `$pr-description`, …), plus Worktrunk for worktrees when available
-
-```
-/ship i want to implement config via c12 npm package
-```
