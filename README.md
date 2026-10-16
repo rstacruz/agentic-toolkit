@@ -17,6 +17,7 @@ Start here. [`/ship`](https://github.com/rstacruz/agentic-toolkit/blob/main/skil
 - Reframes the request, sets up a worktree + draft PR, then plans, implements, polishes, and waits on CI
 - `--max` adds the extra rigor passes: `/polish-plan` and `/polish-implementation`
 - Uses the other skills in this repo along the way (`/atk-plan`, `/polish-implementation`, `/atk-pr-autofix`, …), plus optional dependencies when you have them
+
 Recommended invocation: `/goal /ship <request>` — the `/goal` wrapper keeps the run going until the request is done, rather than stopping after the first reply.
 
 ```

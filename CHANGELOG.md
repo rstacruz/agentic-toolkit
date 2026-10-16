@@ -15,7 +15,10 @@
 
 ### Changed
 
-- Skill references in prose now use `/skill-name` (eg, `/ship`) instead of `$skill-name`; invocation is unchanged. Covers `README.md`, `docs/skills.md`, `AGENTS.md`, and the shipped skills.
+- Skill references in prose now use `/skill-name` (eg, `/ship`) instead of
+  `$skill-name`; invocation is unchanged. Covers `README.md`, `docs/skills.md`,
+  `AGENTS.md`, and the shipped skills.
+
 ## v2026.09.04
 
 ### Breaking changes

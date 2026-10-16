@@ -34,6 +34,7 @@ Solid edges trace `/ship`'s plan → implement → ship pipeline; dashed edges a
 - [`/ship`](../skills/ship/SKILL.md) — Runs an open-ended request through the whole pipeline unattended: reframe → plan → implement → polish → CI, in a worktree and branch with a draft PR
 
 Invoke as `/goal /ship <request>`: `/goal` keeps the run going until the request is done, rather than stopping after the first reply.
+
 ### Planning
 
 - [`/atk-plan`](../skills/atk-plan/SKILL.md) — Turns a rough idea into an actionable plan: judgement calls instead of interviewing, every call documented under `## Decisions` for veto at review
