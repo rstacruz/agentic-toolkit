@@ -131,7 +131,6 @@ Guidelines:
 - Use `Note over Actor: text` to annotate key state transitions or decisions.
 - Use `activate`/`deactivate` sparingly — only when call stack depth aids understanding.
 - Quote labels that contain special characters or spaces: `Actor->>Other: "message"`.
-- Consult the Mermaid docs for syntax guidelines if needed.
 
 Example format:
 

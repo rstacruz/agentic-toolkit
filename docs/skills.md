@@ -5,13 +5,27 @@
 ```mermaid
 graph LR
   ship["ship"] --> atk_plan["atk-plan"]
-  ship --> atk_pr_autofix["atk-pr-autofix"]
   atk_plan --> polish_plan["polish-plan"]
   atk_plan --> triangulate_plan["triangulate-plan"]
+  atk_plan --> pr_risk_assessment["pr-risk-assessment"]
   polish_plan --> polish_implementation["polish-implementation"]
   triangulate_plan --> polish_implementation
-  polish_implementation --> atk_pr_autofix
+  polish_implementation --> atk_code_review["atk-code-review"]
+  polish_implementation --> trim_tests_and_comments["trim-tests-and-comments"]
+  trim_tests_and_comments --> deslop_prose["deslop-prose"]
+  deslop_prose --> atk_pr_autofix["atk-pr-autofix"]
+  atk_pr_autofix --> minimise_pr_comments["minimise-pr-comments"]
+  minimise_pr_comments --> pr_review_guide["pr-review-guide"]
+
+  ship -.-> worktrunk["worktrunk (external)"]
+  ship -.-> pr_description["pr-description (external)"]
+  ship -.-> impact_analysis["impact-analysis (external)"]
+  ship -.-> skimmable["skimmable (external)"]
+  atk_plan -.-> skimmable
+  atk_code_review -.-> skimmable
 ```
+
+Solid edges trace `$ship`'s plan → implement → ship pipeline; dashed edges are optional dependencies, used when present.
 
 ## Skills reference
 
@@ -51,7 +65,7 @@ Used when present, with fallbacks otherwise:
 
 - `$pr-description` <sup>external</sup> — PR title/body guidelines for `$ship`; a plain summary is written when it is missing
 - `$impact-analysis` <sup>external</sup> — production-data estimates for `$ship`; the analysis is skipped when it is missing
-- `$worktrunk` <sup>external</sup> — worktree management for `$ship`'s implement-plan.md; plain `git worktree add` otherwise
+- [`$worktrunk`](https://github.com/max-sixty/worktrunk) <sup>external</sup> — worktree management for `$ship`'s implement-plan.md; plain `git worktree add` otherwise
 - [`$skimmable`](https://github.com/rstacruz/skimmable) <sup>external</sup> — formatting guidelines for `$ship`, `$atk-plan`, and `$atk-code-review`
 
 ## Make them your own
