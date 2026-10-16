@@ -15,8 +15,8 @@
 
 ### Changed
 
-- Skill references in prose now use `/skill-name` (eg, `/ship`) instead of
-  `$skill-name`; invocation is unchanged.
+- Skill references now use `/skill-name` (eg, `/ship`) instead of
+  `$skill-name` — in prose, pseudocode, and comments; invocation is unchanged.
 
 ## v2026.09.04
 
