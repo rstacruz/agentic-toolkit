@@ -152,7 +152,7 @@ Place it as a bullet inside the decision, not in the heading:
 
 ### Review effort
 
-Read [`$pr-risk-assessment`](../pr-risk-assessment/SKILL.md) and apply it.
+Read [`/pr-risk-assessment`](../pr-risk-assessment/SKILL.md) and apply it.
 
 - Use level names verbatim: 🟢 L1 glance, 🟢 L2 skim, 🟡 L3 spot-check, 🟠 L4 audit, 🔴 L5 war room.
 - Format as a nested list, not a paragraph.

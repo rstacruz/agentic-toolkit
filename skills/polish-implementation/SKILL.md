@@ -40,4 +40,4 @@ Notes:
 Reporting:
 
 - Summarise fixes applied and threads left open for discussion (link them).
-- If the pass cap (10) was hit and new threads were still appearing, recommend another `$polish-implementation` run — there may be more to find.
+- If the pass cap (10) was hit and new threads were still appearing, recommend another `/polish-implementation` run — there may be more to find.
