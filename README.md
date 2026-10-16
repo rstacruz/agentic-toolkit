@@ -14,9 +14,21 @@ Use it with [Pi](https://pi.dev/), [OpenCode](https://opencode.ai). Claude Code,
 
 - **OpenCode/Pi**: If you'd like to use a different model for polish reviews, create an agent with the name *"oracle"* and configure your preferred model for it. I personally use it with Opus, or GPT 5.5 high, or GLM 5.2 high. Otherwise, *polish* will default to whatever model you've got selected.
 
-## Quick start
+## Ship it
 
-See [skills/](skills/) and [`docs/skills.md`](./docs/skills.md) for the full skill reference.
+Start here. [`$ship`](https://github.com/rstacruz/agentic-toolkit/blob/main/skills/ship/SKILL.md) takes an open-ended request all the way to a landed PR — unattended.
+
+- Reframes the request, sets up a worktree + draft PR, then plans, implements, polishes, and waits on CI
+- `--max` adds the extra rigor passes: `$polish-plan` and `$polish-implementation`
+- Uses the other skills in this repo along the way (`$atk-plan`, `$polish-implementation`, `$atk-pr-autofix`, …), plus optional dependencies when you have them
+
+```
+/ship i want to implement config via c12 npm package
+```
+
+## Doing it by hand
+
+Every step `$ship` automates can also be run yourself. See [skills/](skills/) and [`docs/skills.md`](./docs/skills.md) for the full skill reference.
 
 ### Plan it
 
@@ -41,7 +53,7 @@ Use [`$polish-plan`](https://github.com/rstacruz/agentic-toolkit/blob/main/skill
 
 ### Implement the plan
 
-Implement the plan as you normally would (I suggest `/goal implement this plan`, as supported by many harnesses by default). No skill here.
+Implement the plan as you normally would (I suggest `/goal implement this plan`, as supported by many harnesses by default). When the plan is split across several PRs, `$ship` fans the work out itself — one worktree per PR, unblocking dependents as their base branch lands code (see its [`implement-plan.md`](https://github.com/rstacruz/agentic-toolkit/blob/main/skills/ship/implement-plan.md)).
 
 <details>
 
@@ -53,7 +65,7 @@ Here's one I would use:
 /goal First, make empty commit then create draft PR (use pr-description skill).
 Then implement the plan as described, correctly and completely.
 Ensure that the `polish-implementation` skill (using Oracle agent type if available; else, Opus) is used afterwards and has completed successfully.
-Ensure `trim-tests` skill was used, and that no other changes to tests are needed.
+Ensure `trim-tests-and-comments` skill was used, and that no other changes to tests are needed.
 Ensure the changes are committed and pushed to Git.
 Ensure `atk-pr-autofix` is used and runs successfully.
 Ensure CI is passing in GitHub. Ultrathink. Plan: <plan file here>
