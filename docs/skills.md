@@ -33,7 +33,7 @@ Solid edges trace `/ship`'s plan → implement → ship pipeline; dashed edges a
 
 - [`/ship`](../skills/ship/SKILL.md) — Runs an open-ended request through the whole pipeline unattended: reframe → plan → implement → polish → CI, in a worktree and branch with a draft PR
 
-`/goal /ship <request>` keeps the run going until the request is done.
+Ship runs under goal mode: `/goal /ship <request>` — the `/goal` wrapper keeps the run going until the request is done.
 
 ### Planning
 
