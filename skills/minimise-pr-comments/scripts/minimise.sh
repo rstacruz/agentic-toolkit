@@ -34,7 +34,9 @@ author=$(jq -r '.data.repository.pullRequest.author.login' <<<"$data")
 # GraphQL Bot.login omits the "[bot]" suffix (REST includes it) — match both forms.
 keepbots='^(github-actions|vercel|netlify|cloudflare-workers-and-pages)(\[bot\])?$'
 # PR-author bodies that count as manual verification / explainer, not self-chatter.
-keepauthor='(manual verification|verified in (nonprod|prod)|tested in (nonprod|prod)|screenshot|autofix report|review guide|for reviewers|call graph|feedback points|handover|^#+ ?Plan|^#+ ?Impact analysis|^#+ .*(autofix|implementation notes|handover))'
+# `!\[` covers comments that embed evidence images even when they never say
+# "screenshot" (e.g. a grid of before/after captures with prose captions).
+keepauthor='(manual verification|verified in (nonprod|prod)|tested in (nonprod|prod)|screenshot|!\[|autofix report|review guide|for reviewers|call graph|feedback points|handover|^#+ ?Plan|^#+ ?Impact analysis|^#+ .*(autofix|implementation notes|handover))'
 
 rows=$(jq -r --arg author "$author" --arg keepbots "$keepbots" --arg keepauthor "$keepauthor" --arg keepids "$keepids" '
   .data.repository.pullRequest as $pr
