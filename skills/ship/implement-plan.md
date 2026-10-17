@@ -79,14 +79,14 @@ Then spawn a subagent in that worktree (in Claude Code: the `Agent` tool, withou
 You are working in <worktree-dir> on branch <branch>.
 All edits must stay in that worktree.
 Implement: <PR description or plan-file pointer>.
-Then commit and push, and finish the run with `$polish-implementation` (when `--max`)
-and `$atk-pr-autofix` — see `$ship`'s implement() for the sequence.
+Then commit and push, and finish the run with `/polish-implementation` (when `--max`)
+and `/atk-pr-autofix` — see `/ship`'s implement() for the sequence.
 ```
 
 - Omit `--base` for PRs with no dependency (default branch).
 - Get `<worktree-dir>` from the `wt switch` output or `wt list`.
 - Append a line to a tracking file: `<id> <base> <branch> <worktree-dir>`
-- **Don't** let the subagent tool create its own isolated worktree (Claude Code: `Agent({isolation: "worktree"})`) — it keys the worktree to the harness's internal agent id on a throwaway branch, not `<branch>`. Pre-create each worktree (the `$worktrunk` skill's "Parallel sub-Agents" pattern, when available) so path and branch stay aligned.
+- **Don't** let the subagent tool create its own isolated worktree (Claude Code: `Agent({isolation: "worktree"})`) — it keys the worktree to the harness's internal agent id on a throwaway branch, not `<branch>`. Pre-create each worktree (the `/worktrunk` skill's "Parallel sub-Agents" pattern, when available) so path and branch stay aligned.
 
 ## 4. Monitor for activity
 

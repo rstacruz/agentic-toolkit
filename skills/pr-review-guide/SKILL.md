@@ -18,7 +18,7 @@ When done:
   ```
   <details><summary>PR explanation</summary>
 
-  {short explanation based on the `$pr-description` skill}
+  {short explanation based on the `/pr-description` skill}
 
   </details>
 

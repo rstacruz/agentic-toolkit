@@ -8,4 +8,6 @@
 
 ### Skill references
 
-Use `` `$skill-name` `` format when referencing skills in prose: eg, `` `$atk-plan` ``, `` `$polish-implementation` ``
+Use `` `/skill-name` `` format when naming a skill — in prose, pseudocode, or comments: eg, `` `/atk-plan` ``, `` `/polish-implementation` ``
+
+The `$name` form stays for pseudocode variables and shell.

@@ -9,12 +9,12 @@ Definition of done: an open-ended request delivered as a verified result via a r
 
 - Plans:
   - [ ] Plan created for human review
-  - [ ] Plan is in `$atk-plan` format (Implementation steps, Decisions, etc)
-  - [ ] Plan polished via `$polish-plan` (only with `--max`, and not for trivial plans)
+  - [ ] Plan is in `/atk-plan` format (Implementation steps, Decisions, etc)
+  - [ ] Plan polished via `/polish-plan` (only with `--max`, and not for trivial plans)
 - Code changes:
   - [ ] Worked on in a worktree (not the main working copy)
   - [ ] Worked on in a branch
-  - [ ] Verified through `$atk-pr-autofix`; plus `$polish-implementation` when `--max` (unconditional on task size or review-effort)
+  - [ ] Verified through `/atk-pr-autofix`; plus `/polish-implementation` when `--max` (unconditional on task size or review-effort)
   - [ ] Impact on real production data analysed and posted (only when relevant; see `impact-analysis()`)
   - [ ] Added prose (markdown and code comments) is concise, non-repetitive, and readable
   - [ ] Readable PR description
@@ -30,26 +30,26 @@ Definition of done: an open-ended request delivered as a verified result via a r
 - Options:
   - `--interactive` - pause at confirmation gates for human review; default is unattended
   - `--skip-plan` - no need to plan
-  - `--max` - enable the extra rigor passes: `$polish-plan` and `$polish-implementation`. Off by default
+  - `--max` - enable the extra rigor passes: `/polish-plan` and `/polish-implementation`. Off by default
 
 ## Skill dependencies
 
 Read these to understand context:
 
-- `$atk-plan`
-- `$polish-plan`
-- `$polish-implementation`
-- `$atk-pr-autofix`
-- `$pr-description` - optional, external; PR title/description guidelines when available
-- `$pr-risk-assessment` - effort level
-- `$worktrunk` - optional, external; used by prepare-worktree() when available
+- `/atk-plan`
+- `/polish-plan`
+- `/polish-implementation`
+- `/atk-pr-autofix`
+- `/pr-description` - optional, external; PR title/description guidelines when available
+- `/pr-risk-assessment` - effort level
+- `/worktrunk` - optional, external; used by prepare-worktree() when available
 - `<skill-dir>/implement-plan.md` - builds the PR graph, spawns unblocked PRs, monitors until all land
-- `$minimise-pr-comments`
-- `$trim-tests-and-comments`
-- `$deslop-prose`
-- `$skimmable` - optional, external; formatting guidelines when available
-- `$pr-review-guide`
-- `$impact-analysis` - optional, external; guidelines for `impact-analysis()`
+- `/minimise-pr-comments`
+- `/trim-tests-and-comments`
+- `/deslop-prose`
+- `/skimmable` - optional, external; formatting guidelines when available
+- `/pr-review-guide`
+- `/impact-analysis` - optional, external; guidelines for `impact-analysis()`
 
 ## Workflow
 
@@ -99,15 +99,15 @@ begin({ $request, $plan_file, … }) {
       Close original PR
       follow <skill-dir>/implement-plan.md
       # that reference only waits for code to land, not CI — each spawned
-      # worker's #implement step must still run atk-pr-autofix (and
-      # polish-implementation if --max) before this counts as "ready".
+      # worker's #implement step must still run /atk-pr-autofix (and
+      # /polish-implementation if --max) before this counts as "ready".
       # Pass --max through to workers.
   } else {
       subagent { implement() }
-      # implement() can run long (atk-pr-autofix polls CI), up to 1h in some cases
+      # implement() can run long (/atk-pr-autofix polls CI), up to 1h in some cases
   }
 
-  # skip silently otherwise; see the `$impact-analysis` skill when available
+  # skip silently otherwise; see the `/impact-analysis` skill when available
   if (change affects behavior that production data can measure over the last 30 days) {
     subagent { impact-analysis() }
   }
@@ -131,7 +131,7 @@ This workflow is intended for shipping PRs.
 However, this skill tends to be requested for things better handled by other workflows. Pass it off if needed.
 
 - Short question --> answer right away
-- Review a pull request --> `$atk-code-review` skill
+- Review a pull request --> `/atk-code-review` skill
 
 ### prepare-worktree()
 
@@ -145,7 +145,7 @@ If pwd is:
 
 ...then use it. Otherwise, prepare a worktree:
 
-- Use the `$worktrunk` skill's `wt switch --create $branch-name` when available; otherwise `git worktree add`.
+- Use the `/worktrunk` skill's `wt switch --create $branch-name` when available; otherwise `git worktree add`.
 - For branch name, use format `<handle>/<three-word-max>`, where `<handle>` is the user's GitHub login (eg, `gh api user -q .login`).
 
 ### reframe-request($request)
@@ -233,7 +233,7 @@ def implement() {
     deslop-prose()
 
     /atk-pr-autofix
-    # atk-pr-autofix polls CI, which can run long. Whatever happens, end
+    # /atk-pr-autofix polls CI, which can run long. Whatever happens, end
     # with a concrete report: files changed, test/type-check results, and
     # current CI state (pass/fail/pending — name what's still pending). A
     # bare "waiting on CI" with no data is not an acceptable final report.
@@ -242,16 +242,16 @@ def implement() {
 
 ### deslop-prose()
 
-Spawn a subagent that edits only lines added on this branch (diff against the base), fixing what `$deslop-prose` finds:
+Spawn a subagent that edits only lines added on this branch (diff against the base), fixing what `/deslop-prose` finds:
 
-- Markdown prose: apply `$deslop-prose` and `$skimmable`.
-- Inline code comments: apply `$deslop-prose`.
+- Markdown prose: apply `/deslop-prose` and `/skimmable`.
+- Inline code comments: apply `/deslop-prose`.
 
 Commit and push the result.
 
 ### impact-analysis()
 
-Estimate how many production records the change affects, positively and negatively (last 30 days), following the external `$impact-analysis` skill. Post the result on the PR and the linked ticket; skip the analysis when the skill is not available.
+Estimate how many production records the change affects, positively and negatively (last 30 days), following the external `/impact-analysis` skill. Post the result on the PR and the linked ticket; skip the analysis when the skill is not available.
 
 - If the result shows the change is riskier or less useful than assumed, say so in the PR description and `notify()`.
 - Link the comment from `write-handover()`; don't repeat the numbers.
@@ -291,7 +291,7 @@ Read <PR URL> and <GitHub comment URL> for context, let's continue work from her
 - Use subagents liberally. Act as an orchestrator.
 - If Slack tools are not available, ignore all Slack directives in this skill.
 - If `/loop` tools (eg, CronCreate) are unavailable, ignore those — loops are a Claude Code feature.
-- When invoking subagents, ask them to read this `$ship` skill so they understand context.
+- When invoking subagents, ask them to read this `/ship` skill so they understand context.
 - When invoking subagents, pass `--max` through if it was given.
 - Planning subagent:
   - If using Claude Code: use *general-purpose* subagent with model=Opus

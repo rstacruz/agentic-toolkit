@@ -4,14 +4,19 @@
 
 ### Added
 
-- `ship` — end-to-end orchestrator for an open-ended request: reframe → plan
+- `/ship` — end-to-end orchestrator for an open-ended request: reframe → plan
   → implement → polish → CI, in a worktree with a draft PR. `--max`
-  enables the `polish-plan` / `polish-implementation` rigor passes, and its
+  enables the `/polish-plan` / `/polish-implementation` rigor passes, and its
   `implement-plan.md` reference fans multi-PR plans out across subagent
   worktrees.
-- `pr-review-guide` — the reviewer walkthrough guide.
-- `minimise-pr-comments`, `trim-tests-and-comments`, `deslop-prose` — PR
+- `/pr-review-guide` — the reviewer walkthrough guide.
+- `/minimise-pr-comments`, `/trim-tests-and-comments`, `/deslop-prose` — PR
   comment cleanup, lean tests/comments, and prose review.
+
+### Changed
+
+- Skill references now use `/skill-name` (eg, `/ship`) instead of
+  `$skill-name` — in prose, pseudocode, and comments; invocation is unchanged.
 
 ## v2026.09.04
 
