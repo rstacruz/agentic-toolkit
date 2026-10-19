@@ -13,12 +13,18 @@ When done:
 
 - Check this PR description if there's already a PR review guide comment.
 
-- Post a PR comment. If a PR review guide comment already exists, edit that instead. If the PR is NOT authored by me, surround it in a `<details>` shell with explanations (below).
+- Post a PR comment. If a PR review guide comment already exists, edit that instead. Surround it in a `<details>` shell with explanations (below). If the PR is authored by me, use `<details open>` rather than `<details>`.
 
   ```
   <details><summary>PR explanation</summary>
 
   {short explanation based on the `/pr-description` skill}
+
+  </details>
+
+  <details><summary>LOC report</summary>
+
+  {see `<SKILL_DIR>/loc-report.md`}
 
   </details>
 
