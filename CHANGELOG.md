@@ -4,7 +4,7 @@
 
 ### Added
 
-- `/ship` — end-to-end orchestrator for an open-ended request: reframe → plan
+- `/cook` — end-to-end orchestrator for an open-ended request: reframe → plan
   → implement → polish → CI, in a worktree with a draft PR. `--max`
   enables the `/polish-plan` / `/polish-implementation` rigor passes, and its
   `implement-plan.md` reference fans multi-PR plans out across subagent
@@ -15,7 +15,7 @@
 
 ### Changed
 
-- Skill references now use `/skill-name` (eg, `/ship`) instead of
+- Skill references now use `/skill-name` (eg, `/cook`) instead of
   `$skill-name` — in prose, pseudocode, and comments; invocation is unchanged.
 
 ## v2026.09.04

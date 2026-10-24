@@ -10,23 +10,23 @@ npx skills add rstacruz/agentic-toolkit
 
 Use it with [Pi](https://pi.dev/), [OpenCode](https://opencode.ai). Claude Code, Codex... pick your poison.
 
-## Ship it
+## Cook it
 
-Start here. [`/ship`](https://github.com/rstacruz/agentic-toolkit/blob/main/skills/ship/SKILL.md) takes an open-ended request all the way to a landed PR — unattended.
+Start here. [`/cook`](https://github.com/rstacruz/agentic-toolkit/blob/main/skills/cook/SKILL.md) takes an open-ended request all the way to a landed PR — unattended.
 
 - Reframes the request, sets up a worktree + draft PR, then plans, implements, polishes, and waits on CI
 - `--max` adds the extra rigor passes: `/polish-plan` and `/polish-implementation`
 - Uses the other skills in this repo along the way (`/atk-plan`, `/polish-implementation`, `/atk-pr-autofix`, …), plus optional dependencies when you have them
 
-Recommended invocation: `/goal /ship <request>` — the `/goal` wrapper keeps the run going until the request is done, rather than stopping after the first reply.
+Recommended invocation: `/goal /cook <request>` — the `/goal` wrapper keeps the run going until the request is done, rather than stopping after the first reply.
 
 ```
-/goal /ship i want to implement config via c12 npm package
+/goal /cook i want to implement config via c12 npm package
 ```
 
 ## Doing it by hand
 
-Every step `/ship` automates can also be run yourself. See [skills/](skills/) and [`docs/skills.md`](./docs/skills.md) for the full skill reference.
+Every step `/cook` automates can also be run yourself. See [skills/](skills/) and [`docs/skills.md`](./docs/skills.md) for the full skill reference.
 
 ### Plan it
 
@@ -51,7 +51,7 @@ Use [`/polish-plan`](https://github.com/rstacruz/agentic-toolkit/blob/main/skill
 
 ### Implement the plan
 
-Implement the plan as you normally would (I suggest `/goal implement this plan`, as supported by many harnesses by default). When the plan is split across several PRs, `/ship` fans the work out itself — one worktree per PR, unblocking dependents as their base branch lands code (see its [`implement-plan.md`](https://github.com/rstacruz/agentic-toolkit/blob/main/skills/ship/implement-plan.md)).
+Implement the plan as you normally would (I suggest `/goal implement this plan`, as supported by many harnesses by default). When the plan is split across several PRs, `/cook` fans the work out itself — one worktree per PR, unblocking dependents as their base branch lands code (see its [`implement-plan.md`](https://github.com/rstacruz/agentic-toolkit/blob/main/skills/cook/implement-plan.md)).
 
 <details>
 

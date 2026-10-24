@@ -1,5 +1,5 @@
 ---
-name: ship
+name: cook
 description: Attend to an open-ended request. Only use when user explicitly asks for this.
 ---
 
@@ -10,17 +10,17 @@ Definition of done: an open-ended request delivered as a verified result via a r
 - Plans:
   - [ ] Plan created for human review
   - [ ] Plan is in `/atk-plan` format (Implementation steps, Decisions, etc)
-  - [ ] Plan polished via `/polish-plan` (only with `--max`, and not for trivial plans)
+  - [ ] Plan polished via `/polish-plan` (only with `--max`)
 - Code changes:
   - [ ] Worked on in a worktree (not the main working copy)
   - [ ] Worked on in a branch
-  - [ ] Verified through `/atk-pr-autofix`; plus `/polish-implementation` when `--max` (unconditional on task size or review-effort)
+  - [ ] Verified through `/atk-pr-autofix`; plus `/polish-implementation` when `--max`
+  - [ ] Verified locally by exercising the change; evidence posted on PR (see `verify-locally()`)
   - [ ] Impact on real production data analysed and posted (only when relevant; see `impact-analysis()`)
   - [ ] Added prose (markdown and code comments) is concise, non-repetitive, and readable
   - [ ] Readable PR description
   - [ ] CI passing
 - Operational:
-  - [ ] Kept the user informed on Slack every 15m until resolved (if Slack is available)
   - [ ] Orchestrated with subagents to keep a long-running high-level context window
 
 ## Input
@@ -28,7 +28,7 @@ Definition of done: an open-ended request delivered as a verified result via a r
 - `$request` - required
 - `$plan_file` - path to an existing plan; otherwise one is made first
 - Options:
-  - `--interactive` - pause at confirmation gates for human review; default is unattended
+  - `--interactive` - pause for plan review before implementing; default is unattended
   - `--skip-plan` - no need to plan
   - `--max` - enable the extra rigor passes: `/polish-plan` and `/polish-implementation`. Off by default
 
@@ -41,7 +41,6 @@ Read these to understand context:
 - `/polish-implementation`
 - `/atk-pr-autofix`
 - `/pr-description` - optional, external; PR title/description guidelines when available
-- `/pr-risk-assessment` - effort level
 - `/worktrunk` - optional, external; used by prepare-worktree() when available
 - `<skill-dir>/implement-plan.md` - builds the PR graph, spawns unblocked PRs, monitors until all land
 - `/minimise-pr-comments`
@@ -50,6 +49,7 @@ Read these to understand context:
 - `/skimmable` - optional, external; formatting guidelines when available
 - `/pr-review-guide`
 - `/impact-analysis` - optional, external; guidelines for `impact-analysis()`
+- `/page-screenshot` - optional, external; captures locally served pages in `verify-locally()`
 
 ## Workflow
 
@@ -60,13 +60,10 @@ begin({ $request, $plan_file, … }) {
   reroute-if-needed()
 
   reframe-request($request)
-  notify(Acknowledge, restate reframed request, say that answer is in flight)
 
   # -- plan phase --
   prepare-worktree()
   create-draft-pr()
-  notify(PR created, planning now)
-  status-loop() # every ~15m while work is in flight; no-op without a loop tool
 
   unless (--skip-plan) {
     if (sufficiently-scoped plan already exists in context or tickets) {
@@ -75,23 +72,12 @@ begin({ $request, $plan_file, … }) {
       $plan_file ??= subagent(fork) { plan() }
     }
 
-    # must return: plan file path, review-effort level (L1-L5), multi-PR (y/n)
-    notify(Plan is available: <plan comment url> <plan file>)
+    # must return: plan file path, multi-PR (y/n)
 
-    # interactive mode pauses for review; default mode continues automatically
-    if (review-effort == L5) {
-      confirm-with-user("Is plan OK? Ready to <next step>?")
-    }
+    if (--max) { /polish-plan }
 
-    # polish only with --max; even then, skip super-easy plans
-    if (--max and review-effort >= L2) {
-      /polish-plan
-    }
-
-    # interactive mode pauses for review; default mode continues automatically
-    if (review-effort >= L3) {
-      confirm-with-user("Ready to implement?")
-    }
+    # unattended runs skip this and continue
+    if (--interactive) { ask user: "Ready to implement?" }
   }
 
   # -- implement phase --
@@ -112,7 +98,7 @@ begin({ $request, $plan_file, … }) {
     subagent { impact-analysis() }
   }
 
-  update PR title and description via `/pr-description` (plain summary when unavailable)
+  update PR title and description via `/pr-description` (plain summary when unavailable); keep the Live verification table from `verify-locally()`
 
   sanity-check()
   subagent { apply /minimise-pr-comments } # keep it easy to read
@@ -120,8 +106,6 @@ begin({ $request, $plan_file, … }) {
 
   # write PR review guide comment
   /pr-review-guide
-
-  notify(All PRs ready and passing CI)
 }
 ```
 
@@ -174,22 +158,6 @@ References:
 - <links to tickets, slack threads, etc>
 ```
 
-### notify()
-
-Notify progress in the chat.
-
-For final notification, give when available:
-
-- PR link, plan file location, worktree path, branch name, env `$CLAUDE_CODE_SESSION_ID`
-- If using Claude Code: "Resume with cd <dir> && claude --resume <session-id>"
-
-### status-loop()
-
-While the run is in flight, notify the user a short status update every ~15m (Slack or chat, when available).
-
-- Needs a loop/cron tool (Claude Code: `/loop`, CronCreate); skip it when the harness has none — see Guidelines.
-- Keep it one line: what step is running, and what is pending.
-
 ### plan()
 
 ```
@@ -200,7 +168,7 @@ def plan($request) {
     subagent { reformat plan to be /skimmable }
     post-pr-comment()
 
-    return { plan_file, review-effort, multi-PR: y/n }
+    return { plan_file, multi-PR: y/n }
 }
 ```
 
@@ -220,11 +188,7 @@ def implement() {
     implement the plan
     commit && push
 
-    # only with --max. When enabled, no review-effort or "task is small"
-    # judgment skips it
-    if (--max) {
-      /polish-implementation
-    }
+    if (--max) { /polish-implementation }
 
     # ensure tests and comments are lean; use fresh subagent.
     # unattended runs skip its approval gate — the PR is the review surface
@@ -237,6 +201,10 @@ def implement() {
     # with a concrete report: files changed, test/type-check results, and
     # current CI state (pass/fail/pending — name what's still pending). A
     # bare "waiting on CI" with no data is not an acceptable final report.
+
+    # fresh subagent, so the implementer doesn't grade its own work
+    subagent { verify-locally() }
+    if (verify-locally() pushed fixes) { /atk-pr-autofix }
 }
 ```
 
@@ -249,17 +217,22 @@ Spawn a subagent that edits only lines added on this branch (diff against the ba
 
 Commit and push the result.
 
+### verify-locally()
+
+- [ ] Changed behaviour exercised in the worktree, beyond tests
+- [ ] Can't run locally → closest proxy (eg, script against the changed function), with the gap stated in the evidence
+- [ ] Screenshots of UI or terminal output for anything visual, including dependency, tooling, or build-config changes that can affect rendered UI
+- [ ] One screenshot per risky area, each captioned with what it proves (eg, "About page shows 10.6.3", "docs page renders source snippets")
+- [ ] Locally served pages (eg, a static build served over HTTP) captured via `/page-screenshot` when available
+- [ ] Evidence posted as one PR comment headed `### Live verification (local)` (the heading keeps it through `/minimise-pr-comments`); edited on re-runs
+- [ ] Same screenshots in the PR description, as a captioned table under a *Live verification* heading that links to that comment
+
 ### impact-analysis()
 
 Estimate how many production records the change affects, positively and negatively (last 30 days), following the external `/impact-analysis` skill. Post the result on the PR and the linked ticket; skip the analysis when the skill is not available.
 
-- If the result shows the change is riskier or less useful than assumed, say so in the PR description and `notify()`.
+- If the result shows the change is riskier or less useful than assumed, say so in the PR description.
 - Link the comment from `write-handover()`; don't repeat the numbers.
-
-### confirm-with-user()
-
-Ask user to review before continuing only when `--interactive` is passed.
-Otherwise, skip this and pick the answer that will continue the workflow.
 
 ### sanity-check()
 
@@ -268,30 +241,30 @@ Otherwise, skip this and pick the answer that will continue the workflow.
 
 ### write-handover()
 
-write handover doc and leave it as a PR comment. Do not duplicate content already captured in other artifacts (specs, plans, ADRs, issues, commits, diffs). Reference them by path or URL instead. Include context that may not be there — eg, decisions done midway through implementation.
+Write handover doc and leave it as a PR comment.
+Do not duplicate content already captured in other artifacts (specs, plans, ADRs, issues, commits, diffs). Reference them by path or URL instead.
+Include context that may not be there — eg, decisions done midway through implementation.
+Do not include context not relevant for continuing work. Eg: "state: draft", "CI green", "approval needed"
 
 General format:
 
 ~~~ markdown
-# :compass: Handover
+### :compass: Handover
+
+- <condensed notes; 4 bullet points max>
+
+<details>
+<summary>Full content</summary>
 
 ... {contents here}
 
----
-
-Get your agent to continue from this session:
-
-```
-Read <PR URL> and <GitHub comment URL> for context, let's continue work from here.
-```
+</details>
 ~~~
 
 ## Guidelines
 
 - Use subagents liberally. Act as an orchestrator.
-- If Slack tools are not available, ignore all Slack directives in this skill.
-- If `/loop` tools (eg, CronCreate) are unavailable, ignore those — loops are a Claude Code feature.
-- When invoking subagents, ask them to read this `/ship` skill so they understand context.
+- When invoking subagents, ask them to read this `/cook` skill so they understand context.
 - When invoking subagents, pass `--max` through if it was given.
 - Planning subagent:
   - If using Claude Code: use *general-purpose* subagent with model=Opus

@@ -4,7 +4,7 @@
 
 ```mermaid
 graph LR
-  ship["ship"] --> atk_plan["atk-plan"]
+  cook["cook"] --> atk_plan["atk-plan"]
   atk_plan --> polish_plan["polish-plan"]
   atk_plan --> triangulate_plan["triangulate-plan"]
   atk_plan --> pr_risk_assessment["pr-risk-assessment"]
@@ -17,23 +17,23 @@ graph LR
   atk_pr_autofix --> minimise_pr_comments["minimise-pr-comments"]
   minimise_pr_comments --> pr_review_guide["pr-review-guide"]
 
-  ship -.-> worktrunk["worktrunk (external)"]
-  ship -.-> pr_description["pr-description (external)"]
-  ship -.-> impact_analysis["impact-analysis (external)"]
-  ship -.-> skimmable["skimmable (external)"]
+  cook -.-> worktrunk["worktrunk (external)"]
+  cook -.-> pr_description["pr-description (external)"]
+  cook -.-> impact_analysis["impact-analysis (external)"]
+  cook -.-> skimmable["skimmable (external)"]
   atk_plan -.-> skimmable
   atk_code_review -.-> skimmable
 ```
 
-Solid edges trace `/ship`'s plan → implement → ship pipeline; dashed edges are optional dependencies, used when present.
+Solid edges trace `/cook`'s plan → implement → ship pipeline; dashed edges are optional dependencies, used when present.
 
 ## Skills reference
 
 ### Orchestration
 
-- [`/ship`](../skills/ship/SKILL.md) — Runs an open-ended request through the whole pipeline unattended: reframe → plan → implement → polish → CI, in a worktree and branch with a draft PR
+- [`/cook`](../skills/cook/SKILL.md) — Runs an open-ended request through the whole pipeline unattended: reframe → plan → implement → polish → CI, in a worktree and branch with a draft PR
 
-Ship runs under goal mode: `/goal /ship <request>` — the `/goal` wrapper keeps the run going until the request is done.
+Cook runs under goal mode: `/goal /cook <request>` — the `/goal` wrapper keeps the run going until the request is done.
 
 ### Planning
 
@@ -65,10 +65,10 @@ Ship runs under goal mode: `/goal /ship <request>` — the `/goal` wrapper keeps
 
 Used when present, with fallbacks otherwise:
 
-- `/pr-description` <sup>external</sup> — PR title/body guidelines for `/ship`; a plain summary is written when it is missing
-- `/impact-analysis` <sup>external</sup> — production-data estimates for `/ship`; the analysis is skipped when it is missing
-- [`/worktrunk`](https://github.com/max-sixty/worktrunk) <sup>external</sup> — worktree management for `/ship`'s implement-plan.md; plain `git worktree add` otherwise
-- [`/skimmable`](https://github.com/rstacruz/skimmable) <sup>external</sup> — formatting guidelines for `/ship`, `/atk-plan`, and `/atk-code-review`
+- `/pr-description` <sup>external</sup> — PR title/body guidelines for `/cook`; a plain summary is written when it is missing
+- `/impact-analysis` <sup>external</sup> — production-data estimates for `/cook`; the analysis is skipped when it is missing
+- [`/worktrunk`](https://github.com/max-sixty/worktrunk) <sup>external</sup> — worktree management for `/cook`'s implement-plan.md; plain `git worktree add` otherwise
+- [`/skimmable`](https://github.com/rstacruz/skimmable) <sup>external</sup> — formatting guidelines for `/cook`, `/atk-plan`, and `/atk-code-review`
 
 ## Make them your own
 

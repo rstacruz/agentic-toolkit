@@ -80,7 +80,7 @@ You are working in <worktree-dir> on branch <branch>.
 All edits must stay in that worktree.
 Implement: <PR description or plan-file pointer>.
 Then commit and push, and finish the run with `/polish-implementation` (when `--max`)
-and `/atk-pr-autofix` — see `/ship`'s implement() for the sequence.
+and `/atk-pr-autofix` — see `/cook`'s implement() for the sequence.
 ```
 
 - Omit `--base` for PRs with no dependency (default branch).
