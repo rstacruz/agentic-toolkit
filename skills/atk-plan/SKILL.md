@@ -99,7 +99,6 @@ def decide($request, $facts, { --interactive }) {
 
 - [ ] every decision has Chosen, Why, Alternatives
 - [ ] non-goals are explicit
-- [ ] post-implementation verification states what to check before merging or deploying
 
 ### save-plan()
 
@@ -225,15 +224,6 @@ Consider structuring plan files like so. Feel free to add or omit sections as ne
 - `path/file2.ts` → `symbolName`, `name2`
 
 ### 2. <decision>
-
-## Post-implementation verification
-
-<details>
-<summary>Expand</summary>
-
-...
-
-</details>
 
 ## Risks
 

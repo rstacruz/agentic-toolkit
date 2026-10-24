@@ -1,6 +1,6 @@
 ---
 name: minimise-pr-comments
-description: Hide (minimize) noisy PR comments/reviews while keeping signal — human feedback, deploy notifications, manual-verification notes, and only the latest Copilot review pass. Use when the user asks to clean up, declutter, or minimise/collapse comments on a GitHub PR.
+description: Hide (minimize) noisy PR comments/reviews while keeping signal — human feedback, deploy notifications, live-verification notes, and only the latest Copilot review pass. Use when the user asks to clean up, declutter, or minimise/collapse comments on a GitHub PR.
 ---
 
 # Minimise PR comments
@@ -15,10 +15,10 @@ confirmation needed.
 
 1. A non-bot comment/review from someone who isn't the PR author (real reviewer feedback)
 2. A bot comment about a deployment/preview notification (Vercel, Netlify, etc. — Pulumi previews are minimized, see `keepbots` in the script)
-3. A PR-author comment/review about manual verification (testing steps, screenshots, "verified in nonprod", etc.), or explainer, or review guide
+3. A PR-author comment/review about live verification (testing steps, screenshots, "verified in nonprod", etc.), or explainer, or review guide
 4. **Only the single most recent Copilot review** (its overview text, plus any inline comments attached to that same review) — regardless of what it says
 
-Everything else — bot admin noise (ticket-tracker linkback, CI gate pings), every *earlier* Copilot review pass and its inline findings (superseded once a newer Copilot review exists), and the PR author's own replies/self-reviews (unless about manual verification) — gets minimized.
+Everything else — bot admin noise (ticket-tracker linkback, CI gate pings), every *earlier* Copilot review pass and its inline findings (superseded once a newer Copilot review exists), and the PR author's own replies/self-reviews (unless about live verification) — gets minimized.
 
 Already-minimized items: leave alone, don't touch.
 
@@ -40,7 +40,7 @@ For rule 4: group Copilot's reviews by submission time, keep only the last one (
 
    `MINIMISE_KEEP_IDS` (comma-separated comment/review IDs) forces specific items to be kept, whatever the classifier decides.
 
-The script encodes the default rule deterministically (structural checks for reviewer/author/Copilot-recency, a login allowlist for deploy/preview bots) — no body-reading judgement needed except one narrow regex for PR-author manual-verification keywords. If a PR surfaces a bot or phrasing the script misclassifies, fix the regex/allowlist in `scripts/minimise.sh` rather than falling back to manual mutation calls.
+The script encodes the default rule deterministically (structural checks for reviewer/author/Copilot-recency, a login allowlist for deploy/preview bots) — no body-reading judgement needed except one narrow regex for PR-author verification keywords. If a PR surfaces a bot or phrasing the script misclassifies, fix the regex/allowlist in `scripts/minimise.sh` rather than falling back to manual mutation calls.
 
 ## Example classification
 
@@ -55,5 +55,5 @@ For a PR with author `<pr-author>` and a handful of Copilot review passes over t
 | ticket-tracker bot | Bot | issue/ticket linkback | minimize — admin noise |
 | CI bot | Bot | "re-run this if the gate is stuck" tip | minimize — admin noise |
 | Copilot | Bot | earlier review pass + its inline findings | minimize — superseded by the later Copilot review |
-| `<pr-author>` | User (PR author) | self-review / reply to a Copilot finding | minimize — author, not manual verification |
-| `<pr-author>` | User (PR author) | "tested this in nonprod, screenshots attached" | **keep** — manual verification
+| `<pr-author>` | User (PR author) | self-review / reply to a Copilot finding | minimize — author, not live verification |
+| `<pr-author>` | User (PR author) | "tested this in nonprod, screenshots attached" | **keep** — live verification

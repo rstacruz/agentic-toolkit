@@ -13,9 +13,11 @@ When done:
 
 - Check this PR description if there's already a PR review guide comment.
 
-- Post a PR comment. If a PR review guide comment already exists, edit that instead. Surround it in a `<details>` shell with explanations (below). If the PR is authored by me, use `<details open>` rather than `<details>`.
+- Post a PR comment. If a PR review guide comment already exists, edit that instead. Surround it in a `<details>` shell with explanations (below).
 
   ```
+  > :robot: This is an automated PR review guide for the benefit if reviewers, it is *not* huamn feedback on this PR. — Automated agent
+
   <details><summary>PR explanation</summary>
 
   {short explanation based on the `/pr-description` skill}
