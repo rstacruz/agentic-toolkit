@@ -33,10 +33,11 @@ author=$(jq -r '.data.repository.pullRequest.author.login' <<<"$data")
 # Bots whose comments are deploy/preview notifications — always keep.
 # GraphQL Bot.login omits the "[bot]" suffix (REST includes it) — match both forms.
 keepbots='^(github-actions|vercel|netlify|cloudflare-workers-and-pages)(\[bot\])?$'
-# PR-author bodies that count as manual verification / explainer, not self-chatter.
+# PR-author bodies that count as verification / explainer, not self-chatter.
+# `manual verification` stays for older and hand-written comments.
 # `!\[` covers comments that embed evidence images even when they never say
 # "screenshot" (e.g. a grid of before/after captures with prose captions).
-keepauthor='(manual verification|verified in (nonprod|prod)|tested in (nonprod|prod)|screenshot|!\[|autofix report|review guide|for reviewers|call graph|feedback points|handover|^#+ ?Plan|^#+ ?Impact analysis|^#+ .*(autofix|implementation notes|handover))'
+keepauthor='(live verification|manual verification|verified in (nonprod|prod)|tested in (nonprod|prod)|screenshot|!\[|autofix report|review guide|for reviewers|call graph|feedback points|handover|^#+ ?Plan|^#+ ?Impact analysis|^#+ .*(autofix|implementation notes|handover))'
 
 rows=$(jq -r --arg author "$author" --arg keepbots "$keepbots" --arg keepauthor "$keepauthor" --arg keepids "$keepids" '
   .data.repository.pullRequest as $pr
@@ -60,7 +61,7 @@ rows=$(jq -r --arg author "$author" --arg keepbots "$keepbots" --arg keepauthor 
       elif n.author.__typename=="Bot" then {v:"minimize",r:"admin bot noise"}
       elif n.author.login==$author then
         # only fuzzy branch: keyword allowlist stands in for judgement on the authors own words
-        (if (n.body // ""|test($keepauthor;"i")) then {v:"keep",r:"author explainer/manual-verification"} else {v:"minimize",r:"author self-comment"} end)
+        (if (n.body // ""|test($keepauthor;"i")) then {v:"keep",r:"author explainer/verification"} else {v:"minimize",r:"author self-comment"} end)
       else {v:"keep",r:"real reviewer feedback"}
       end;
 
