@@ -9,12 +9,17 @@
   enables the `/polish-plan` / `/polish-implementation` rigor passes, and its
   `implement-plan.md` reference fans multi-PR plans out across subagent
   worktrees.
-- `/pr-review-guide` — the reviewer walkthrough guide.
+- `/pr-review-guide` — the reviewer walkthrough guide, including a collapsed
+  LOC breakdown of the PR's changed lines by category.
 - `/minimise-pr-comments`, `/trim-tests-and-comments`, `/deslop-prose` — PR
-  comment cleanup, lean tests/comments, and prose review.
+  comment cleanup (keeps reviewer feedback, deploy notices, and author
+  verification — including image-only evidence), lean tests/comments, and
+  prose review.
 
 ### Changed
 
+- `/atk-plan` no longer asks for a `## Post-implementation verification`
+  section in plans — dropped from both the template and the checklist.
 - Skill references now use `/skill-name` (eg, `/cook`) instead of
   `$skill-name` — in prose, pseudocode, and comments; invocation is unchanged.
 
