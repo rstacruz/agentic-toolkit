@@ -3,11 +3,10 @@ import { exists, mkdir, mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import type { RemoteFixture } from "./suite";
 
-/** Fetches `f` at its pinned sha into `cacheRoot` once; returns the extracted tree's dir. */
+/** Fetches fixture at its pinned sha once; returns its dir */
 export async function ensureFixture(cacheRoot: string, f: RemoteFixture): Promise<string> {
   const [owner, repo] = new URL(f.repo).pathname.replace(/^\/|\.git$/g, "").split("/");
   const dir = `${cacheRoot}/${owner}-${repo}@${f.sha}`;
-  // marker lives beside the tree so it never gets staged
   const marker = `${dir}.complete`;
   if (await exists(marker)) return dir;
 

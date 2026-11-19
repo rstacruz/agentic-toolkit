@@ -24,7 +24,6 @@ if (!skill || !opt.iteration) throw new Error("usage: run.ts <skill> --iteration
 if (!opt.model?.includes("/")) throw new Error("--model must be an exact provider/model ID");
 
 const sdir = `${ROOT}/${skill}`;
-// suite is selected by CLI arg, so it can't be a static import
 const suite: Suite<unknown> = (await import(`${sdir}/suite.ts`)).default;
 const preamble = (await exists(`${sdir}/preamble.md`)) ? (await Bun.file(`${sdir}/preamble.md`).text()).trim() : "";
 const ws = `${ROOT}/.workspace/${skill}/iteration-${opt.iteration}`;
@@ -38,7 +37,7 @@ for (const c of suite.cases.filter((c) => !opt.only || c.id === opt.only)) {
   for (let n = 1; n <= +opt.runs!; n++) {
     const pair = `${ws}/${c.id}/pair-${n}`;
     await mkdir(`${ws}/${c.id}`, { recursive: true });
-    await mkdir(pair); // exclusive: throws EEXIST if the pair is taken
+    await mkdir(pair); // non-recursive: throws if the pair exists
 
     const stage = await mkdtemp(`${tmpdir()}/${skill}-stage-`);
     try {
@@ -47,7 +46,6 @@ for (const c of suite.cases.filter((c) => !opt.only || c.id === opt.only)) {
       const src = remote ? await ensureFixture(`${ROOT}/.workspace/.cache/fixtures`, remote) : `${sdir}/fixtures/${fixture}`;
       await $`cp -R ${src}/. ${stage}/ && mkdir -p ${stage}/outputs`;
       for (const [name, body] of Object.entries(suite.files ?? {})) await Bun.write(`${stage}/${name}`, body);
-      // users invoke the skill explicitly, so the with_skill arm does too
       const prompts: Record<string, string> = {
         with_skill: [preamble, `/${suite.skill} ${c.prompt}`].filter(Boolean).join("\n\n"),
         without_skill: [preamble, c.prompt].filter(Boolean).join("\n\n"),
@@ -80,9 +78,9 @@ async function runArm(arm: string, flags: string[], stage: string, prompt: strin
     await $`cp -R ${stage}/. ${cwd}/`;
     if (arm === "with_skill") {
       await $`mkdir -p ${cwd}/.omp/skills && cp -R ${REPO}/skills/${suite.skill} ${cwd}/.omp/skills/`;
-      skillDigest = await treeHash(`${cwd}/.omp/skills/${suite.skill}`); // hash what the agent actually gets
+      skillDigest = await treeHash(`${cwd}/.omp/skills/${suite.skill}`);
     }
-    const before = await hashFiles(cwd); // after setup, so injected files never count as changes
+    const before = await hashFiles(cwd);
     const lock = await lockdown(conf, suite.tools);
 
     const res = await $`omp -p --no-session --no-context-files --no-rules --no-extensions ${flags} \
@@ -92,10 +90,9 @@ async function runArm(arm: string, flags: string[], stage: string, prompt: strin
       .nothrow()
       .quiet();
 
-    // evidence first, deliverable last
     await Bun.write(`${dir}/transcript.jsonl`, res.stdout);
     if (res.exitCode !== 0) await Bun.write(`${dir}/stderr.txt`, res.stderr);
-    const completed = res.exitCode === 0 || res.exitCode === 3; // 3 = --max-cost reached; graded as-is
+    const completed = res.exitCode === 0 || res.exitCode === 3; // 3 = --max-cost reached
     await Bun.write(
       `${dir}/run.json`,
       JSON.stringify(

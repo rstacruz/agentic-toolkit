@@ -1,6 +1,6 @@
 import { Glob } from "bun";
 
-/** rel path → sha256, hidden files included */
+/** rel path -> sha256, hidden files included */
 export async function hashFiles(dir: string): Promise<Map<string, string>> {
   const out = new Map<string, string>();
   for await (const rel of new Glob("**/*").scan({ cwd: dir, dot: true, onlyFiles: true })) {

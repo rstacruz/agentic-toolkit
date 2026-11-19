@@ -3,13 +3,13 @@ export type Result = { name: string; passed: boolean; evidence: string };
 export type Case<O> = {
   id: string;
   prompt: string;
-  /** Fixture name: a remote fixture in `Suite.fixtures` or a dir under `fixtures/`; default = id */
+  /** Remote fixture name or dir under fixtures/; default = id */
   fixture?: string;
   /** Both arms */
   behavior?: (out: O) => Result[];
   /** with_skill only; conventions for actions this case expects */
   format?: (out: O) => Result[];
-  /** Prose behavior criteria for the LLM judge; none → no judge call */
+  /** Prose criteria for the LLM judge; none skips it */
   judge?: string[];
 };
 
@@ -19,7 +19,7 @@ export type Suite<O> = {
   skill: string;
   /** Path under outputs/, same for both arms */
   deliverable: string;
-  /** Throws → unusable */
+  /** Throws if unusable */
   parse: (raw: string) => O;
   /** Extra files written into the staged input */
   files?: Record<string, string>;

@@ -9,7 +9,6 @@ export default defineSuite({
   tools: ["read", "write", "grep", "glob"],
   maxCost: 2,
   fixtures: {
-    // p-queue v10.0.0, MIT, committed 2026-10-13
     "p-queue": {
       repo: "https://github.com/sindresorhus/p-queue",
       sha: "7f272ab5ff2254c0dc2537b7977e88ede1cd55e8",

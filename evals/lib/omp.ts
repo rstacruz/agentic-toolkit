@@ -1,9 +1,6 @@
 import { z } from "zod";
 
-/**
- * omp config overlay + flags: no xd:// devices, and every tool outside `tools` (eg user-configured mcp__*)
- * needs approval, which print mode refuses. `dir` must be outside the run cwd.
- */
+/** omp config overlay and flags that lock down tools */
 export async function lockdown(dir: string, tools: string[]): Promise<string[]> {
   const path = `${dir}/lockdown.yml`;
   const overlay = { tools: { xdev: false, approval: Object.fromEntries(tools.map((t) => [t, "allow"])) } };

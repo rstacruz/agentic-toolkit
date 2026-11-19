@@ -22,7 +22,7 @@ export const everyDecisionHasRisk = (doc: Md): Result[] =>
     r(`everyDecisionHasRisk(### ${d.title})`, !!d.risk, d.risk ? (d.text.match(RISK)?.[0] ?? d.risk) : "no **Risk:** line"),
   );
 
-/** Worst-hit-wins: a row only when some decision is 🔴 high */
+/** Emits a row only when some decision is red risk */
 export function redRiskImpliesL4(doc: Md): Result[] {
   const red = decisions(doc).filter((d) => d.risk === "🔴 high");
   if (!red.length) return [];

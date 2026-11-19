@@ -17,7 +17,6 @@ const judgeModel = opt["judge-model"];
 if (!skill || !opt.iteration) throw new Error("usage: grade.ts <skill> --iteration N --judge-model p/m");
 if (!judgeModel?.includes("/")) throw new Error("--judge-model must be an exact provider/model ID");
 
-// suite is selected by CLI arg, so it can't be a static import
 const suite: Suite<unknown> = (await import(`${ROOT}/${skill}/suite.ts`)).default;
 const ws = `${ROOT}/.workspace/${skill}/iteration-${opt.iteration}`;
 const ARMS = ["with_skill", "without_skill"] as const;
@@ -91,7 +90,7 @@ async function gradeArm(c: Case<unknown>, arm: Arm, dir: string): Promise<Gradin
   };
 }
 
-/** Any failure throws; the caller records it as judge_error */
+/** Throws on any failure */
 async function judge(criteria: string[], deliverable: string, dir: string): Promise<Result[]> {
   const prompt = [
     "You are grading a deliverable against numbered criteria. Judge only from the deliverable text.",
@@ -174,7 +173,7 @@ for (const c of suite.cases) {
     const pdir = `${cdir}/pair-${n}`;
     const inputFile = Bun.file(`${pdir}/input.json`);
     if (!(await inputFile.exists())) {
-      report.incomplete_pairs++; // runner died mid-pair
+      report.incomplete_pairs++;
       continue;
     }
     const input = Input.parse(await inputFile.json());
