@@ -47,16 +47,20 @@ for (const c of suite.cases.filter((c) => !opt.only || c.id === opt.only)) {
       const src = remote ? await ensureFixture(`${ROOT}/.workspace/.cache/fixtures`, remote) : `${sdir}/fixtures/${fixture}`;
       await $`cp -R ${src}/. ${stage}/ && mkdir -p ${stage}/outputs`;
       for (const [name, body] of Object.entries(suite.files ?? {})) await Bun.write(`${stage}/${name}`, body);
-      const prompt = [preamble, c.prompt].filter(Boolean).join("\n\n");
+      // users invoke the skill explicitly, so the with_skill arm does too
+      const prompts: Record<string, string> = {
+        with_skill: [preamble, `/${suite.skill} ${c.prompt}`].filter(Boolean).join("\n\n"),
+        without_skill: [preamble, c.prompt].filter(Boolean).join("\n\n"),
+      };
       const input = {
         model: opt.model,
-        prompt,
+        prompts,
         fixture,
         fixture_source: remote ? { repo: remote.repo, sha: remote.sha } : undefined,
         input_digest: await treeHash(stage),
       };
       const skill_digest = await Promise.all(
-        Object.entries(ARMS).map(([arm, flags]) => runArm(arm, flags, stage, prompt, `${pair}/${arm}`)),
+        Object.entries(ARMS).map(([arm, flags]) => runArm(arm, flags, stage, prompts[arm], `${pair}/${arm}`)),
       );
       await Bun.write(`${pair}/input.json`, JSON.stringify({ ...input, skill_digest: skill_digest[0] }, null, 2));
       console.log(`${c.id}/pair-${n} done`);

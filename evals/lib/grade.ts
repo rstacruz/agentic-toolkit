@@ -149,6 +149,7 @@ const report = {
   incomplete_pairs: 0,
   unusable: [] as { case: string; pair: number; arm: Arm; reason: string | null }[],
   judge_errors: [] as { case: string; pair: number; arm: Arm; error: string | null }[],
+  skill_not_loaded: [] as { case: string; pair: number }[],
   cases: [] as {
     id: string;
     pairs: number;
@@ -189,6 +190,9 @@ for (const c of suite.cases) {
       if (g[arm].outcome === "judge_error")
         report.judge_errors.push({ case: c.id, pair: n, arm, error: g[arm].judge_error });
     }
+    const withRun = RunJson.safeParse(await Bun.file(`${pdir}/with_skill/run.json`).json().catch(() => null));
+    if (withRun.success && withRun.data.status === "completed" && withRun.data.skill_file === null)
+      report.skill_not_loaded.push({ case: c.id, pair: n });
     if (ARMS.some((a) => g[a].outcome === "incomplete")) report.incomplete_pairs++;
     if (!ARMS.every((a) => g[a].outcome === "scored" || g[a].outcome === "unusable")) continue;
 
@@ -233,6 +237,8 @@ for (const c of report.cases) {
   else for (const f of c.format) lines.push(`  ${f.passed.padEnd(5)} ${f.name}`);
 }
 lines.push("", `incomplete pairs: ${report.incomplete_pairs}`);
+lines.push(`with_skill arms that never loaded the skill: ${report.skill_not_loaded.length}`);
+for (const s of report.skill_not_loaded) lines.push(`skill not loaded: ${s.case}/pair-${s.pair}/with_skill`);
 for (const u of report.unusable) lines.push(`unusable: ${u.case}/pair-${u.pair}/${u.arm}: ${u.reason}`);
 for (const j of report.judge_errors) lines.push(`judge error: ${j.case}/pair-${j.pair}/${j.arm}: ${j.error}`);
 console.log(lines.join("\n"));
