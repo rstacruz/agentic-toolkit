@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- `evals/` — a Bun harness that runs a skill with and without it loaded on
+  the same input (`bun lib/run.ts`), then grades both runs with code checks
+  and an LLM judge (`bun lib/grade.ts`). Ships with an `/atk-plan` suite on a
+  pinned p-queue snapshot, fetched and cached at run time.
+
 ## v2026.11.19
 
 ### Breaking changes
