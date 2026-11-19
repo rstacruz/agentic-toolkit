@@ -85,9 +85,9 @@ export const noActionContains = (p: Plan, s: string) => {
   const hit = p.actions.find((a) => JSON.stringify(a).includes(s));
   return r(`noActionContains(${s})`, !hit, hit ? JSON.stringify(hit).slice(0, 200) : "clean");
 };
-/** Bot command only counts at the start of a body */
+/** A mention anywhere in a body pings the bot */
 export const noBotCommand = (p: Plan, bot: string) => {
-  const hit = [...of(p, "reply"), ...of(p, "pr-comment")].find((a) => a.body.trimStart().startsWith(bot));
+  const hit = [...of(p, "reply"), ...of(p, "pr-comment")].find((a) => a.body.includes(bot));
   return r(`noBotCommand(${bot})`, !hit, hit ? hit.body.slice(0, 200) : "clean");
 };
 export const triageCovers = (p: Plan, ...sources: string[]) =>
