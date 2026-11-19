@@ -110,7 +110,7 @@ export const findingsHaveUrlAndDigest = (p: Plan) =>
       ? [r(`urlAndDigest(${t.source})`, !!t.url?.trim() && !!t.digest?.trim(), `url=${t.url ?? "-"} digest=${t.digest ?? "-"}`)]
       : [],
   );
-/** Each triage url is listed in the last pr-comment */
+/** Each triage url is listed in the last pr-comment; review-body findings have no thread, so they need one */
 export const prCommentListsDispositions = (p: Plan) => {
   const body = of(p, "pr-comment").at(-1)?.body;
   return p.triage.flatMap((t) => {
