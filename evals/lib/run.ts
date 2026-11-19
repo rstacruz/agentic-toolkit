@@ -47,7 +47,10 @@ for (const c of suite.cases.filter((c) => !opt.only || c.id === opt.only)) {
       await $`cp -R ${src}/. ${stage}/ && mkdir -p ${stage}/outputs`;
       for (const [name, body] of Object.entries(suite.files ?? {})) await Bun.write(`${stage}/${name}`, body);
       const prompts: Record<string, string> = {
-        with_skill: [preamble, `/${suite.skill} ${c.prompt}`].filter(Boolean).join("\n\n"),
+        // omp -p doesn't expand `/<skill>`, and models treat it as plain text; naming the URI gets it read
+        with_skill: [preamble, `Use the ${suite.skill} skill (skill://${suite.skill}) for this request: ${c.prompt}`]
+          .filter(Boolean)
+          .join("\n\n"),
         without_skill: [preamble, c.prompt].filter(Boolean).join("\n\n"),
       };
       const input = {

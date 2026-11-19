@@ -97,7 +97,7 @@ bun lib/run.ts atk-plan --iteration 1 --model anthropic/claude-sonnet-4-5 [--run
 bun lib/grade.ts atk-plan --iteration 1 --judge-model anthropic/claude-haiku-4-5
 ```
 
-- The with-skill run invokes `/<skill> <request>`, as a user would. The report flags any with-skill run that never loaded the skill.
+- The with-skill run asks for the skill by name (`skill://<skill>`); a bare `/<skill>` prefix gets ignored in headless mode. The report flags any with-skill run that never loaded the skill.
 - Results go to `evals/.workspace/<skill>/iteration-N/` (gitignored); `grade.ts` prints the report and writes `report.json`.
 - Each run is capped at the suite's `maxCost` ($2 for atk-plan), so a full iteration can cost tens of dollars. Use `--only` and `--runs 1` while authoring.
 - Use a fresh `--iteration` for every batch; pairs are never overwritten. The judge model must differ from the runner model.
