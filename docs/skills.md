@@ -38,7 +38,6 @@ Cook runs under goal mode: `/goal /cook <request>` — the `/goal` wrapper keeps
 ### Planning
 
 - [`/atk-plan`](../skills/atk-plan/SKILL.md) — Compact, non-interactive plan in a fixed format: decides everything for the user, never asks, saves the Markdown to `~/.artefacts/`
-- [`/atk-plan-legacy`](../skills/atk-plan-legacy/SKILL.md) — The previous fuller planner: decide-first ladder, stakes levels, grounds facts, and asks on mid/high-stakes branches with `--interactive`
 
 ### Refining
 

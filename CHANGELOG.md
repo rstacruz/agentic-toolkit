@@ -30,7 +30,7 @@
 
 - `/atk-plan` is now compact and non-interactive: decides everything for the
   user, never asks, and saves the plan to `~/.artefacts/`. The previous
-  decide-first planner is now `/atk-plan-legacy`.
+  decide-first planner is removed.
 - Skill references now use `/skill-name` (eg, `/cook`) instead of
   `$skill-name` — in prose, pseudocode, and comments; invocation is unchanged.
 
