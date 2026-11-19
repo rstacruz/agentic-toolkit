@@ -105,12 +105,6 @@ export const onePerFix = (p: Plan) =>
   of(p, "commit").map((a, i) => r(`onePerFix(commit #${i + 1})`, a.fixes.length === 1, JSON.stringify(a.fixes)));
 export const repliesEndWith = (p: Plan, s: string) =>
   of(p, "reply").map((a) => r(`replyEndsWith(${a.thread})`, a.body.trimEnd().endsWith(s), a.body.slice(-60)));
-export const findingsHaveUrlAndDigest = (p: Plan) =>
-  p.triage.flatMap((t) =>
-    t.source.startsWith("review:")
-      ? [r(`urlAndDigest(${t.source})`, !!t.url?.trim() && !!t.digest?.trim(), `url=${t.url ?? "-"} digest=${t.digest ?? "-"}`)]
-      : [],
-  );
 /**
  * Each triage url is in the last pr-comment, plus the digest for review-body findings (they share one review url).
  * The report is required once there are commits or review-body findings.

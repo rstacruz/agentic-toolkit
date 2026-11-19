@@ -3,7 +3,6 @@ import {
   Plan,
   bucket,
   count,
-  findingsHaveUrlAndDigest,
   firstActionIs,
   fixedPushedResolved,
   noBotCommand,
@@ -58,7 +57,6 @@ export default defineSuite({
       ],
       format: (p) => [
         ...firstActionIs(p, "merge-base"),
-        ...findingsHaveUrlAndDigest(p),
         ...prCommentListsDispositions(p),
       ],
     },
