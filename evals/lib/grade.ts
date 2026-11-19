@@ -47,9 +47,12 @@ type Grading = {
 const score = (rows: Result[]) => (rows.length ? rows.filter((x) => x.passed).length / rows.length : null);
 const mean = (xs: number[]) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : null);
 const SUITE_JUDGE = "judge (suite): ";
-/** Behavior score over suite-wide (`true`) or case (`false`) rows; unusable stays 0 */
-const part = (g: Grading, suiteRows: boolean) =>
-  g.outcome === "unusable" ? 0 : score(g.behavior.filter((x) => x.name.startsWith(SUITE_JUDGE) === suiteRows));
+/** Behavior score over suite-wide (`true`) or case (`false`) rows; unusable stays 0, unless the suite has no such rows */
+function part(g: Grading, suiteRows: boolean) {
+  if (suiteRows && !suite.judge?.length) return null;
+  if (g.outcome === "unusable") return 0;
+  return score(g.behavior.filter((x) => x.name.startsWith(SUITE_JUDGE) === suiteRows));
+}
 
 async function gradeArm(c: Case<unknown>, arm: Arm, dir: string): Promise<Grading> {
   const base = { reason: null, behavior: [], format: [], behavior_score: null, format_score: null, judge_error: null };
