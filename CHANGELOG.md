@@ -14,6 +14,8 @@
 
 - `/atk-plan` risk lines now say what breaks if a decision is wrong, not why
   it's safe. The new evals caught plans doing the latter.
+- `/atk-plan` drops its Goals checklist and the "order the plan" line, which
+  repeated the Format template. The evals score the same without them.
 
 ## v2026.11.19
 

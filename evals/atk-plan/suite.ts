@@ -81,7 +81,7 @@ export default defineSuite({
       judge: [
         "Rates the risk by semver breakage (public API), not by the size of the change",
         "Decides between a deprecated alias (minor) and a breaking rename (major), and says why",
-        "Updates the type tests and the readme, not just the source",
+        "Updates the readme and the runtime tests (`test/basic.ts`), not just the source",
       ],
     },
   ],

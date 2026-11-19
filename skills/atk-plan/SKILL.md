@@ -6,16 +6,9 @@ description: >
 
 Plan the given change. Decide for the user; never ask.
 
-## Goals
-
-- [ ] Saved to a Markdown file
-- [ ] Lists decisions
-- [ ] No duplication across `## Design`, `## Implementation steps`, and `## PR's`
-
 ## Guidelines
 
 - Read related files, plans, and tickets first.
-- Order the plan: Decisions → Design → Implementation steps → PR's.
 - `## Design` owns contracts exactly once: data model, state, storage, types, markup, CSS, component tree. `## Implementation steps` is one line per step: files — action — done when. Never repeat a Design code block or attribute list; write `Apply Design → <section>` and keep only the step-specific delta.
 - In `## Design`, mark code with `/* 🟢 New */`, `/* 🟡 Updated */`, or `/* 🔴 Removed */` so the design shows the change, not just the end state.
 - Give examples in `## Design` when they make a contract concrete: sample rows for each new table, a request and response for each API operation, a before and after value, and one refusal or error case. Use one scenario (same ids and values) across all examples so they read as a story. Mark made-up data as illustrative; copy real output when you ran something and say how. Skip examples for contracts that are self-evident, and never repeat them in `## Implementation steps`.
