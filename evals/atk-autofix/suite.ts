@@ -107,6 +107,7 @@ export default defineSuite({
         notCommitted(p, "review:5602#nitpick-1"),
         notCommitted(p, "review:5602#nitpick-2"),
         fixedPushedResolved(p, "PRRT_loop"),
+        count(p, "commit", 1),
       ],
     },
     {
