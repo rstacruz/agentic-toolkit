@@ -111,13 +111,20 @@ export const findingsHaveUrlAndDigest = (p: Plan) =>
       ? [r(`urlAndDigest(${t.source})`, !!t.url?.trim() && !!t.digest?.trim(), `url=${t.url ?? "-"} digest=${t.digest ?? "-"}`)]
       : [],
   );
-/** Each triage url is listed in the last pr-comment; review-body findings have no thread, so they need one */
+/**
+ * Each triage url is in the last pr-comment, plus the digest for review-body findings (they share one review url).
+ * The report is required once there are commits or review-body findings.
+ */
 export const prCommentListsDispositions = (p: Plan) => {
   const body = of(p, "pr-comment").at(-1)?.body;
+  const required = of(p, "commit").length > 0;
   return p.triage.flatMap((t) => {
-    if (body === undefined && !t.source.startsWith("review:")) return [];
-    const ok = body !== undefined && !!t.url && body.includes(t.url);
-    return [r(`reported(${t.source})`, ok, body === undefined ? "no pr-comment" : ok ? "listed" : `url not in report: ${t.url ?? "-"}`)];
+    const finding = t.source.startsWith("review:");
+    if (body === undefined && !required && !finding) return [];
+    const missing = (finding ? [t.url, t.digest] : [t.url]).filter((k) => !k?.trim() || !body?.includes(k));
+    const ok = body !== undefined && missing.length === 0;
+    const why = body === undefined ? "no pr-comment" : ok ? "listed" : `not in report: ${missing.map((k) => k || "-").join(", ")}`;
+    return [r(`reported(${t.source})`, ok, why)];
   });
 };
 export const planSchema = JSON.stringify(z.toJSONSchema(Plan), null, 2);
