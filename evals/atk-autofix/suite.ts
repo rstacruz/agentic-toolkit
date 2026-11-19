@@ -92,7 +92,7 @@ export default defineSuite({
     {
       id: "base-already-fixed",
       prompt: "address the feedback on #405 please",
-      behavior: (p) => [notCommitted(p, "thread:PRRT_clamp"), pushedAfterMerge(p), resolved(p, "PRRT_clamp")],
+      behavior: (p) => [count(p, "commit", 0), pushedAfterMerge(p), resolved(p, "PRRT_clamp")],
     },
     {
       id: "human-review-only",
