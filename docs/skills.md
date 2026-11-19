@@ -8,13 +8,13 @@ graph LR
   atk_plan --> polish_plan["polish-plan"]
   atk_plan --> triangulate_plan["triangulate-plan"]
   atk_plan --> pr_risk_assessment["pr-risk-assessment"]
-  polish_plan --> self_review["atk-pr-autofix --reviewers self"]
+  polish_plan --> self_review["atk-autofix --reviewers self"]
   triangulate_plan --> self_review
   self_review --> atk_code_review["atk-code-review"]
   self_review --> trim_tests_and_comments["trim-tests-and-comments"]
   trim_tests_and_comments --> deslop_prose["deslop-prose"]
-  deslop_prose --> atk_pr_autofix["atk-pr-autofix"]
-  atk_pr_autofix --> minimise_pr_comments["minimise-pr-comments"]
+  deslop_prose --> atk_autofix["atk-autofix"]
+  atk_autofix --> minimise_pr_comments["minimise-pr-comments"]
   minimise_pr_comments --> pr_review_guide["pr-review-guide"]
 
   cook -.-> worktrunk["worktrunk (external)"]
@@ -47,11 +47,11 @@ Cook runs under goal mode: `/goal /cook <request>` — the `/goal` wrapper keeps
 
 ### Implementing
 
-- [`/atk-pr-autofix --reviewers self`](../skills/atk-pr-autofix/SKILL.md) — Self-review loop against a GitHub PR: `/atk-code-review` threads get fixed, replied to, and resolved, up to 4 passes
+- [`/atk-autofix --reviewers self`](../skills/atk-autofix/SKILL.md) — Self-review loop against a GitHub PR: `/atk-code-review` threads get fixed, replied to, and resolved, up to 4 passes
 
 ### Shipping
 
-- [`/atk-pr-autofix`](../skills/atk-pr-autofix/SKILL.md) — Monitor a PR's CI status in a loop until it passes or needs human input
+- [`/atk-autofix`](../skills/atk-autofix/SKILL.md) — Monitor a PR's CI status in a loop until it passes or needs human input
 - [`/pr-review-guide`](../skills/pr-review-guide/SKILL.md) — Reviewer walkthrough narrative: call graph, chapters, sequence diagrams, decision points
 - [`/trim-tests-and-comments`](../skills/trim-tests-and-comments/SKILL.md) — Reports, then cuts, weak tests and low-value comments added on the branch
 - [`/deslop-prose`](../skills/deslop-prose/SKILL.md) — Flags AI-sounding prose, clichés, filler, and unnatural phrasing in added prose and code comments

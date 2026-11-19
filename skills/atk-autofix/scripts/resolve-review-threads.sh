@@ -4,7 +4,7 @@
 #
 # No --thread-id: resolves all unresolved threads.
 # --thread-id set: resolves only the given thread ID(s), regardless of current
-#   resolved state — used by atk-pr-autofix to leave needs-discussion threads
+#   resolved state — used by atk-autofix to leave needs-discussion threads
 #   open.
 
 set -euo pipefail

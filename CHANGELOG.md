@@ -2,11 +2,16 @@
 
 ## Unreleased
 
+### Breaking changes
+
+- `/atk-pr-autofix` is renamed to `/atk-autofix`. Its PR report comments are
+  now tagged `atk-autofix`; reports tagged with the old name are still read.
+
 ### Added
 
 - `/cook` — end-to-end orchestrator for an open-ended request: reframe → plan
   → implement → polish → CI, in a worktree with a draft PR. `--max`
-  enables the `/polish-plan` / `/atk-pr-autofix --reviewers self` rigor passes, and its
+  enables the `/polish-plan` / `/atk-autofix --reviewers self` rigor passes, and its
   `implement-plan.md` reference fans multi-PR plans out across subagent
   worktrees.
 - `/pr-review-guide` — the reviewer walkthrough guide, including a collapsed
@@ -16,7 +21,7 @@
   comment cleanup (keeps reviewer feedback, deploy notices, and author
   verification — including image-only evidence), lean tests/comments, and
   prose review. `MINIMISE_HIDE_IDS` force-hides specific comments.
-- `/atk-pr-autofix --reviewers self` — runs `/atk-code-review` as a reviewer
+- `/atk-autofix --reviewers self` — runs `/atk-code-review` as a reviewer
   in the autofix loop, up to 4 passes. Never selected by default; combine it
   with bots via `--reviewers auto,self`. `/cook --max` uses it in place of
   `/polish-implementation`.
