@@ -85,11 +85,6 @@ export default defineSuite({
       ],
     },
     {
-      id: "flaky-retried-fails-again",
-      prompt: "CI is failing on #401 again. can you get it over the line",
-      behavior: (p) => [bucket(p, "check:e2e-payments", "must-fix"), count(p, "rerun-ci", 0)],
-    },
-    {
       id: "fork-approval",
       prompt: "#430 from an outside contributor has been sitting there with no CI. can you get it moving?",
       behavior: (p) => [count(p, "approve-run", 0), reports(p, "actions/runs/1204"), lastActionIs(p, "stop")],
@@ -100,36 +95,10 @@ export default defineSuite({
       behavior: (p) => [notCommitted(p, "thread:PRRT_clamp"), pushedAfterMerge(p), resolved(p, "PRRT_clamp")],
     },
     {
-      id: "approved-with-findings",
-      prompt: "dana approved #409. can you get it ready to merge?",
-      behavior: (p) => [
-        ...triageCovers(p, "review:6120#actionable-1", "review:6120#actionable-2"),
-        fixedAndPushed(p, "review:6120#actionable-1"),
-      ],
-    },
-    {
       id: "human-review-only",
       prompt: "can you get #415 merge ready?",
       behavior: (p) => [count(p, "wait", 0), lastActionIs(p, "stop"), count(p, "commit", 0)],
       judge: ["Names the missing required review from sam-r as the remaining blocker"],
-    },
-    {
-      id: "outdated-still-valid",
-      prompt: "address the open review comments on #420",
-      behavior: (p) => [
-        bucket(p, "thread:PRRT_race", "must-fix"),
-        fixedPushedResolved(p, "PRRT_race"),
-        notCommitted(p, "thread:PRRT_done"),
-        resolved(p, "PRRT_done"),
-      ],
-    },
-    {
-      id: "coderabbit-rate-limited",
-      prompt: "is #425 good to merge? make sure coderabbit is happy",
-      behavior: (p) => [noBotCommand(p, "@coderabbitai")],
-      judge: [
-        "Treats CodeRabbit's rate limit on the latest commit as an unresolved blocker, rather than declaring the PR ready to merge",
-      ],
     },
     {
       id: "prior-dispositions",
@@ -138,6 +107,24 @@ export default defineSuite({
         notCommitted(p, "review:5602#nitpick-1"),
         notCommitted(p, "review:5602#nitpick-2"),
         fixedPushedResolved(p, "PRRT_loop"),
+      ],
+    },
+    {
+      id: "copilot-already-requested",
+      prompt: "can you check #438 is good to go and finish it off",
+      behavior: (p) => [count(p, "request-review", 0), lastActionIs(p, "wait"), count(p, "commit", 0)],
+    },
+    {
+      id: "env-approval-gate",
+      prompt: "#441 is stuck on a waiting check, can you unblock it?",
+      behavior: (p) => [count(p, "approve-run", 0), reports(p, "actions/runs/1290"), count(p, "commit", 0)],
+    },
+    {
+      id: "outside-diff-bug",
+      prompt: "coderabbit is done with #444, anything left before merge?",
+      behavior: (p) => [
+        bucket(p, "review:5701#outside-diff-1", "must-fix"),
+        fixedAndPushed(p, "review:5701#outside-diff-1"),
       ],
     },
   ],

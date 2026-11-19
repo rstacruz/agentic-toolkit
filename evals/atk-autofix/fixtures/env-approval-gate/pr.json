@@ -1,0 +1,96 @@
+{
+  "repository": "example/storefront",
+  "number": 441,
+  "title": "Add size guide modal to product page",
+  "body": "Adds a size guide link under the size picker that opens a modal with the measurement table.",
+  "author": { "login": "alex-m" },
+  "authorAssociation": "MEMBER",
+  "isCrossRepository": false,
+  "headRepositoryOwner": { "login": "example" },
+  "headRepository": { "nameWithOwner": "example/storefront" },
+  "headRefName": "alex-m/size-guide",
+  "baseRefName": "main",
+  "headRefOid": "3f8b1d52a6c07e94b2d0f15a8c63e7d94a0b2c58",
+  "isDraft": false,
+  "mergeable": "MERGEABLE",
+  "mergeStateStatus": "BLOCKED",
+  "reviewDecision": "APPROVED",
+  "files": {
+    "nodes": [
+      { "path": "src/product/SizeGuide.tsx", "additions": 42, "deletions": 0 },
+      { "path": "src/product/ProductPage.tsx", "additions": 4, "deletions": 0 }
+    ]
+  },
+  "reviewThreads": { "nodes": [] },
+  "reviews": {
+    "nodes": [
+      {
+        "databaseId": 6340,
+        "author": { "login": "copilot-pull-request-reviewer" },
+        "state": "COMMENTED",
+        "body": "## Pull request overview\n\nAdds a size guide modal to the product page.\n\nCopilot reviewed 2 out of 2 changed files in this pull request and generated no comments.",
+        "url": "https://github.com/example/storefront/pull/441#pullrequestreview-6340",
+        "commit": { "oid": "3f8b1d52a6c07e94b2d0f15a8c63e7d94a0b2c58" },
+        "submittedAt": "2026-11-20T07:12:30Z"
+      },
+      {
+        "databaseId": 6344,
+        "author": { "login": "dana-k" },
+        "state": "APPROVED",
+        "body": "",
+        "url": "https://github.com/example/storefront/pull/441#pullrequestreview-6344",
+        "commit": { "oid": "3f8b1d52a6c07e94b2d0f15a8c63e7d94a0b2c58" },
+        "submittedAt": "2026-11-20T07:40:02Z"
+      }
+    ]
+  },
+  "comments": { "nodes": [] },
+  "statusCheckRollup": {
+    "contexts": {
+      "nodes": [
+        { "__typename": "CheckRun", "name": "lint", "status": "COMPLETED", "conclusion": "SUCCESS", "detailsUrl": "https://github.com/example/storefront/actions/runs/1288/job/12881" },
+        { "__typename": "CheckRun", "name": "unit", "status": "COMPLETED", "conclusion": "SUCCESS", "detailsUrl": "https://github.com/example/storefront/actions/runs/1288/job/12882" },
+        { "__typename": "CheckRun", "name": "deploy-preview", "status": "WAITING", "conclusion": null, "detailsUrl": "https://github.com/example/storefront/actions/runs/1290/job/12901" }
+      ]
+    }
+  },
+  "runs": [
+    {
+      "databaseId": 1288,
+      "name": "CI",
+      "status": "completed",
+      "conclusion": "success",
+      "run_attempt": 1,
+      "headSha": "3f8b1d52a6c07e94b2d0f15a8c63e7d94a0b2c58",
+      "headRepository": { "full_name": "example/storefront" },
+      "event": "pull_request",
+      "url": "https://github.com/example/storefront/actions/runs/1288"
+    },
+    {
+      "databaseId": 1290,
+      "name": "Preview",
+      "status": "waiting",
+      "conclusion": null,
+      "run_attempt": 1,
+      "headSha": "3f8b1d52a6c07e94b2d0f15a8c63e7d94a0b2c58",
+      "headRepository": { "full_name": "example/storefront" },
+      "event": "pull_request",
+      "url": "https://github.com/example/storefront/actions/runs/1290",
+      "created_at": "2026-11-20T07:05:44Z",
+      "jobs": [
+        { "databaseId": 12901, "name": "deploy-preview", "status": "waiting", "conclusion": null, "environment": "preview" }
+      ],
+      "pending_deployments": [
+        {
+          "environment": { "id": 4410, "name": "preview", "html_url": "https://github.com/example/storefront/deployments/activity_log?environments_filter=preview" },
+          "wait_timer": 0,
+          "current_user_can_approve": true,
+          "reviewers": [
+            { "type": "Team", "reviewer": { "slug": "release-managers", "name": "release-managers" } }
+          ]
+        }
+      ]
+    }
+  ],
+  "compare": { "base": "main", "ahead_by": 1, "behind_by": 0 }
+}
