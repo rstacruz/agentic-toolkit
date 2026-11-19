@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 import { $ } from "bun";
 import { parseArgs } from "node:util";
-import { exists, mkdir, mkdtemp, rm } from "node:fs/promises";
+import { exists, mkdir, mkdtemp, realpath, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { changedPaths, hashFiles, treeHash } from "./files";
 import { ensureFixture } from "./fixtures";
@@ -70,7 +70,8 @@ for (const c of suite.cases.filter((c) => !opt.only || c.id === opt.only)) {
 
 async function runArm(arm: string, flags: string[], stage: string, prompt: string, dir: string) {
   await mkdir(dir);
-  const cwd = await mkdtemp(`${tmpdir()}/${skill}-eval-`);
+  // realpath: omp reports skill paths under process.cwd(), which resolves symlinks (macOS /var → /private/var)
+  const cwd = await realpath(await mkdtemp(`${tmpdir()}/${skill}-eval-`));
   const conf = await mkdtemp(`${tmpdir()}/${skill}-conf-`);
   const t0 = performance.now();
   let skillDigest: string | undefined;
