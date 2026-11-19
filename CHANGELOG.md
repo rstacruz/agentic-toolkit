@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## v2026.11.19
 
 ### Breaking changes
 
@@ -33,6 +33,10 @@
   decide-first planner is removed.
 - Skill references now use `/skill-name` (eg, `/cook`) instead of
   `$skill-name` — in prose, pseudocode, and comments; invocation is unchanged.
+
+### Removed
+
+- `metaplan` — the experimental planning notebook is no longer shipped.
 
 ## v2026.09.04
 
