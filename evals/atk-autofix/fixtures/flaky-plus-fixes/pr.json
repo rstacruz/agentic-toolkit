@@ -1,0 +1,96 @@
+{
+  "repository": "example/storefront",
+  "number": 395,
+  "title": "Show location and join year on profile card",
+  "body": "Adds `location` and `memberSince` to the account profile card.",
+  "author": { "login": "alex-m" },
+  "headRefName": "alex-m/profile-card-location",
+  "baseRefName": "main",
+  "headRefOid": "5e9b2d71c4a03f86e1d7b05c29a4f3e8d6b10c77",
+  "isDraft": false,
+  "mergeable": "MERGEABLE",
+  "reviewDecision": "REVIEW_REQUIRED",
+  "files": {
+    "nodes": [
+      { "path": "src/account/profile-card.ts", "additions": 4, "deletions": 0 },
+      { "path": "src/account/types.ts", "additions": 1, "deletions": 0 },
+      { "path": "src/account/profile-card.test.ts", "additions": 3, "deletions": 0 }
+    ]
+  },
+  "reviewThreads": {
+    "nodes": [
+      {
+        "id": "PRRT_null",
+        "isResolved": false,
+        "isOutdated": false,
+        "path": "src/account/profile-card.ts",
+        "line": 15,
+        "comments": {
+          "nodes": [
+            {
+              "databaseId": 68311,
+              "author": { "login": "dana-k" },
+              "body": "What does this render for accounts that never filled in an address? Most guest-converted accounts don't have one.",
+              "url": "https://github.com/example/storefront/pull/395#discussion_r68311",
+              "createdAt": "2026-11-19T09:12:44Z"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "reviews": {
+    "nodes": [
+      {
+        "databaseId": 6101,
+        "author": { "login": "dana-k" },
+        "state": "COMMENTED",
+        "body": "",
+        "url": "https://github.com/example/storefront/pull/395#pullrequestreview-6101",
+        "commit": { "oid": "5e9b2d71c4a03f86e1d7b05c29a4f3e8d6b10c77" },
+        "submittedAt": "2026-11-19T09:12:44Z"
+      },
+      {
+        "databaseId": 6102,
+        "author": { "login": "copilot-pull-request-reviewer" },
+        "state": "COMMENTED",
+        "body": "## Pull request overview\n\nAdds location and membership year fields to the profile card builder and updates the unit test.\n\nCopilot reviewed 2 out of 2 changed files in this pull request and generated no comments.",
+        "url": "https://github.com/example/storefront/pull/395#pullrequestreview-6102",
+        "commit": { "oid": "5e9b2d71c4a03f86e1d7b05c29a4f3e8d6b10c77" },
+        "submittedAt": "2026-11-19T08:51:02Z"
+      }
+    ]
+  },
+  "comments": { "nodes": [] },
+  "statusCheckRollup": {
+    "contexts": {
+      "nodes": [
+        { "__typename": "CheckRun", "name": "lint", "status": "COMPLETED", "conclusion": "SUCCESS", "detailsUrl": "https://github.com/example/storefront/actions/runs/1101/job/11011" },
+        { "__typename": "CheckRun", "name": "unit", "status": "COMPLETED", "conclusion": "SUCCESS", "detailsUrl": "https://github.com/example/storefront/actions/runs/1101/job/11012" },
+        { "__typename": "CheckRun", "name": "e2e-account", "status": "COMPLETED", "conclusion": "SUCCESS", "detailsUrl": "https://github.com/example/storefront/actions/runs/1101/job/11013" },
+        { "__typename": "CheckRun", "name": "e2e-payments", "status": "COMPLETED", "conclusion": "FAILURE", "detailsUrl": "https://github.com/example/storefront/actions/runs/1101/job/11014" }
+      ]
+    }
+  },
+  "runs": [
+    {
+      "databaseId": 1101,
+      "name": "CI",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_attempt": 1,
+      "headSha": "5e9b2d71c4a03f86e1d7b05c29a4f3e8d6b10c77",
+      "event": "pull_request",
+      "url": "https://github.com/example/storefront/actions/runs/1101",
+      "failed_jobs": [
+        {
+          "databaseId": 11014,
+          "name": "e2e-payments",
+          "url": "https://github.com/example/storefront/actions/runs/1101/job/11014",
+          "log_excerpt": "Running 6 tests using 2 workers\n\n  ✓ e2e/cart.spec.ts:14:3 › adds item to cart (2.3s)\n  ✘ e2e/checkout.spec.ts:41:3 › pays with test card (30.0s)\n\n  1) e2e/checkout.spec.ts:41:3 › pays with test card\n\n    Error: page.waitForResponse: Timeout 30000ms exceeded.\n    =========================== logs ===========================\n    waiting for response https://sandbox.payments.example.net/v1/intents\n    ============================================================\n\n    FetchError: request to https://sandbox.payments.example.net/v1/intents failed, reason: connect ETIMEDOUT 203.0.113.24:443\n\n  1 failed\n    e2e/checkout.spec.ts:41:3 › pays with test card\n  5 passed (51.2s)\nError: Process completed with exit code 1."
+        }
+      ]
+    }
+  ],
+  "compare": { "base": "main", "ahead_by": 1, "behind_by": 0 }
+}

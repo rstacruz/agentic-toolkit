@@ -1,0 +1,131 @@
+{
+  "repository": "example/storefront",
+  "number": 420,
+  "title": "Cache the product catalog in memory",
+  "body": "Adds `CatalogCache` so `listProducts` stops calling the catalog service on every request. Entries expire after 5 minutes by default.",
+  "author": { "login": "alex-m" },
+  "headRefName": "alex-m/catalog-cache",
+  "baseRefName": "main",
+  "headRefOid": "c3a81f5e7d02b946e1c8a0f3d5b7e92a4c6d1b88",
+  "isDraft": false,
+  "mergeable": "MERGEABLE",
+  "reviewDecision": "REVIEW_REQUIRED",
+  "files": {
+    "nodes": [
+      { "path": "src/catalog/cache.ts", "additions": 35, "deletions": 0 },
+      { "path": "src/catalog/handlers.ts", "additions": 4, "deletions": 1 }
+    ]
+  },
+  "reviewThreads": {
+    "nodes": [
+      {
+        "id": "PRRT_race",
+        "isResolved": false,
+        "isOutdated": true,
+        "path": "src/catalog/cache.ts",
+        "line": null,
+        "originalLine": 21,
+        "comments": {
+          "nodes": [
+            {
+              "databaseId": 72011,
+              "author": { "login": "sam-r" },
+              "body": "If two requests come in while the cache is empty (cold start, or right after expiry), both see no entry and both call `load()`, so we hit the catalog service twice. Under load that's a thundering herd on exactly the service this is meant to protect. Could we cache the in-flight promise instead of the resolved value, so concurrent callers share one load?",
+              "url": "https://github.com/example/storefront/pull/420#discussion_r72011",
+              "createdAt": "2026-11-18T13:40:19Z"
+            }
+          ]
+        }
+      },
+      {
+        "id": "PRRT_done",
+        "isResolved": false,
+        "isOutdated": true,
+        "path": "src/catalog/cache.ts",
+        "line": null,
+        "originalLine": 9,
+        "comments": {
+          "nodes": [
+            {
+              "databaseId": 72012,
+              "author": { "login": "dana-k" },
+              "body": "The TTL is hard-coded to 5 minutes. Tests and the admin preview will want a shorter one; can it be a constructor option with 5 minutes as the default?",
+              "url": "https://github.com/example/storefront/pull/420#discussion_r72012",
+              "createdAt": "2026-11-18T13:52:44Z"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "reviews": {
+    "nodes": [
+      {
+        "databaseId": 6141,
+        "author": { "login": "sam-r" },
+        "state": "COMMENTED",
+        "body": "",
+        "url": "https://github.com/example/storefront/pull/420#pullrequestreview-6141",
+        "commit": { "oid": "7b0f2e9d4c18a53e6f2d9b1a0c7e4f83d5a2b6c4" },
+        "submittedAt": "2026-11-18T13:40:19Z"
+      },
+      {
+        "databaseId": 6142,
+        "author": { "login": "dana-k" },
+        "state": "COMMENTED",
+        "body": "",
+        "url": "https://github.com/example/storefront/pull/420#pullrequestreview-6142",
+        "commit": { "oid": "7b0f2e9d4c18a53e6f2d9b1a0c7e4f83d5a2b6c4" },
+        "submittedAt": "2026-11-18T13:52:44Z"
+      },
+      {
+        "databaseId": 6143,
+        "author": { "login": "copilot-pull-request-reviewer" },
+        "state": "COMMENTED",
+        "body": "## Pull request overview\n\nAdds an in-memory `CatalogCache` with a configurable TTL and uses it in `listProducts`.\n\nCopilot reviewed 2 out of 2 changed files in this pull request and generated no comments.",
+        "url": "https://github.com/example/storefront/pull/420#pullrequestreview-6143",
+        "commit": { "oid": "c3a81f5e7d02b946e1c8a0f3d5b7e92a4c6d1b88" },
+        "submittedAt": "2026-11-19T09:31:57Z"
+      }
+    ]
+  },
+  "comments": { "nodes": [] },
+  "commits": {
+    "nodes": [
+      {
+        "commit": {
+          "oid": "7b0f2e9d4c18a53e6f2d9b1a0c7e4f83d5a2b6c4",
+          "messageHeadline": "feat(catalog): cache product catalog in memory",
+          "committedDate": "2026-11-18T12:58:30Z"
+        }
+      },
+      {
+        "commit": {
+          "oid": "c3a81f5e7d02b946e1c8a0f3d5b7e92a4c6d1b88",
+          "messageHeadline": "refactor(catalog): extract refresh(), take ttl via constructor",
+          "committedDate": "2026-11-19T09:20:14Z"
+        }
+      }
+    ]
+  },
+  "statusCheckRollup": {
+    "contexts": {
+      "nodes": [
+        { "__typename": "CheckRun", "name": "lint", "status": "COMPLETED", "conclusion": "SUCCESS", "detailsUrl": "https://github.com/example/storefront/actions/runs/971/job/9711" },
+        { "__typename": "CheckRun", "name": "unit", "status": "COMPLETED", "conclusion": "SUCCESS", "detailsUrl": "https://github.com/example/storefront/actions/runs/971/job/9712" }
+      ]
+    }
+  },
+  "runs": [
+    {
+      "databaseId": 971,
+      "name": "CI",
+      "status": "completed",
+      "conclusion": "success",
+      "headSha": "c3a81f5e7d02b946e1c8a0f3d5b7e92a4c6d1b88",
+      "event": "pull_request",
+      "url": "https://github.com/example/storefront/actions/runs/971"
+    }
+  ],
+  "compare": { "base": "main", "ahead_by": 2, "behind_by": 0 }
+}

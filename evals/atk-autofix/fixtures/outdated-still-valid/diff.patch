@@ -1,0 +1,58 @@
+diff --git a/src/catalog/cache.ts b/src/catalog/cache.ts
+new file mode 100644
+index 0000000..a52e7c9
+--- /dev/null
++++ b/src/catalog/cache.ts
+@@ -0,0 +1,35 @@
++import type { Product } from "./types";
++
++const DEFAULT_TTL_MS = 5 * 60 * 1000;
++
++type Entry = { value: Product[]; expiresAt: number };
++
++/**
++ * Caches the product catalog in memory so request handlers don't each hit
++ * the catalog service.
++ */
++export class CatalogCache {
++  private entry: Entry | undefined;
++
++  constructor(
++    private readonly load: () => Promise<Product[]>,
++    private readonly ttlMs: number = DEFAULT_TTL_MS,
++  ) {}
++
++  async get(): Promise<Product[]> {
++    if (this.entry && this.entry.expiresAt > Date.now()) {
++      return this.entry.value;
++    }
++    return this.refresh();
++  }
++
++  private async refresh(): Promise<Product[]> {
++    const value = await this.load();
++    this.entry = { value, expiresAt: Date.now() + this.ttlMs };
++    return value;
++  }
++
++  invalidate(): void {
++    this.entry = undefined;
++  }
++}
+diff --git a/src/catalog/handlers.ts b/src/catalog/handlers.ts
+index 3e7b20d..8c14f5a 100644
+--- a/src/catalog/handlers.ts
++++ b/src/catalog/handlers.ts
+@@ -1,7 +1,11 @@
++import { CatalogCache } from "./cache";
+ import { fetchCatalog } from "./client";
+ 
++const cache = new CatalogCache(fetchCatalog);
++
+ export async function listProducts(req: Request): Promise<Response> {
+-  const products = await fetchCatalog();
++  const products = await cache.get();
+   const category = new URL(req.url).searchParams.get("category");
+   const filtered = category ? products.filter((p) => p.category === category) : products;
+   return Response.json(filtered);
+ }

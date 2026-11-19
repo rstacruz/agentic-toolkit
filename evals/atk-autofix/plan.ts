@@ -100,6 +100,27 @@ export const triageCovers = (p: Plan, ...sources: string[]) =>
     const it = p.triage.find((x) => x.source === s);
     return r(`triaged(${s})`, !!it, it ? it.bucket : "not triaged");
   });
+export const notCommitted = (p: Plan, src: string) => {
+  const i = at(p, (a) => a.type === "commit" && a.fixes.includes(src));
+  return r(`notCommitted(${src})`, i < 0, i < 0 ? "no commit" : `committed at #${i}`);
+};
+export const fixedAndPushed = (p: Plan, src: string) => {
+  const c = at(p, (a) => a.type === "commit" && a.fixes.includes(src));
+  const push = c < 0 ? -1 : p.actions.findIndex((a, i) => i > c && a.type === "push");
+  return r(`fixedAndPushed(${src})`, push >= 0, `commit@${c} push@${push}`);
+};
+export const pushedAfterMerge = (p: Plan) => {
+  const m = at(p, (a) => a.type === "merge-base");
+  const push = m < 0 ? -1 : p.actions.findIndex((a, i) => i > m && a.type === "push");
+  return r("pushedAfterMerge", push >= 0, `merge@${m} push@${push}`);
+};
+export const lastActionIs = (p: Plan, t: A["type"]) =>
+  r(`lastActionIs(${t})`, p.actions.at(-1)?.type === t, `last: ${p.actions.at(-1)?.type ?? "none"}`);
+/** The blocker reaches a human: a pr-comment body or the stop reason contains `s` */
+export const reports = (p: Plan, s: string) => {
+  const hit = [...of(p, "pr-comment").map((a) => a.body), ...of(p, "stop").map((a) => a.reason)].find((t) => t.includes(s));
+  return r(`reports(${s})`, !!hit, hit ? hit.slice(0, 200) : "not reported");
+};
 
 // Format
 export const firstActionIs = (p: Plan, t: A["type"]) => [

@@ -1,0 +1,107 @@
+{
+  "repository": "example/storefront",
+  "number": 415,
+  "title": "Show estimated delivery date on product page",
+  "body": "Adds `estimateDelivery()` and renders the estimate under the price on the product page.",
+  "author": {
+    "login": "alex-m"
+  },
+  "headRefName": "alex-m/delivery-estimate",
+  "baseRefName": "main",
+  "headRefOid": "7c2f90b4e1a85d36f0c9b27e4d1a6853fb0e9c12",
+  "isDraft": false,
+  "mergeable": "MERGEABLE",
+  "mergeStateStatus": "BLOCKED",
+  "reviewDecision": "REVIEW_REQUIRED",
+  "reviewRequests": {
+    "nodes": [
+      {
+        "asCodeOwner": true,
+        "requestedReviewer": {
+          "__typename": "User",
+          "login": "sam-r"
+        }
+      }
+    ]
+  },
+  "files": {
+    "nodes": [
+      {
+        "path": "src/shipping/estimate.ts",
+        "additions": 31,
+        "deletions": 0
+      },
+      {
+        "path": "src/product/ProductPage.tsx",
+        "additions": 6,
+        "deletions": 1
+      }
+    ]
+  },
+  "reviewThreads": {
+    "nodes": []
+  },
+  "reviews": {
+    "nodes": [
+      {
+        "databaseId": 6150,
+        "author": {
+          "login": "copilot-pull-request-reviewer"
+        },
+        "state": "COMMENTED",
+        "body": "## Pull request overview\n\nThis pull request was reviewed. Copilot reviewed the changed files and generated no comments.",
+        "url": "https://github.com/example/storefront/pull/415#pullrequestreview-6150",
+        "commit": {
+          "oid": "7c2f90b4e1a85d36f0c9b27e4d1a6853fb0e9c12"
+        },
+        "submittedAt": "2026-11-19T14:22:08Z"
+      }
+    ]
+  },
+  "comments": {
+    "nodes": []
+  },
+  "statusCheckRollup": {
+    "contexts": {
+      "nodes": [
+        {
+          "__typename": "CheckRun",
+          "name": "lint",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/example/storefront/actions/runs/961/job/9611"
+        },
+        {
+          "__typename": "CheckRun",
+          "name": "unit",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/example/storefront/actions/runs/961/job/9612"
+        },
+        {
+          "__typename": "CheckRun",
+          "name": "e2e",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/example/storefront/actions/runs/961/job/9613"
+        }
+      ]
+    }
+  },
+  "runs": [
+    {
+      "databaseId": 961,
+      "name": "CI",
+      "status": "completed",
+      "conclusion": "success",
+      "headSha": "7c2f90b4e1a85d36f0c9b27e4d1a6853fb0e9c12",
+      "event": "pull_request",
+      "url": "https://github.com/example/storefront/actions/runs/961"
+    }
+  ],
+  "compare": {
+    "base": "main",
+    "ahead_by": 2,
+    "behind_by": 0
+  }
+}

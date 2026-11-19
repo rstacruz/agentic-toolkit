@@ -1,0 +1,179 @@
+{
+  "repository": "example/storefront",
+  "number": 433,
+  "title": "Reserve stock in batches at checkout",
+  "body": "Reserves stock through the inventory service in batches instead of one request per SKU. Batch size is configurable per store.",
+  "author": {
+    "login": "alex-m"
+  },
+  "headRefName": "alex-m/batch-reserve",
+  "baseRefName": "main",
+  "headRefOid": "2a8d61f0c4e97b35a1d0f8c26e4b93a7d5c01e86",
+  "isDraft": false,
+  "mergeable": "MERGEABLE",
+  "reviewDecision": null,
+  "files": {
+    "nodes": [
+      {
+        "path": "src/inventory/reserve.ts",
+        "additions": 28,
+        "deletions": 0
+      },
+      {
+        "path": "src/checkout/submit.ts",
+        "additions": 3,
+        "deletions": 1
+      }
+    ]
+  },
+  "commits": {
+    "nodes": [
+      {
+        "commit": {
+          "oid": "9f4c27a1e0d83b56c2a7f19e04d6b8325e1a0c7d",
+          "messageHeadline": "Reserve stock in batches",
+          "committedDate": "2026-11-18T15:10:22Z"
+        }
+      },
+      {
+        "commit": {
+          "oid": "4e1d2c97b0a35f18e6c4d92a07b3e5f1c8d60a24",
+          "messageHeadline": "Return early when no SKUs to reserve",
+          "committedDate": "2026-11-18T16:31:05Z"
+        }
+      },
+      {
+        "commit": {
+          "oid": "2a8d61f0c4e97b35a1d0f8c26e4b93a7d5c01e86",
+          "messageHeadline": "Make reservation batch size configurable per store",
+          "committedDate": "2026-11-19T09:14:48Z"
+        }
+      }
+    ]
+  },
+  "reviewThreads": {
+    "nodes": [
+      {
+        "id": "PRRT_loop",
+        "isResolved": false,
+        "isOutdated": false,
+        "path": "src/inventory/reserve.ts",
+        "line": 9,
+        "comments": {
+          "nodes": [
+            {
+              "databaseId": 71433,
+              "author": {
+                "login": "coderabbitai"
+              },
+              "body": "_⚠️ Potential issue_ | _🔴 Critical_\n\n**`batchSize` of 0 hangs the reservation loop.**\n\n`??` only falls back for `null`/`undefined`, so a store with `reservationBatchSize: 0` passes `0` through. `start += 0` never advances and the `while` loop keeps posting empty reservations forever. A negative value has the same problem. Clamp it to at least 1 (or reject non-positive values).\n\n```diff\n-  const batchSize = opts.batchSize ?? 50;\n+  const batchSize = Math.max(1, opts.batchSize ?? 50);\n```",
+              "url": "https://github.com/example/storefront/pull/433#discussion_r71433",
+              "createdAt": "2026-11-19T09:21:30Z"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "reviews": {
+    "nodes": [
+      {
+        "databaseId": 5590,
+        "author": {
+          "login": "coderabbitai"
+        },
+        "state": "COMMENTED",
+        "body": "**Actionable comments posted: 0**\n\n<details>\n<summary>🧹 Nitpick comments (2)</summary><blockquote>\n\n<details>\n<summary>src/inventory/reserve.ts (2)</summary><blockquote>\n\n`8-8`: **Return early for an empty SKU list.**\n\nGuard against an empty SKU list. `reserveStock([])` still sends a request to the inventory service with an empty body, which it rejects with a 400. Return early when `skus.length === 0`.\n\n---\n\n`14-14`: **Rename `chunk` for clarity.**\n\nConsider renaming `chunk` to `chunkSkus`. A more specific name makes it clearer what is being split.\n\n</blockquote></details>\n\n</blockquote></details>\n",
+        "url": "https://github.com/example/storefront/pull/433#pullrequestreview-5590",
+        "commit": {
+          "oid": "9f4c27a1e0d83b56c2a7f19e04d6b8325e1a0c7d"
+        },
+        "submittedAt": "2026-11-18T15:18:02Z"
+      },
+      {
+        "databaseId": 5600,
+        "author": {
+          "login": "copilot-pull-request-reviewer"
+        },
+        "state": "COMMENTED",
+        "body": "## Pull request overview\n\nThis pull request was reviewed. Copilot reviewed the changed files and generated no comments.",
+        "url": "https://github.com/example/storefront/pull/433#pullrequestreview-5600",
+        "commit": {
+          "oid": "2a8d61f0c4e97b35a1d0f8c26e4b93a7d5c01e86"
+        },
+        "submittedAt": "2026-11-19T09:19:44Z"
+      },
+      {
+        "databaseId": 5602,
+        "author": {
+          "login": "coderabbitai"
+        },
+        "state": "COMMENTED",
+        "body": "**Actionable comments posted: 1**\n\n<details>\n<summary>🧹 Nitpick comments (2)</summary><blockquote>\n\n<details>\n<summary>src/inventory/reserve.ts (2)</summary><blockquote>\n\n`8-8`: **Return early for an empty SKU list.**\n\nGuard against an empty SKU list. `reserveStock([])` still sends a request to the inventory service with an empty body, which it rejects with a 400. Return early when `skus.length === 0`.\n\n---\n\n`14-14`: **Rename `chunk` for clarity.**\n\nConsider renaming `chunk` to `chunkSkus`. A more specific name makes it clearer what is being split.\n\n</blockquote></details>\n\n</blockquote></details>\n",
+        "url": "https://github.com/example/storefront/pull/433#pullrequestreview-5602",
+        "commit": {
+          "oid": "2a8d61f0c4e97b35a1d0f8c26e4b93a7d5c01e86"
+        },
+        "submittedAt": "2026-11-19T09:21:30Z"
+      }
+    ]
+  },
+  "comments": {
+    "nodes": [
+      {
+        "databaseId": 91433,
+        "author": {
+          "login": "alex-m"
+        },
+        "authorAssociation": "MEMBER",
+        "body": "### ☑️ Autofix: Address CodeRabbit review on stock reservation\n\nFixed one CodeRabbit nitpick and skipped one as out of scope. 🤖 _(automated agent: atk-autofix)_\n\n<details>\n<summary>Review-body findings (2)</summary>\n\n- **[FIXED]** Guard against an empty SKU list in `reserveStock`. Source: https://github.com/example/storefront/pull/433#pullrequestreview-5590 · digest `274150d353bf` · commit 4e1d2c9\n- **[SKIPPED]** Rename `chunk` to `chunkSkus`. Source: https://github.com/example/storefront/pull/433#pullrequestreview-5590 · digest `978990b661cf` · won't-fix: naming preference, `chunk` is the shared helper's existing name used across `src/inventory`; out of scope for this PR\n\n</details>\n",
+        "url": "https://github.com/example/storefront/pull/433#issuecomment-91433",
+        "createdAt": "2026-11-18T16:33:40Z",
+        "updatedAt": "2026-11-18T16:33:40Z"
+      }
+    ]
+  },
+  "statusCheckRollup": {
+    "contexts": {
+      "nodes": [
+        {
+          "__typename": "CheckRun",
+          "name": "lint",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/example/storefront/actions/runs/983/job/9831"
+        },
+        {
+          "__typename": "CheckRun",
+          "name": "unit",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/example/storefront/actions/runs/983/job/9832"
+        },
+        {
+          "__typename": "CheckRun",
+          "name": "e2e",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/example/storefront/actions/runs/983/job/9833"
+        }
+      ]
+    }
+  },
+  "runs": [
+    {
+      "databaseId": 983,
+      "name": "CI",
+      "status": "completed",
+      "conclusion": "success",
+      "headSha": "2a8d61f0c4e97b35a1d0f8c26e4b93a7d5c01e86",
+      "event": "pull_request",
+      "url": "https://github.com/example/storefront/actions/runs/983"
+    }
+  ],
+  "compare": {
+    "base": "main",
+    "ahead_by": 3,
+    "behind_by": 0
+  }
+}

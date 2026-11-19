@@ -1,0 +1,22 @@
+diff --git a/README.md b/README.md
+index 4f2a9c1..b81d0e3 100644
+--- a/README.md
++++ b/README.md
+@@ -18,7 +18,7 @@ pnpm install
+ pnpm dev
+ ```
+ 
+-The dev server listens on port 3000 by default. Set `PORT` to overide it.
++The dev server listens on port 3000 by default. Set `PORT` to override it.
+ 
+ ## Tests
+ 
+diff --git a/src/cart/format.ts b/src/cart/format.ts
+index 9a0c4e2..1d7f3b5 100644
+--- a/src/cart/format.ts
++++ b/src/cart/format.ts
+@@ -1,5 +1,5 @@
+ export function itemCountLabel(n: number): string {
+-  return `${n} items`;
++  return n === 1 ? "1 item" : `${n} items`;
+ }

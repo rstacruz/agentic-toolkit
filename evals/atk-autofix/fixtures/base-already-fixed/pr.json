@@ -1,0 +1,145 @@
+{
+  "repository": "example/storefront",
+  "number": 405,
+  "title": "Add bulk add to cart from pasted order sheets",
+  "body": "Adds `bulkAdd`, which takes rows of `{ sku, qty }` pasted from a spreadsheet and adds each to the cart. Rows whose quantity doesn't parse are skipped and returned so the UI can flag them.",
+  "author": { "login": "alex-m" },
+  "headRefName": "alex-m/bulk-add",
+  "baseRefName": "main",
+  "headRefOid": "5e2b9c71a04d3f8e6b1c27d90a8f4e3b6c1d2a05",
+  "isDraft": false,
+  "mergeable": "MERGEABLE",
+  "reviewDecision": "REVIEW_REQUIRED",
+  "files": {
+    "nodes": [
+      { "path": "src/cart/bulk-add.ts", "additions": 22, "deletions": 0 },
+      { "path": "src/cart/index.ts", "additions": 1, "deletions": 0 }
+    ]
+  },
+  "reviewThreads": {
+    "nodes": [
+      {
+        "id": "PRRT_clamp",
+        "isResolved": false,
+        "isOutdated": false,
+        "path": "src/cart/bulk-add.ts",
+        "line": 14,
+        "comments": {
+          "nodes": [
+            {
+              "databaseId": 70511,
+              "author": { "login": "dana-k" },
+              "body": "`parseQuantity(\"0\")` returns 0 here, so a sheet with a `0` in the qty column inserts a zero-quantity line into the cart. Checkout chokes on those. Can we clamp to at least 1?",
+              "url": "https://github.com/example/storefront/pull/405#discussion_r70511",
+              "createdAt": "2026-11-17T14:22:08Z"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "reviews": {
+    "nodes": [
+      {
+        "databaseId": 6081,
+        "author": { "login": "dana-k" },
+        "state": "COMMENTED",
+        "body": "",
+        "url": "https://github.com/example/storefront/pull/405#pullrequestreview-6081",
+        "commit": { "oid": "5e2b9c71a04d3f8e6b1c27d90a8f4e3b6c1d2a05" },
+        "submittedAt": "2026-11-17T14:22:08Z"
+      },
+      {
+        "databaseId": 6082,
+        "author": { "login": "copilot-pull-request-reviewer" },
+        "state": "COMMENTED",
+        "body": "## Pull request overview\n\nAdds a `bulkAdd` helper that parses pasted order rows and adds them to the cart, skipping rows with unparseable quantities.\n\nCopilot reviewed 2 out of 2 changed files in this pull request and generated no comments.",
+        "url": "https://github.com/example/storefront/pull/405#pullrequestreview-6082",
+        "commit": { "oid": "5e2b9c71a04d3f8e6b1c27d90a8f4e3b6c1d2a05" },
+        "submittedAt": "2026-11-17T13:05:41Z"
+      }
+    ]
+  },
+  "comments": { "nodes": [] },
+  "statusCheckRollup": {
+    "contexts": {
+      "nodes": [
+        { "__typename": "CheckRun", "name": "lint", "status": "COMPLETED", "conclusion": "SUCCESS", "detailsUrl": "https://github.com/example/storefront/actions/runs/941/job/9411" },
+        { "__typename": "CheckRun", "name": "unit", "status": "COMPLETED", "conclusion": "SUCCESS", "detailsUrl": "https://github.com/example/storefront/actions/runs/941/job/9412" }
+      ]
+    }
+  },
+  "runs": [
+    {
+      "databaseId": 941,
+      "name": "CI",
+      "status": "completed",
+      "conclusion": "success",
+      "headSha": "5e2b9c71a04d3f8e6b1c27d90a8f4e3b6c1d2a05",
+      "event": "pull_request",
+      "url": "https://github.com/example/storefront/actions/runs/941"
+    }
+  ],
+  "compare": {
+    "base": "main",
+    "ahead_by": 2,
+    "behind_by": 3,
+    "commits": [
+      {
+        "sha": "b83f0d2e6a17c49e5d0b2a81f3c6e7d94a2b5c10",
+        "commit": {
+          "message": "chore(deps): bump vitest to 2.1.4 (#401)",
+          "author": { "name": "sam-r", "date": "2026-11-18T08:41:12Z" }
+        },
+        "files": [
+          {
+            "filename": "package.json",
+            "status": "modified",
+            "additions": 1,
+            "deletions": 1,
+            "patch": "@@ -21,7 +21,7 @@\n     \"typescript\": \"^5.6.3\",\n-    \"vitest\": \"^2.1.2\"\n+    \"vitest\": \"^2.1.4\"\n   }"
+          }
+        ]
+      },
+      {
+        "sha": "1c94e7a3b05d28f6e1a9c3b7d4e2f0a8b6c5d317",
+        "commit": {
+          "message": "fix(cart): clamp parsed quantity to at least 1 (#399)",
+          "author": { "name": "dana-k", "date": "2026-11-18T11:07:55Z" }
+        },
+        "files": [
+          {
+            "filename": "src/cart/quantity.ts",
+            "status": "modified",
+            "additions": 3,
+            "deletions": 2,
+            "patch": "@@ -1,8 +1,9 @@\n /**\n- * Parses a quantity from user input. Returns NaN when the input is not a number.\n+ * Parses a quantity from user input. Returns NaN when the input is not a\n+ * number; otherwise an integer of at least 1.\n  */\n export function parseQuantity(input: string): number {\n   const n = Number.parseInt(input.trim(), 10);\n   if (Number.isNaN(n)) return NaN;\n-  return n;\n+  return Math.max(1, n);\n }"
+          },
+          {
+            "filename": "src/cart/quantity.test.ts",
+            "status": "modified",
+            "additions": 5,
+            "deletions": 0,
+            "patch": "@@ -12,3 +12,8 @@ describe(\"parseQuantity\", () => {\n   it(\"returns NaN for non-numeric input\", () => {\n     expect(parseQuantity(\"abc\")).toBeNaN();\n   });\n+\n+  it(\"clamps zero and negatives to 1\", () => {\n+    expect(parseQuantity(\"0\")).toBe(1);\n+    expect(parseQuantity(\"-3\")).toBe(1);\n+  });\n });"
+          }
+        ]
+      },
+      {
+        "sha": "e07a5b9c3d1f84e2a6c0b7d5f9e3a1c8b2d4f6e9",
+        "commit": {
+          "message": "docs: note bulk import limits in README (#402)",
+          "author": { "name": "sam-r", "date": "2026-11-18T15:30:02Z" }
+        },
+        "files": [
+          {
+            "filename": "README.md",
+            "status": "modified",
+            "additions": 2,
+            "deletions": 0,
+            "patch": "@@ -48,3 +48,5 @@ ## Cart\n \n Carts hold at most 200 lines.\n+\n+Bulk imports are capped at 500 rows per request."
+          }
+        ]
+      }
+    ]
+  }
+}

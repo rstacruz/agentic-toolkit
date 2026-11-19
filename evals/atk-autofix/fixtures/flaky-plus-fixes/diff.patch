@@ -1,0 +1,61 @@
+diff --git a/src/account/profile-card.ts b/src/account/profile-card.ts
+index 3d1c0a2..8f42b7e 100644
+--- a/src/account/profile-card.ts
++++ b/src/account/profile-card.ts
+@@ -1,18 +1,24 @@
+ import type { User } from "./types";
+ 
+ export type ProfileCard = {
+   name: string;
+   email: string;
++  location: string;
++  memberSince: string;
+ };
+ 
+ export function toProfileCard(user: User): ProfileCard {
+   return {
+     name: user.displayName ?? user.email,
+     email: user.email,
++    location: `${user.address.city}, ${user.address.country}`,
++    memberSince: new Date(user.createdAt).getFullYear().toString(),
+   };
+ }
+diff --git a/src/account/types.ts b/src/account/types.ts
+index a91e2f0..c27d5b8 100644
+--- a/src/account/types.ts
++++ b/src/account/types.ts
+@@ -1,12 +1,13 @@
+ export type Address = {
+   line1: string;
+   city: string;
+   country: string;
+ };
+ 
+ export type User = {
+   id: string;
+   email: string;
+   displayName?: string;
+   address?: Address;
++  createdAt: string;
+ };
+diff --git a/src/account/profile-card.test.ts b/src/account/profile-card.test.ts
+index 51b7c2d..e03a9f4 100644
+--- a/src/account/profile-card.test.ts
++++ b/src/account/profile-card.test.ts
+@@ -4,12 +4,15 @@ import { toProfileCard } from "./profile-card";
+ const user = {
+   id: "u_1",
+   email: "pat@example.com",
+   displayName: "Pat",
++  address: { line1: "1 Main St", city: "Springfield", country: "US" },
+   createdAt: "2021-03-04T00:00:00Z",
+ };
+ 
+ test("builds a card", () => {
+   expect(toProfileCard(user)).toEqual({
+     name: "Pat",
+     email: "pat@example.com",
++    location: "Springfield, US",
++    memberSince: "2021",
+   });
+ });

@@ -1,0 +1,163 @@
+{
+  "repository": "example/storefront",
+  "number": 425,
+  "title": "Validate coupon codes at checkout",
+  "body": "Validates the coupon code with the promotions service before pricing the order. Second commit handles expired coupons.",
+  "author": {
+    "login": "alex-m"
+  },
+  "headRefName": "alex-m/coupon-validate",
+  "baseRefName": "main",
+  "headRefOid": "e6d03f1a92c47b85d0e1f36a4c98b27e51d0a3f9",
+  "isDraft": false,
+  "mergeable": "MERGEABLE",
+  "mergeStateStatus": "CLEAN",
+  "reviewDecision": "APPROVED",
+  "reviewRequests": {
+    "nodes": []
+  },
+  "files": {
+    "nodes": [
+      {
+        "path": "src/checkout/coupon.ts",
+        "additions": 34,
+        "deletions": 0
+      },
+      {
+        "path": "src/checkout/submit.ts",
+        "additions": 5,
+        "deletions": 1
+      }
+    ]
+  },
+  "commits": {
+    "nodes": [
+      {
+        "commit": {
+          "oid": "b19e4a7c03d26f58e1a9c4b70d3e82f615ac9d04",
+          "messageHeadline": "Validate coupon codes before pricing",
+          "committedDate": "2026-11-19T10:02:41Z"
+        }
+      },
+      {
+        "commit": {
+          "oid": "e6d03f1a92c47b85d0e1f36a4c98b27e51d0a3f9",
+          "messageHeadline": "Reject expired coupons",
+          "committedDate": "2026-11-19T11:47:15Z"
+        }
+      }
+    ]
+  },
+  "reviewThreads": {
+    "nodes": []
+  },
+  "reviews": {
+    "nodes": [
+      {
+        "databaseId": 5650,
+        "author": {
+          "login": "coderabbitai"
+        },
+        "state": "COMMENTED",
+        "body": "**Actionable comments posted: 0**\n\n<details>\n<summary>📜 Review details</summary>\n\n**Commits**\nReviewing files that changed from the base of the PR and between b19e4a7 and b19e4a7.\n\n</details>",
+        "url": "https://github.com/example/storefront/pull/425#pullrequestreview-5650",
+        "commit": {
+          "oid": "b19e4a7c03d26f58e1a9c4b70d3e82f615ac9d04"
+        },
+        "submittedAt": "2026-11-19T10:09:30Z"
+      },
+      {
+        "databaseId": 5655,
+        "author": {
+          "login": "copilot-pull-request-reviewer"
+        },
+        "state": "COMMENTED",
+        "body": "## Pull request overview\n\nThis pull request was reviewed. Copilot reviewed the changed files and generated no comments.",
+        "url": "https://github.com/example/storefront/pull/425#pullrequestreview-5655",
+        "commit": {
+          "oid": "e6d03f1a92c47b85d0e1f36a4c98b27e51d0a3f9"
+        },
+        "submittedAt": "2026-11-19T11:53:02Z"
+      },
+      {
+        "databaseId": 5658,
+        "author": {
+          "login": "dana-k"
+        },
+        "state": "APPROVED",
+        "body": "LGTM.",
+        "url": "https://github.com/example/storefront/pull/425#pullrequestreview-5658",
+        "commit": {
+          "oid": "e6d03f1a92c47b85d0e1f36a4c98b27e51d0a3f9"
+        },
+        "submittedAt": "2026-11-19T12:05:44Z"
+      }
+    ]
+  },
+  "comments": {
+    "nodes": [
+      {
+        "databaseId": 91250,
+        "author": {
+          "login": "coderabbitai"
+        },
+        "authorAssociation": "NONE",
+        "body": "<!-- This is an auto-generated comment: summarize by coderabbit.ai -->\n<!-- This is an auto-generated comment: rate limited by coderabbit.ai -->\n\n> [!WARNING]\n> ## Review limit reached\n>\n> This repository has used its hourly allowance of reviews. The commits pushed since the last review (`b19e4a7` → `e6d03f1`) were **not reviewed**.\n>\n> Wait **38 minutes** before asking for another review. Requests made before then will be ignored.\n\n<!-- end of auto-generated comment: rate limited by coderabbit.ai -->\n\n## Walkthrough\n\nAdds a `couponCode` field to checkout and validates it against the promotions service before the order total is computed.\n\n## Changes\n\n| File | Summary |\n|---|---|\n| `src/checkout/coupon.ts` | New `validateCoupon` helper. |\n| `src/checkout/submit.ts` | Calls `validateCoupon` before pricing. |\n",
+        "url": "https://github.com/example/storefront/pull/425#issuecomment-91250",
+        "createdAt": "2026-11-19T10:03:12Z",
+        "updatedAt": "2026-11-19T11:48:03Z"
+      }
+    ]
+  },
+  "statusCheckRollup": {
+    "contexts": {
+      "nodes": [
+        {
+          "__typename": "CheckRun",
+          "name": "lint",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/example/storefront/actions/runs/972/job/9721"
+        },
+        {
+          "__typename": "CheckRun",
+          "name": "unit",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/example/storefront/actions/runs/972/job/9722"
+        },
+        {
+          "__typename": "CheckRun",
+          "name": "e2e",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/example/storefront/actions/runs/972/job/9723"
+        },
+        {
+          "__typename": "CheckRun",
+          "name": "CodeRabbit",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://coderabbit.ai",
+          "completedAt": "2026-11-19T11:48:03Z"
+        }
+      ]
+    }
+  },
+  "runs": [
+    {
+      "databaseId": 972,
+      "name": "CI",
+      "status": "completed",
+      "conclusion": "success",
+      "headSha": "e6d03f1a92c47b85d0e1f36a4c98b27e51d0a3f9",
+      "event": "pull_request",
+      "url": "https://github.com/example/storefront/actions/runs/972"
+    }
+  ],
+  "compare": {
+    "base": "main",
+    "ahead_by": 2,
+    "behind_by": 0
+  }
+}

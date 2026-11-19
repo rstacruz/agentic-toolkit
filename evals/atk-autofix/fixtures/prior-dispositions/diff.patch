@@ -1,0 +1,45 @@
+diff --git a/src/inventory/reserve.ts b/src/inventory/reserve.ts
+new file mode 100644
+index 0000000..c3f7a21
+--- /dev/null
++++ b/src/inventory/reserve.ts
+@@ -0,0 +1,28 @@
++import { inventoryClient } from "./client";
++
++export interface ReserveOptions {
++  batchSize?: number;
++}
++
++export async function reserveStock(skus: string[], opts: ReserveOptions = {}): Promise<string[]> {
++  if (skus.length === 0) return [];
++  const batchSize = opts.batchSize ?? 50;
++  const reserved: string[] = [];
++
++  let start = 0;
++  while (start < skus.length) {
++    const chunk = skus.slice(start, start + batchSize);
++    const res = await inventoryClient.post("/reservations", { skus: chunk });
++    reserved.push(...res.reservedSkus);
++    start += batchSize;
++  }
++
++  return reserved;
++}
++
++export async function reserveForCart(cartId: string, skus: string[], batchSize?: number) {
++  const reserved = await reserveStock(skus, { batchSize });
++  await inventoryClient.post(`/carts/${cartId}/holds`, { skus: reserved });
++  return reserved;
++}
+diff --git a/src/checkout/submit.ts b/src/checkout/submit.ts
+index 41b0e9a..7d26c38 100644
+--- a/src/checkout/submit.ts
++++ b/src/checkout/submit.ts
+@@ -12,6 +12,9 @@ export async function submitOrder(cart: Cart, settings: StoreSettings) {
+   const lines = cart.lines.filter((l) => l.quantity > 0);
+-  await holdStock(cart.id, lines);
++  const skus = lines.map((l) => l.sku);
++  // settings.reservationBatchSize is set per store in the admin panel (0 allowed)
++  await reserveForCart(cart.id, skus, settings.reservationBatchSize);
+   return createOrder(cart, lines);
+ }
