@@ -69,14 +69,25 @@ export const resolved = (p: Plan, id: string) => {
   const i = at(p, (a) => a.type === "resolve" && a.threads.includes(id));
   return r(`resolved(${id})`, i >= 0, i >= 0 ? `resolved at #${i}` : "not resolved");
 };
+/** After the action at `from`: push and reply on the thread, then resolve it */
+const pushedRepliedResolved = (p: Plan, from: number, id: string) => {
+  const push = from < 0 ? -1 : p.actions.findIndex((a, i) => i > from && a.type === "push");
+  const rep = from < 0 ? -1 : p.actions.findIndex((a, i) => i > from && a.type === "reply" && a.thread === id);
+  const after = Math.max(push, rep);
+  const res = push < 0 || rep < 0 ? -1 : p.actions.findIndex((a, i) => i > after && a.type === "resolve" && a.threads.includes(id));
+  return { ok: res >= 0, evidence: `push@${push} reply@${rep} resolve@${res}` };
+};
 /** Commit, push and reply on the thread, then resolve it */
 export const fixedPushedResolved = (p: Plan, id: string) => {
   const c = at(p, (a) => a.type === "commit" && a.fixes.includes(`thread:${id}`));
-  const push = c < 0 ? -1 : p.actions.findIndex((a, i) => i > c && a.type === "push");
-  const rep = c < 0 ? -1 : p.actions.findIndex((a, i) => i > c && a.type === "reply" && a.thread === id);
-  const after = Math.max(push, rep);
-  const res = push < 0 || rep < 0 ? -1 : p.actions.findIndex((a, i) => i > after && a.type === "resolve" && a.threads.includes(id));
-  return r(`fixedPushedResolved(${id})`, res >= 0, `commit@${c} push@${push} reply@${rep} resolve@${res}`);
+  const { ok, evidence } = pushedRepliedResolved(p, c, id);
+  return r(`fixedPushedResolved(${id})`, ok, `commit@${c} ${evidence}`);
+};
+/** The base branch already fixes the thread: merge it, push, reply, then resolve */
+export const mergedPushedResolved = (p: Plan, id: string) => {
+  const m = at(p, (a) => a.type === "merge-base");
+  const { ok, evidence } = pushedRepliedResolved(p, m, id);
+  return r(`mergedPushedResolved(${id})`, ok, `merge@${m} ${evidence}`);
 };
 export const count = (p: Plan, t: A["type"], n: number) =>
   r(`count(${t}, ${n})`, of(p, t).length === n, `${t} × ${of(p, t).length}`);
@@ -108,11 +119,6 @@ export const fixedAndPushed = (p: Plan, src: string) => {
   const c = at(p, (a) => a.type === "commit" && a.fixes.includes(src));
   const push = c < 0 ? -1 : p.actions.findIndex((a, i) => i > c && a.type === "push");
   return r(`fixedAndPushed(${src})`, push >= 0, `commit@${c} push@${push}`);
-};
-export const pushedAfterMerge = (p: Plan) => {
-  const m = at(p, (a) => a.type === "merge-base");
-  const push = m < 0 ? -1 : p.actions.findIndex((a, i) => i > m && a.type === "push");
-  return r("pushedAfterMerge", push >= 0, `merge@${m} push@${push}`);
 };
 export const lastActionIs = (p: Plan, t: A["type"]) =>
   r(`lastActionIs(${t})`, p.actions.at(-1)?.type === t, `last: ${p.actions.at(-1)?.type ?? "none"}`);
