@@ -149,7 +149,7 @@ const report = {
   overall_delta: null as number | null,
   incomplete_pairs: 0,
   unusable: [] as { case: string; pair: number; arm: Arm; reason: string | null }[],
-  incomplete: [] as { case: string; pair: number; arm: Arm; reason: string | null }[],
+  incomplete: [] as { case: string; pair: number; arm: Arm | null; reason: string | null }[],
   judge_errors: [] as { case: string; pair: number; arm: Arm; error: string | null }[],
   skill_not_loaded: [] as { case: string; pair: number }[],
   cases: [] as {
@@ -177,6 +177,7 @@ for (const c of suite.cases) {
     const inputFile = Bun.file(`${pdir}/input.json`);
     if (!(await inputFile.exists())) {
       report.incomplete_pairs++;
+      report.incomplete.push({ case: c.id, pair: n, arm: null, reason: "input.json missing" });
       continue;
     }
     const input = Input.parse(await inputFile.json());
@@ -240,7 +241,8 @@ for (const c of report.cases) {
   else for (const f of c.format) lines.push(`  ${f.passed.padEnd(5)} ${f.name}`);
 }
 lines.push("", `incomplete pairs: ${report.incomplete_pairs}`);
-for (const i of report.incomplete) lines.push(`incomplete: ${i.case}/pair-${i.pair}/${i.arm}: ${i.reason}`);
+for (const i of report.incomplete)
+  lines.push(`incomplete: ${i.case}/pair-${i.pair}${i.arm ? `/${i.arm}` : ""}: ${i.reason}`);
 lines.push(`with_skill arms that never loaded the skill: ${report.skill_not_loaded.length}`);
 for (const s of report.skill_not_loaded) lines.push(`skill not loaded: ${s.case}/pair-${s.pair}/with_skill`);
 for (const u of report.unusable) lines.push(`unusable: ${u.case}/pair-${u.pair}/${u.arm}: ${u.reason}`);
