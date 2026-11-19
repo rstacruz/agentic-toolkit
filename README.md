@@ -15,8 +15,8 @@ Use it with [Pi](https://pi.dev/), [OpenCode](https://opencode.ai). Claude Code,
 Start here. [`/cook`](https://github.com/rstacruz/agentic-toolkit/blob/main/skills/cook/SKILL.md) takes an open-ended request all the way to a landed PR — unattended.
 
 - Reframes the request, sets up a worktree + draft PR, then plans, implements, polishes, and waits on CI
-- `--max` adds the extra rigor passes: `/polish-plan` and `/polish-implementation`
-- Uses the other skills in this repo along the way (`/atk-plan`, `/polish-implementation`, `/atk-pr-autofix`, …), plus optional dependencies when you have them
+- `--max` adds the extra rigor passes: `/polish-plan` and `/atk-autofix --reviewers self`
+- Uses the other skills in this repo along the way (`/atk-plan`, `/atk-code-review`, `/atk-autofix`, …), plus optional dependencies when you have them
 
 Recommended invocation: `/goal /cook <request>` — the `/goal` wrapper keeps the run going until the request is done, rather than stopping after the first reply.
 
@@ -62,26 +62,27 @@ Here's one I would use:
 ```
 /goal First, make empty commit then create draft PR (use the `/pr-description` skill).
 Then implement the plan as described, correctly and completely.
-Ensure that the `/polish-implementation` skill (using Oracle agent type if available; else, Opus) is used afterwards and has completed successfully.
+Ensure that `/atk-autofix --reviewers self` (using Oracle agent type for the review if available; else, Opus) is used afterwards and has completed successfully.
 Ensure `/trim-tests-and-comments` skill was used, and that no other changes to tests are needed.
 Ensure the changes are committed and pushed to Git.
-Ensure `/atk-pr-autofix` is used and runs successfully.
+Ensure `/atk-autofix` is used and runs successfully.
 Ensure CI is passing in GitHub. Ultrathink. Plan: <plan file here>
 ```
 
 </details>
 
-### Polish the implementation
+### Self-review the implementation
 
-Use [`/polish-implementation`](https://github.com/rstacruz/agentic-toolkit/blob/main/skills/polish-implementation/SKILL.md) after implementing a plan.
+Use [`/atk-autofix --reviewers self`](https://github.com/rstacruz/agentic-toolkit/blob/main/skills/atk-autofix/SKILL.md) after implementing a plan.
 
 - Requires a PR for the branch (creates a draft one automatically if missing)
-- Findings are posted as self-review threads on the PR, then fixed, replied to, and resolved — durable across passes, unlike a purely local review loop
-- Stops when a pass finds nothing new, up to 10 passes
+- `/atk-code-review` findings are posted as self-review threads on the PR, then fixed, replied to, and resolved — durable across passes, unlike a purely local review loop
+- Stops when a pass finds nothing new, up to 4 passes
+- Never on by default; combine with bot reviewers via `--reviewers auto,self`
 
 ### Watch CI
 
-Use [`/atk-pr-autofix`](https://github.com/rstacruz/agentic-toolkit/blob/main/skills/atk-pr-autofix/SKILL.md) to monitor a PR until CI passes or needs intervention.
+Use [`/atk-autofix`](https://github.com/rstacruz/agentic-toolkit/blob/main/skills/atk-autofix/SKILL.md) to monitor a PR until CI passes or needs intervention.
 
 - Waits for CI to be green
 - Addresses CI failures automatically

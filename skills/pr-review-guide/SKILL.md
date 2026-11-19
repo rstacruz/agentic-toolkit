@@ -11,28 +11,31 @@ When done:
 
 - Save to `~/.artefacts/<title>.md`
 
+- Validate every Mermaid block before posting. Fix any block that fails and re-run until it exits 0. Never post with failures. This needs network access for `npx` on first run, and takes ~15-20s (it launches headless Chromium). Passing locally does not guarantee GitHub renders it, as GitHub's Mermaid lags upstream.
+
+  ```sh
+  <SKILL_DIR>/check-mermaid.sh ~/.artefacts/<title>.md
+  ```
+
+
 - Check this PR description if there's already a PR review guide comment.
 
 - Post a PR comment. If a PR review guide comment already exists, edit that instead. Surround it in a `<details>` shell with explanations (below).
 
   ```
-  > :robot: This is an automated PR review guide for the benefit if reviewers, it is *not* huamn feedback on this PR. — Automated agent
+  > :robot: This is an automated PR review guide for the benefit if reviewers, it is *not* human feedback on this PR. — Automated agent
 
-  <details><summary>PR explanation</summary>
+  {at a glance infographic}
 
-  {short explanation based on the `/pr-description` skill}
+  <details><summary>Review guidde</summary>
+
+  {review guide here}
 
   </details>
 
   <details><summary>LOC report</summary>
 
   {see `<SKILL_DIR>/loc-report.md`}
-
-  </details>
-
-  <details><summary>PR review guide</summary>
-
-  {review guide here}
 
   </details>
   ```
@@ -43,6 +46,13 @@ When done:
   > 💡 Check out the [PR review guide](https://…#issuecomment-‥).
   ```
 
+- After posting or editing the comment, fetch the body you actually sent and re-run the check on it:
+
+  ```sh
+  gh api repos/<owner>/<repo>/issues/comments/<id> --jq .body > /tmp/pr-guide-check-$$.md
+  <SKILL_DIR>/check-mermaid.sh /tmp/pr-guide-check-$$.md
+  ```
+
 ## Creating a PR review guide
 
 Create a narrative that would lead a reviewer through incremental steps that explain one piece of information at a time.
@@ -50,15 +60,119 @@ Create a narrative that would lead a reviewer through incremental steps that exp
 Omit any sections that may not be relevant or helpful (eg, a sequence diagram may not be needed for simple changes).
 Try to order sections like so:
 
+- Problem (h2)
+- Background (h2)
 - Call graph (h2)
-- Chapters (h2's)
 - Decision points (h2)
+- Chapters (h2's)
 - Sequence diagram (h2)
 - Dependency updates (h2)
 - Concepts (h2)
 - Example data (h2)
 - FAQ (h2)
 - Feedback points (h2)
+
+### Prefer visuals
+
+Show before telling. For each section, pick the visual form first and fall back to prose only when none fits.
+
+- **Numbers to compare** (line counts, latency, counts before/after, per-file size): draw a bar chart in the infographic, with before as a light bar and after as a solid bar overlaid. Never list them as prose or a bare table.
+- **Flow, order, state, dependencies:** Mermaid (call graph, sequence diagram, state diagram).
+- **UI changes:** annotated screenshots or mockups traced from real screenshots.
+- **Review attention:** mark where a reviewer should look on the visual itself (amber `!` marker, red/green/yellow overlay), not in a separate paragraph.
+- **One form per idea:** never show the same content as both a chart and a list. If the infographic carries it, the guide only links to it.
+- **Totals must reconcile:** compute chart totals from the same data as the LOC report (`git show <base>:<file> | wc -l`), and cross-check. A mismatch costs reviewer trust.
+- **Render and look:** convert the SVG (`rsvg-convert -w 1800 x.svg -o x.png`) and inspect it before posting. Fix overflow, clipped text and long bars.
+
+### At a glance infographic
+
+Draw an SVG infographic that a reviewer can understand without reading the guide.
+
+**Start from what exists:**
+
+- If the PR description already has an infographic, start from its source and build on it. Never post a weaker redraw.
+- If real screenshots exist (PR description, test runs, local artefacts), trace mockups from them: same layout, element order, colours and copy. Never draw a generic wireframe (grey avatar circle, placeholder bars).
+
+**Content:**
+
+- Explain the problem, solution, before/after.
+- Lay it out as numbered panels in reading order (`1 · …`, `2 · …`).
+- Title (h1) states the outcome, not the topic (eg, "Duplicate queue deliveries are now skipped", not "Queue worker changes"). Max 9 words.
+- Add a one-line subheading under the title that explains the idea further (the why or mechanism, eg, "Later steps only add fields, so the first result is final"). Never repeat the ticket ID, PR number or other metadata there; the PR already shows those.
+- In screenshots, highlight changed areas with overlay boxes with red/green/yellow strokes.
+
+**Format:**
+
+- Light mode: background `#F0F0F3`, white panels (`#ffffff`, stroke `#d0d7de`), dark text (`#1f2328`, muted `#59636e`). Use GitHub-light accent colours with enough contrast on white (green `#1a7f37`, red `#cf222e`, amber `#9a6700`, blue `#0969da`). Bars that carry white labels need a dark fill (`#6e7781`). Never use a dark background.
+- Embed in the comment. GitHub renders SVG attachments, so attach the SVG directly.
+- Note that `gh` CLI supports image attachments (`gh pr comment 13 --attach ./before.png --attach ./after.png`).
+- Include the local source file in a HTML comment: `<!-- Source: ~/... -->` so future edits can be done.
+- Look at the SVG before posting. Fix overlapping or clipped text, and any panel that needs the guide to make sense.
+
+### Problem
+
+Include a **Problem** section (h2) as the first section, so a reviewer knows what is being fixed before seeing how.
+
+- Minto + list: open with one bold sentence that states the problem (the conclusion), then a short list of supporting facts beneath it.
+- Each list item is one line: what breaks, for whom, how often, or why the obvious fix doesn't work. Nest details only when needed.
+- Describe the observable problem first; the fix goes only in the closing `**This PR:**` bullet.
+- Ground it in evidence: ticket/PR description, incident, metric, error message. Use real numbers; never invent them.
+- Close with one `**This PR:**` bullet saying in one or two lines what the PR does. There is no separate "PR explanation", so Problem is the reviewer's summary.
+- Omit the section only if the PR has no problem to state (eg, pure chore or refactor), and say so in one line instead.
+
+Example:
+
+~~~~~
+## Problem
+
+**The old event router can't be removed yet: two legacy background jobs still send ~20k identify calls/week through it.**
+
+- The event router is being removed before its contract renews (PROJ-123)
+- Deleting the calls isn't safe:
+  - nothing else sets `firstName`, `lastName`, `createdAt` or signup `role`/`plan` on analytics user profiles
+  - `email` feeds the ad conversion model, so new signups would drop out of matching
+- **This PR:** sends both identifies straight to the analytics provider with the same trait names and user ID, awaits a flush, and drops the event router packages and secret binding
+~~~~~
+
+### Background
+
+Include a **Background** section (h2) right after Problem, for anyone who is not familiar with this part of the codebase. Start with the line `New to this area? Some background context:`, then one **collapsed `<details>` per area**, so reviewers expand only what they need.
+
+- One `<details>` per area (a service, a third-party system, a concept). The `<summary>` is the area name only.
+- Inside each: how that area works _before_ the PR, in 1–3 bullets. Say how it relates to the Problem.
+- Keep each short. Link to docs (`docs/`, READMEs) rather than copying them.
+- Do not describe the change itself; that belongs in Chapters.
+- Differs from **Concepts**: Background is the system context that already exists; Concepts is a glossary of terms the diff introduces or relies on.
+- Omit if the area is self-explanatory.
+- Leave a blank line after `<summary>` and before `</details>`, or GitHub won't render the markdown.
+
+Example:
+
+~~~~~
+## Background
+
+New to this area? Some background context:
+
+<details><summary>legacy-jobs</summary>
+
+- Older background job service.
+- `user.ts` has database triggers that react to `users/{id}` writes.
+
+</details>
+
+<details><summary>Event router</summary>
+
+- Third-party event router. The triggers call `identify` on it.
+- It forwards user traits to the analytics provider (user properties) and the ads platform (a custom event).
+
+</details>
+
+<details><summary>Analytics provider</summary>
+
+- Product analytics. Other services already use the shared `AnalyticsClient` from `packages/analytics`.
+
+</details>
+~~~~~
 
 ### Example data
 
@@ -250,7 +364,7 @@ For each dependency update, MUST also include these four items:
   - List advisories fixed or newly introduced (with IDs, eg GHSA/CVE).
 - **User-facing impact** — Which user features/journeys use this dependency?
   - Trace usages (`grep`, `pnpm why`) back to entry points (pages, API routes, GraphQL operations, jobs) and name the feature/journey.
-  - Say which apps/packages ship it to end users (eg, webapp bundle, API runtime).
+  - Say which apps/packages ship it to end users (eg, web app bundle, API runtime).
 - **Internal impact** — Which developer tooling uses this dependency?
   - eg, build, lint, test, CI, codegen, scripts, dev servers.
   - Say if it is a dev-only dependency with no runtime exposure.
@@ -287,23 +401,46 @@ Example format:
 
 ### Decision points
 
-Decision points are the "why" of the change. A reviewer reads code and asks "why not X?" — the guide should answer before they ask.
+Decision points are the "why" of the change. A reviewer reads code and asks "why not X?" — the guide should answer before they ask. This section comes **before** the chapters: a reader should know what was decided before walking the diff.
 
 **Source:** pull decisions from the PR's plan doc (usually records stakes, chosen, why, alternatives). If none exists, reconstruct from the diff and commit messages. Re-ground every decision in the actual code — the plan may have drifted.
 
-Each decision needs:
+Use the `/atk-plan` decision format verbatim, so the guide reads like the plan it came from:
 
-- **Chosen** — what the code does
-- **Why** — the concrete reason (an invariant it preserves, a cost it avoids)
-- **Rejected alternatives with failure modes** — for each: what it was AND what observably breaks if you take it. Name the failure with specifics (numbers, behavior), not a label.
-- **Affects** — files/symbols touched, cross-referenced to call graph markers (eg `[A]`)
+~~~~
+## Decisions
+
+### 1. <decision>
+
+- **Chosen:** <option>
+- **Why:** one line
+- **Risk:** 🟢 low / 🟡 med / 🔴 high — <one line: what breaks if this is wrong>
+
+**Alternatives:**
+
+- ✗ <runner-up> — <why it lost: the observable failure, with numbers or behavior, not a label>
+
+**Affects:**
+
+- `path/file.ts` → `symbolName` `[A]`
+~~~~
+
+- Number decisions (`1`, `2`, …) and reference them as `D1`, `D2` from the chapters and the call graph.
+- Grade risk by the cost of being wrong (data loss, privacy, live migrations, public contracts), not the size of the change; worst-hit-wins.
+- Every decision needs at least one rejected alternative, and each alternative names what observably breaks.
 
 Example:
 
 ~~~~
-**Decision (D3):** band change **discards** the unplayed lower-band pool.
-**Why:** band = f(level), not pool position; pools dwarf band lengths (187/135/80/63 vs 3/5/5 rounds), so discarding costs ~nothing.
-**Rejected — drain the current band before switching:** the ladder becomes pool-size-driven. With 187 band-1 puzzles, rounds 1–187 stay band 1. Pool length, not level, paces the ramp.
+### 3. Band change discards the unplayed lower-band pool
+
+- **Chosen:** rebuild the pool from the catalog on band change
+- **Why:** band = f(level), not pool position; pools dwarf band lengths (187/135/80/63 vs 3/5/5 rounds), so discarding costs ~nothing
+- **Risk:** 🟢 low — the only loss is unplayed puzzles that the new band would not have served anyway
+
+**Alternatives:**
+
+- ✗ Drain the current band before switching — the ladder becomes pool-size-driven: with 187 band-1 puzzles, rounds 1–187 stay band 1, so pool length rather than level paces the ramp
 
 ```ts
 // drain-first advance — keep popping, no rebuild on crossing
@@ -311,7 +448,9 @@ const next = nextPuzzle(state.pool, state.catalog, band, rng)
 // round 4 can still serve a band-1 puzzle (184 left in pool)
 ```
 
-**Affects:** `pool.ts` → `nextPuzzle`, `bandAdvance` `[A]`
+**Affects:**
+
+- `pool.ts` → `nextPuzzle`, `bandAdvance` `[A]`
 ~~~~
 
 ### FAQ

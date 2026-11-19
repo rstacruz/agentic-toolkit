@@ -5,7 +5,7 @@ description: Iterative code review loop against a GitHub PR — `/atk-code-revie
 
 Run an iterative review loop on an implementation, fixing and replying to self-review threads on GitHub each pass.
 
-This skill pushes commits and posts/resolves GitHub PR comments autonomously across passes — same posture as `/atk-pr-autofix`. Invoking it is the opt-in; it won't ask before each push or comment.
+This skill pushes commits and posts/resolves GitHub PR comments autonomously across passes — same posture as `/atk-autofix`. Invoking it is the opt-in; it won't ask before each push or comment.
 
 ## Workflow
 
@@ -20,13 +20,13 @@ This skill pushes commits and posts/resolves GitHub PR comments autonomously acr
 3. **If no new threads:** done — go to step 6 (report).
 
 4. **Triage and fix.** For each thread ID returned by step 2:
-   - Triage using `/atk-pr-autofix`'s categories: must fix / should fix / won't fix / needs discussion.
+   - Triage using `/atk-autofix`'s categories: must fix / should fix / won't fix / needs discussion.
    - Apply must-fix and should-fix changes — one commit per item.
    - Reply to the thread via GraphQL `addPullRequestReviewThreadReply` (takes `threadId` + `body` directly, no comment-id lookup needed): quote the finding, state the action taken and commit hash (or the reason for not fixing).
    - Resolve fixed and won't-fix threads:
      `bash <SKILL_DIR>/scripts/resolve-review-threads.sh [number] --thread-id <id>[,<id>...]`
    - Leave "needs discussion" threads open — that's a signal for the human reviewer, not something to resolve automatically.
-   - Never touch a thread not returned by step 2 — those belong to a human or Copilot, and are `/atk-pr-autofix`'s job to handle later.
+   - Never touch a thread not returned by step 2 — those belong to a human or Copilot, and are `/atk-autofix`'s job to handle later.
 
 5. **Push**, then return to step 2. Repeat up to 10 passes.
 

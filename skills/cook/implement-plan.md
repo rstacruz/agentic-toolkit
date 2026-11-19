@@ -79,8 +79,8 @@ Then spawn a subagent in that worktree (in Claude Code: the `Agent` tool, withou
 You are working in <worktree-dir> on branch <branch>.
 All edits must stay in that worktree.
 Implement: <PR description or plan-file pointer>.
-Then commit and push, and finish the run with `/polish-implementation` (when `--max`)
-and `/atk-pr-autofix` — see `/cook`'s implement() for the sequence.
+Then commit and push, and finish the run with `/atk-autofix --reviewers self` (when `--max`)
+and `/atk-autofix` — see `/cook`'s implement() for the sequence.
 ```
 
 - Omit `--base` for PRs with no dependency (default branch).

@@ -160,15 +160,19 @@ fetch_repo_nwo() {
 
 fetch_graphql() {
   gql_data=$(gh api graphql \
-    -f query='query($owner: String!, $repo: String!, $number: Int!) {
+    -f query='query($owner: String!, $repo: String!, $number: Int!, $configYaml: String!, $configYml: String!) {
       repository(owner: $owner, name: $repo) {
+        codeRabbitYaml: object(expression: $configYaml) { __typename }
+        codeRabbitYml: object(expression: $configYml) { __typename }
         pullRequest(number: $number) {
           headRefOid
           reviewThreads(first: 100) {
+            pageInfo { hasNextPage }
             nodes {
               id
               isResolved
               comments(first: 50) {
+                pageInfo { hasNextPage }
                 nodes {
                   databaseId
                   body
@@ -184,7 +188,8 @@ fetch_graphql() {
             position
             state
           }
-          reviewRequests(first: 20) {
+          reviewRequests(first: 100) {
+            pageInfo { hasNextPage }
             nodes {
               requestedReviewer {
                 __typename
@@ -207,9 +212,36 @@ fetch_graphql() {
       }
     }' \
     -F owner="$OWNER" -F repo="$REPO" -F number="$number" \
-    2>/dev/null || echo '{}')
+    -f configYaml="${base_branch}:.coderabbit.yaml" -f configYml="${base_branch}:.coderabbit.yml" \
+    2>/dev/null) || gql_data=''
 
-  unresolved=$(echo "$gql_data" | jq '[.data.repository.pullRequest.reviewThreads.nodes[] | select(.isResolved == false)] | length' 2>/dev/null || echo 0)
+  gql_complete=true
+  gql_problem=""
+  if ! echo "$gql_data" | jq -e '
+    (.errors // [] | length == 0) and
+    (.data.repository.pullRequest as $pr |
+      ($pr.headRefOid | type == "string" and length > 0) and
+      ($pr.reviewThreads.nodes | type == "array") and
+      ($pr.reviews.nodes | type == "array") and
+      ($pr.reviewRequests.nodes | type == "array") and
+      ($pr.reviewThreads.pageInfo.hasNextPage | type == "boolean") and
+      ($pr.reviews.pageInfo.hasNextPage | type == "boolean") and
+      ($pr.reviewRequests.pageInfo.hasNextPage | type == "boolean") and
+      ([$pr.reviewThreads.nodes[] | .comments.pageInfo.hasNextPage | type == "boolean"] | all))
+  ' >/dev/null 2>&1; then
+    gql_complete=false
+    gql_problem="GitHub GraphQL data unavailable or incomplete"
+  elif echo "$gql_data" | jq -e '
+    .data.repository.pullRequest |
+    .reviewThreads.pageInfo.hasNextPage or .reviews.pageInfo.hasNextPage or
+    .reviewRequests.pageInfo.hasNextPage or
+    any(.reviewThreads.nodes[]; .comments.pageInfo.hasNextPage)
+  ' >/dev/null; then
+    gql_complete=false
+    gql_problem="GitHub GraphQL results truncated by pagination"
+  fi
+
+  unresolved=$(echo "$gql_data" | jq '[.data.repository.pullRequest.reviewThreads.nodes[]? | select(.isResolved == false)] | length' 2>/dev/null || echo 0)
   mq_state=$(echo "$gql_data"  | jq -r '.data.repository.pullRequest.mergeQueueEntry.state // empty' 2>/dev/null || true)
   mq_pos=$(echo "$gql_data"    | jq -r '.data.repository.pullRequest.mergeQueueEntry.position // empty' 2>/dev/null || true)
 
@@ -269,10 +301,26 @@ fetch_graphql() {
     atk_stale=false
     atk_verdict=""
   fi
+
+  coderabbit_review=$(echo "$gql_data" | jq -c '
+    [.data.repository.pullRequest.reviews.nodes[]?
+     | select((.author.login // "" | ascii_downcase) | IN("coderabbitai", "coderabbitai[bot]", "coderabbit[bot]"))
+     | select(.isMinimized == false and .state != "DISMISSED")]
+    | sort_by(.submittedAt) | last // empty
+  ' 2>/dev/null)
+  coderabbit_pending=$(echo "$gql_data" | jq -r '
+    [.data.repository.pullRequest.reviewRequests.nodes[]?.requestedReviewer
+     | select((.login // "" | ascii_downcase) | IN("coderabbitai", "coderabbitai[bot]", "coderabbit[bot]"))] | length > 0
+  ' 2>/dev/null)
+  coderabbit_config=$(echo "$gql_data" | jq -r '
+    .data.repository | (.codeRabbitYaml != null or .codeRabbitYml != null)
+  ' 2>/dev/null)
 }
 
 print_copilot_status() {
-  if [[ "$copilot_pending" == "true" ]]; then
+  if [[ "$gql_complete" != "true" ]]; then
+    print_status "$WARN" "Copilot unknown" "$gql_problem"
+  elif [[ "$copilot_pending" == "true" ]]; then
     print_status "$PENDING" "Copilot pending" "Copilot is reviewing this pull request"
   elif [[ "$copilot_stale" == "true" ]]; then
     print_status "$INFO" "Copilot outdated" "reviewed an older commit"
@@ -288,7 +336,9 @@ print_copilot_status() {
 }
 
 print_atk_review_status() {
-  if [[ "$atk_stale" == "true" ]]; then
+  if [[ "$gql_complete" != "true" ]]; then
+    print_status "$WARN" "atk-code-review unknown" "$gql_problem"
+  elif [[ "$atk_stale" == "true" ]]; then
     print_status "$INFO" "atk-code-review outdated" "verdict is for an older commit"
   elif [[ -n "$atk_verdict" ]]; then
     case "$atk_verdict" in
@@ -300,6 +350,64 @@ print_atk_review_status() {
   else
     print_status "$INFO" "No atk-code-review review"
   fi
+}
+
+print_coderabbit_status() {
+  local review_oid review_state review_time rate_limited processing check_pending check_failed
+  review_oid=$(echo "$coderabbit_review" | jq -r '.commit.oid // ""' 2>/dev/null)
+  review_state=$(echo "$coderabbit_review" | jq -r '.state // ""' 2>/dev/null)
+  review_time=$(echo "$coderabbit_review" | jq -r '.submittedAt // ""' 2>/dev/null)
+  check_failed=false
+  rate_limited=$(echo "$PR_DATA" | jq -r --arg after "$review_time" '
+    [.comments[]? | select((.author.login // "" | ascii_downcase) | IN("coderabbitai", "coderabbitai[bot]", "coderabbit[bot]"))
+     | select((.createdAt // "") >= $after)
+     | select((.body // "" | ascii_downcase) | test("rate.limit|too many requests"))]
+    | length > 0
+  ' 2>/dev/null)
+  processing=$(echo "$PR_DATA" | jq -r --arg after "$review_time" '
+    [.comments[]? | select((.author.login // "" | ascii_downcase) | IN("coderabbitai", "coderabbitai[bot]", "coderabbit[bot]"))
+     | select((.updatedAt // .createdAt // "") >= $after)]
+    | sort_by(.updatedAt // .createdAt) | last // {}
+    | (.body // "" | ascii_downcase | test("currently processing new changes|come back again in a few minutes"))
+  ' 2>/dev/null)
+  if echo "$coderabbit_review" | jq -e '(.body // "" | ascii_downcase) | test("rate.limit|too many requests")' >/dev/null 2>&1; then
+    rate_limited=true
+  fi
+  check_pending=false
+  if echo "$ci_checks" | grep -i -q $'^coderabbit[^\t]*\tpending\t'; then
+    check_pending=true
+  fi
+  if echo "$ci_checks" | grep -i -q $'^coderabbit[^\t]*\tfail\t'; then
+    check_failed=true
+  fi
+
+  if [[ "$gql_complete" != "true" ]]; then
+    print_status "$WARN" "CodeRabbit unknown" "$gql_problem"
+  elif [[ "$rate_limited" == "true" ]]; then
+    print_status "$WARN" "CodeRabbit rate-limited" "review may not be complete"
+  elif [[ "$coderabbit_pending" == "true" || "$check_pending" == "true" || "$processing" == "true" ]]; then
+    print_status "$PENDING" "CodeRabbit pending" "review requested or check in progress"
+  elif [[ "$checks_available" != "true" || "$check_failed" == "true" ]]; then
+    print_status "$WARN" "CodeRabbit unknown" "checks unavailable or CodeRabbit check failed"
+  elif [[ -n "$coderabbit_review" && -z "$review_oid" ]]; then
+    print_status "$WARN" "CodeRabbit unknown" "review commit unavailable"
+  elif [[ -n "$coderabbit_review" && "$review_oid" != "$head_oid" ]]; then
+    print_status "$WARN" "CodeRabbit stale" "reviewed an older commit"
+  elif [[ "$review_state" == "CHANGES_REQUESTED" ]]; then
+    print_status "$FAIL" "CodeRabbit changes requested"
+  elif [[ -n "$coderabbit_review" ]]; then
+    print_status "$INFO" "CodeRabbit reviewed" "inspect review body and threads for findings"
+  elif [[ "$coderabbit_config" == "true" ]]; then
+    print_status "$WARN" "CodeRabbit unknown" "repository config exists; no active review found"
+  else
+    print_status "$WARN" "CodeRabbit unknown" "no current review found; enablement not established"
+  fi
+  echo "$gql_data" | jq -r '
+    .data.repository.pullRequest.reviews.nodes[]?
+    | select((.author.login // "" | ascii_downcase) | IN("coderabbitai", "coderabbitai[bot]", "coderabbit[bot]"))
+    | select(.isMinimized == false and (.body // "" | length > 0))
+    | "\n  CodeRabbit review body (\(.submittedAt // "unknown date"), \(.state)):\n\(.body)"
+  ' 2>/dev/null || true
 }
 
 relative_time() {
@@ -366,10 +474,18 @@ print_reviewers() {
   [[ -n "$pending" ]] && printf -- "  %s %s\n" "$PENDING" "waiting for: $pending"
 }
 
-print_ci_status() {
+fetch_checks() {
   local -a repo_flag=()
+  local checks_exit=0
   [[ -n "$REPO_ARG" ]] && repo_flag=(--repo "$REPO_ARG")
-  ci_checks=$({ gh pr checks ${repo_flag[@]+"${repo_flag[@]}"} "$number" 2>/dev/null || true; })
+  ci_checks=$(gh pr checks ${repo_flag[@]+"${repo_flag[@]}"} "$number" 2>/dev/null) || checks_exit=$?
+  checks_available=true
+  if [[ -z "$ci_checks" || ( "$checks_exit" -ne 0 && "$checks_exit" -ne 1 && "$checks_exit" -ne 8 ) ]]; then
+    checks_available=false
+  fi
+}
+
+print_ci_status() {
 
   if echo "$ci_checks" | grep -q $'^[^\t]*\tfail\t'; then
     print_status "$FAIL" "CI failing"
@@ -379,6 +495,8 @@ print_ci_status() {
   elif echo "$ci_checks" | grep -q $'^[^\t]*\tpending\t'; then
     pending_count=$(echo "$ci_checks" | grep -c $'^[^\t]*\tpending\t' || true)
     print_status "$PENDING" "CI pending" "${pending_count} checks in progress"
+  elif [[ "$checks_available" != "true" ]]; then
+    print_status "$WARN" "CI unknown" "checks unavailable or no checks reported"
   else
     print_status "$OK" "CI passing"
   fi
@@ -428,9 +546,16 @@ print_merge_status() {
     fi
 
     print_copilot_status
+    print_coderabbit_status
     print_atk_review_status
 
-    if [[ "$unresolved" -gt 0 ]]; then
+    if [[ "$gql_complete" != "true" ]]; then
+      print_status "$WARN" "Review threads unknown" "$gql_problem"
+      if [[ "$unresolved" -gt 0 ]]; then
+        print_status "$WARN" "At least ${unresolved} unresolved threads"
+        print_threads
+      fi
+    elif [[ "$unresolved" -gt 0 ]]; then
       print_status "$WARN" "${unresolved} unresolved threads"
       print_threads
     fi
@@ -445,6 +570,7 @@ main() {
   fetch_pr_data || exit 1
   fetch_repo_nwo || exit 1
   fetch_graphql
+  fetch_checks
   # Title header (three echo lines, inline — too small to abstract)
   echo
   echo "█  ${BOLD}$title${RESET}"
@@ -452,6 +578,12 @@ main() {
   print_author_info
   print_reviewers
   print_merge_status
+  if [[ "$state" == "MERGED" || -n "$mq_state" ]]; then
+    print_coderabbit_status
+    if [[ "$gql_complete" != "true" ]]; then
+      print_status "$WARN" "Review threads unknown" "$gql_problem"
+    fi
+  fi
   # verbose + comments
   if [[ "$VERBOSE" == true ]]; then
     header "PR description"
