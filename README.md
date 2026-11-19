@@ -89,7 +89,7 @@ Use [`/atk-autofix`](https://github.com/rstacruz/agentic-toolkit/blob/main/skill
 
 ## Evals
 
-`evals/` holds a [Bun](https://bun.sh) harness. It runs each skill twice on the same input via headless `omp`, once with the skill loaded and once without, then grades both runs. Suites: `/atk-plan` (plans against a pinned p-queue snapshot) and `/atk-autofix` (dry run: reads a frozen, synthetic PR snapshot and writes the actions it would take to `plan.json`).
+`evals/` holds a [Bun](https://bun.sh) harness. It runs each skill twice on the same input via headless `omp`, once with the skill loaded and once without, then grades both runs. Suites: `/atk-plan` (pinned p-queue snapshot) and `/atk-autofix` (dry run on a frozen, synthetic PR; records intended actions in `plan.json`).
 
 ```sh
 cd evals && bun install
