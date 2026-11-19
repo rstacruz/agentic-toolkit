@@ -66,12 +66,14 @@ export const resolved = (p: Plan, id: string) => {
   const i = at(p, (a) => a.type === "resolve" && a.threads.includes(id));
   return r(`resolved(${id})`, i >= 0, i >= 0 ? `resolved at #${i}` : "not resolved");
 };
-/** Commit, then push, then resolve the thread */
+/** Commit, push and reply on the thread, then resolve it */
 export const fixedPushedResolved = (p: Plan, id: string) => {
   const c = at(p, (a) => a.type === "commit" && a.fixes.includes(`thread:${id}`));
   const push = c < 0 ? -1 : p.actions.findIndex((a, i) => i > c && a.type === "push");
-  const res = push < 0 ? -1 : p.actions.findIndex((a, i) => i > push && a.type === "resolve" && a.threads.includes(id));
-  return r(`fixedPushedResolved(${id})`, c >= 0 && push > c && res > push, `commit@${c} push@${push} resolve@${res}`);
+  const rep = c < 0 ? -1 : p.actions.findIndex((a, i) => i > c && a.type === "reply" && a.thread === id);
+  const after = Math.max(push, rep);
+  const res = push < 0 || rep < 0 ? -1 : p.actions.findIndex((a, i) => i > after && a.type === "resolve" && a.threads.includes(id));
+  return r(`fixedPushedResolved(${id})`, res >= 0, `commit@${c} push@${push} reply@${rep} resolve@${res}`);
 };
 export const count = (p: Plan, t: A["type"], n: number) =>
   r(`count(${t}, ${n})`, of(p, t).length === n, `${t} × ${of(p, t).length}`);
