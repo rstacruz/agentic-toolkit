@@ -89,7 +89,7 @@ Use [`/atk-autofix`](https://github.com/rstacruz/agentic-toolkit/blob/main/skill
 
 ## Evals
 
-`evals/` holds a [Bun](https://bun.sh) harness that runs each skill with and without the skill loaded, on the same input, using `omp` headless, then grades both runs. Only `/atk-plan` has a suite so far.
+`evals/` holds a [Bun](https://bun.sh) harness. It runs each skill twice on the same input via headless `omp`, once with the skill loaded and once without, then grades both runs. Only `/atk-plan` has a suite so far.
 
 ```sh
 cd evals && bun install
@@ -97,7 +97,7 @@ bun lib/run.ts atk-plan --iteration 1 --model anthropic/claude-sonnet-4-5 [--run
 bun lib/grade.ts atk-plan --iteration 1 --judge-model anthropic/claude-haiku-4-5
 ```
 
-- The with-skill run invokes the skill as `/<skill> <request>`, as a user would; the report lists any with-skill run that never loaded it.
+- The with-skill run invokes `/<skill> <request>`, as a user would. The report flags any with-skill run that never loaded the skill.
 - Results go to `evals/.workspace/<skill>/iteration-N/` (gitignored); `grade.ts` prints the report and writes `report.json`.
 - Each run is capped at the suite's `maxCost` ($2 for atk-plan), so a full iteration can cost tens of dollars. Use `--only` and `--runs 1` while authoring.
 - Use a fresh `--iteration` for every batch; pairs are never overwritten. The judge model must differ from the runner model.
