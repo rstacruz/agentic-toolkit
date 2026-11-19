@@ -46,6 +46,13 @@ type Grading = {
 
 const score = (rows: Result[]) => (rows.length ? rows.filter((x) => x.passed).length / rows.length : null);
 const mean = (xs: number[]) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : null);
+const SUITE_JUDGE = "judge (suite): ";
+/** Behavior score over suite-wide (`true`) or case (`false`) rows; unusable stays 0, unless the suite has no such rows */
+function part(g: Grading, suiteRows: boolean) {
+  if (suiteRows && !suite.judge?.length) return null;
+  if (g.outcome === "unusable") return 0;
+  return score(g.behavior.filter((x) => x.name.startsWith(SUITE_JUDGE) === suiteRows));
+}
 
 async function gradeArm(c: Case<unknown>, arm: Arm, dir: string): Promise<Grading> {
   const base = { reason: null, behavior: [], format: [], behavior_score: null, format_score: null, judge_error: null };
@@ -76,8 +83,9 @@ async function gradeArm(c: Case<unknown>, arm: Arm, dir: string): Promise<Gradin
   const behavior = c.behavior?.(out) ?? [];
   const criteria = [...(c.judge ?? []), ...(suite.judge ?? [])];
   if (criteria.length) {
+    const names = criteria.map((t, i) => `${i < (c.judge?.length ?? 0) ? "judge: " : SUITE_JUDGE}${t}`);
     try {
-      behavior.push(...(await judge(criteria, raw, dir)));
+      behavior.push(...(await judge(criteria, names, raw, dir)));
     } catch (e) {
       return { ...base, outcome: "judge_error", judge_error: String(e).slice(0, 500) };
     }
@@ -93,8 +101,8 @@ async function gradeArm(c: Case<unknown>, arm: Arm, dir: string): Promise<Gradin
   };
 }
 
-/** Throws on any failure */
-async function judge(criteria: string[], deliverable: string, dir: string): Promise<Result[]> {
+/** Throws on any failure; `names[i]` labels the row for `criteria[i]` without changing the prompt (or its cache key) */
+async function judge(criteria: string[], names: string[], deliverable: string, dir: string): Promise<Result[]> {
   const prompt = [
     "You are grading a deliverable against numbered criteria. Judge only from the deliverable text.",
     "",
@@ -111,7 +119,7 @@ async function judge(criteria: string[], deliverable: string, dir: string): Prom
   const rows = (results: z.infer<typeof JudgeOut>) =>
     results
       .toSorted((a, b) => a.criterion - b.criterion)
-      .map((x) => ({ name: `judge: ${criteria[x.criterion]}`, passed: x.passed, evidence: x.evidence.slice(0, 200) }));
+      .map((x) => ({ name: names[x.criterion], passed: x.passed, evidence: x.evidence.slice(0, 200) }));
 
   const cached = Bun.file(`${dir}/judge.json`);
   if (await cached.exists()) {
@@ -148,6 +156,8 @@ const report = {
   iteration: +opt.iteration,
   judge_model: judgeModel,
   overall_delta: null as number | null,
+  overall_case_delta: null as number | null,
+  overall_suite_delta: null as number | null,
   incomplete_pairs: 0,
   unusable: [] as { case: string; pair: number; arm: Arm; reason: string | null }[],
   incomplete: [] as { case: string; pair: number; arm: Arm | null; reason: string | null }[],
@@ -157,6 +167,8 @@ const report = {
     id: string;
     pairs: number;
     delta: number | null;
+    case_delta: number | null;
+    suite_delta: number | null;
     behavior: { name: string; with: string; without: string }[];
     format: { name: string; passed: string }[] | "n/a";
   }[],
@@ -169,6 +181,7 @@ for (const c of suite.cases) {
     .flatMap((d) => (/^pair-\d+$/.test(d) ? [+d.slice(5)] : []))
     .sort((a, b) => a - b);
   const deltas: number[] = [];
+  const split = { case: [] as number[], suite: [] as number[] };
   const behavior = new Map<string, Record<Arm, number>>();
   const format = new Map<string, [number, number]>();
   let valid = 0;
@@ -203,6 +216,10 @@ for (const c of suite.cases) {
 
     valid++;
     deltas.push(g.with_skill.behavior_score! - g.without_skill.behavior_score!);
+    for (const [k, suiteRows] of [["case", false], ["suite", true]] as const) {
+      const [w, wo] = [part(g.with_skill, suiteRows), part(g.without_skill, suiteRows)];
+      if (w !== null && wo !== null) split[k].push(w - wo);
+    }
     for (const arm of ARMS)
       for (const row of g[arm].behavior) {
         const counts = behavior.get(row.name) ?? { with_skill: 0, without_skill: 0 };
@@ -220,6 +237,8 @@ for (const c of suite.cases) {
     id: c.id,
     pairs: valid,
     delta: mean(deltas),
+    case_delta: mean(split.case),
+    suite_delta: mean(split.suite),
     behavior: [...behavior].map(([name, k]) => ({
       name,
       with: `${k.with_skill}/${valid}`,
@@ -228,14 +247,27 @@ for (const c of suite.cases) {
     format: format.size ? [...format].map(([name, [p, t]]) => ({ name, passed: `${p}/${t}` })) : "n/a",
   });
 }
-report.overall_delta = mean(report.cases.flatMap((c) => (c.delta === null ? [] : [c.delta])));
+const overall = (k: "delta" | "case_delta" | "suite_delta") =>
+  mean(report.cases.flatMap((c) => (c[k] === null ? [] : [c[k]])));
+report.overall_delta = overall("delta");
+report.overall_case_delta = overall("case_delta");
+report.overall_suite_delta = overall("suite_delta");
 
 await Bun.write(`${ws}/report.json`, JSON.stringify(report, null, 2));
 
 const pct = (x: number | null) => (x === null ? "n/a" : `${x >= 0 ? "+" : ""}${Math.round(x * 100)}%`);
-const lines = [`${skill} iteration ${opt.iteration} (judge ${judgeModel})`, `overall behavior delta: ${pct(report.overall_delta)}`];
+const parts = (x: { case: number | null; suite: number | null }) =>
+  `(case criteria ${pct(x.case)}, suite criteria ${pct(x.suite)})`;
+const lines = [
+  `${skill} iteration ${opt.iteration} (judge ${judgeModel})`,
+  `overall behavior delta: ${pct(report.overall_delta)} ${parts({ case: report.overall_case_delta, suite: report.overall_suite_delta })}`,
+];
 for (const c of report.cases) {
-  lines.push("", `## ${c.id} — ${c.pairs} pair(s), delta ${pct(c.delta)}`, "behavior (with / without):");
+  lines.push(
+    "",
+    `## ${c.id} — ${c.pairs} pair(s), delta ${pct(c.delta)} ${parts({ case: c.case_delta, suite: c.suite_delta })}`,
+    "behavior (with / without):",
+  );
   for (const b of c.behavior) lines.push(`  ${b.with.padEnd(5)} ${b.without.padEnd(5)} ${b.name}`);
   lines.push("format (with_skill):");
   if (c.format === "n/a") lines.push("  n/a");
