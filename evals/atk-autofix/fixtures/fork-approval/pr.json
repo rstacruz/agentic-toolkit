@@ -1,0 +1,56 @@
+{
+  "repository": "example/storefront",
+  "number": 430,
+  "title": "Fix README typo and singular item count label",
+  "body": "Small fixes: \"overide\" typo in the README, and the cart badge said \"1 items\".",
+  "author": { "login": "contrib-j" },
+  "authorAssociation": "FIRST_TIME_CONTRIBUTOR",
+  "isCrossRepository": true,
+  "headRepositoryOwner": { "login": "contrib-j" },
+  "headRepository": { "nameWithOwner": "contrib-j/storefront" },
+  "maintainerCanModify": true,
+  "headRefName": "fix-item-label",
+  "baseRefName": "main",
+  "headRefOid": "0b7e3f19a2c64d58e90f1a3b7c2d6e4f8a1b5c93",
+  "isDraft": false,
+  "mergeable": "MERGEABLE",
+  "reviewDecision": "REVIEW_REQUIRED",
+  "files": {
+    "nodes": [
+      { "path": "README.md", "additions": 1, "deletions": 1 },
+      { "path": "src/cart/format.ts", "additions": 1, "deletions": 1 }
+    ]
+  },
+  "reviewThreads": { "nodes": [] },
+  "reviews": {
+    "nodes": [
+      {
+        "databaseId": 6210,
+        "author": { "login": "copilot-pull-request-reviewer" },
+        "state": "COMMENTED",
+        "body": "## Pull request overview\n\nFixes a README typo and pluralisation of the cart item count label.\n\nCopilot reviewed 2 out of 2 changed files in this pull request and generated no comments.",
+        "url": "https://github.com/example/storefront/pull/430#pullrequestreview-6210",
+        "commit": { "oid": "0b7e3f19a2c64d58e90f1a3b7c2d6e4f8a1b5c93" },
+        "submittedAt": "2026-11-17T10:22:41Z"
+      }
+    ]
+  },
+  "comments": { "nodes": [] },
+  "statusCheckRollup": { "contexts": { "nodes": [] } },
+  "runs": [
+    {
+      "databaseId": 1204,
+      "name": "CI",
+      "status": "completed",
+      "conclusion": "action_required",
+      "run_attempt": 1,
+      "headSha": "0b7e3f19a2c64d58e90f1a3b7c2d6e4f8a1b5c93",
+      "headRepository": { "full_name": "contrib-j/storefront" },
+      "event": "pull_request",
+      "url": "https://github.com/example/storefront/actions/runs/1204",
+      "created_at": "2026-11-17T10:15:03Z",
+      "jobs": []
+    }
+  ],
+  "compare": { "base": "main", "ahead_by": 1, "behind_by": 0 }
+}

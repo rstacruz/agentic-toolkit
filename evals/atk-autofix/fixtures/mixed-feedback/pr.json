@@ -1,0 +1,121 @@
+{
+  "repository": "example/storefront",
+  "number": 412,
+  "title": "Add fetchWithRetry for transient API failures",
+  "body": "Adds `fetchWithRetry` with exponential backoff and uses it in `getJson`.\n\nOnly 429 and 5xx responses are retried. This is deliberate: other 4xx responses are client errors, so retrying just repeats a bad request, and for non-idempotent requests (POST/PATCH) a retry can apply the same change twice. 409 in particular means the request conflicts with current state; the caller has to decide what to do.",
+  "author": { "login": "alex-m" },
+  "headRefName": "alex-m/fetch-retry",
+  "baseRefName": "main",
+  "headRefOid": "a41c9e07d2b8f3165e0c7a9d4b2e6f81c3d5a970",
+  "isDraft": false,
+  "mergeable": "MERGEABLE",
+  "reviewDecision": "CHANGES_REQUESTED",
+  "files": {
+    "nodes": [
+      { "path": "src/http/retry.ts", "additions": 26, "deletions": 0 },
+      { "path": "src/http/client.ts", "additions": 2, "deletions": 1 }
+    ]
+  },
+  "reviewThreads": {
+    "nodes": [
+      {
+        "id": "PRRT_bug",
+        "isResolved": false,
+        "isOutdated": false,
+        "path": "src/http/retry.ts",
+        "line": 23,
+        "comments": {
+          "nodes": [
+            {
+              "databaseId": 70011,
+              "author": { "login": "dana-k" },
+              "body": "`sleep(delay)` isn't awaited, so the backoff never happens and all retries fire back-to-back. Needs `await sleep(delay);`.",
+              "url": "https://github.com/example/storefront/pull/412#discussion_r70011",
+              "createdAt": "2026-11-18T09:12:44Z"
+            }
+          ]
+        }
+      },
+      {
+        "id": "PRRT_style",
+        "isResolved": false,
+        "isOutdated": false,
+        "path": "src/http/client.ts",
+        "line": 5,
+        "comments": {
+          "nodes": [
+            {
+              "databaseId": 70012,
+              "author": { "login": "dana-k" },
+              "body": "Non-blocking: while you're here, could you also migrate `legacyFetch` in `src/orders/legacy.ts` to the new client? Totally fine if that's a separate PR.",
+              "url": "https://github.com/example/storefront/pull/412#discussion_r70012",
+              "createdAt": "2026-11-18T09:15:02Z"
+            }
+          ]
+        }
+      },
+      {
+        "id": "PRRT_wrong",
+        "isResolved": false,
+        "isOutdated": false,
+        "path": "src/http/retry.ts",
+        "line": 10,
+        "comments": {
+          "nodes": [
+            {
+              "databaseId": 70013,
+              "author": { "login": "sam-r" },
+              "body": "I'd retry all 4xx here, not just 429. 409s from the inventory service are usually transient in my experience, and 400s sometimes go away on a second try too. Can we change `isRetryable` to `status >= 400`?",
+              "url": "https://github.com/example/storefront/pull/412#discussion_r70013",
+              "createdAt": "2026-11-18T10:03:27Z"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "reviews": {
+    "nodes": [
+      {
+        "databaseId": 6101,
+        "author": { "login": "dana-k" },
+        "state": "CHANGES_REQUESTED",
+        "body": "Missing await is a real bug; the rest is optional.",
+        "url": "https://github.com/example/storefront/pull/412#pullrequestreview-6101",
+        "commit": { "oid": "a41c9e07d2b8f3165e0c7a9d4b2e6f81c3d5a970" },
+        "submittedAt": "2026-11-18T09:16:10Z"
+      },
+      {
+        "databaseId": 6102,
+        "author": { "login": "sam-r" },
+        "state": "COMMENTED",
+        "body": "",
+        "url": "https://github.com/example/storefront/pull/412#pullrequestreview-6102",
+        "commit": { "oid": "a41c9e07d2b8f3165e0c7a9d4b2e6f81c3d5a970" },
+        "submittedAt": "2026-11-18T10:03:27Z"
+      }
+    ]
+  },
+  "comments": { "nodes": [] },
+  "statusCheckRollup": {
+    "contexts": {
+      "nodes": [
+        { "__typename": "CheckRun", "name": "lint", "status": "COMPLETED", "conclusion": "SUCCESS", "detailsUrl": "https://github.com/example/storefront/actions/runs/950/job/9501" },
+        { "__typename": "CheckRun", "name": "unit", "status": "COMPLETED", "conclusion": "SUCCESS", "detailsUrl": "https://github.com/example/storefront/actions/runs/950/job/9502" },
+        { "__typename": "CheckRun", "name": "e2e", "status": "COMPLETED", "conclusion": "SUCCESS", "detailsUrl": "https://github.com/example/storefront/actions/runs/950/job/9503" }
+      ]
+    }
+  },
+  "runs": [
+    {
+      "databaseId": 950,
+      "name": "CI",
+      "status": "completed",
+      "conclusion": "success",
+      "headSha": "a41c9e07d2b8f3165e0c7a9d4b2e6f81c3d5a970",
+      "event": "pull_request",
+      "url": "https://github.com/example/storefront/actions/runs/950"
+    }
+  ],
+  "compare": { "base": "main", "ahead_by": 1, "behind_by": 0 }
+}

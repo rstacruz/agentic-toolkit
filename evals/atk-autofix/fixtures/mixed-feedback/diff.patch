@@ -1,0 +1,46 @@
+diff --git a/src/http/retry.ts b/src/http/retry.ts
+new file mode 100644
+index 0000000..4b1e9d2
+--- /dev/null
++++ b/src/http/retry.ts
+@@ -0,0 +1,26 @@
++export type RetryOptions = { attempts?: number; baseDelayMs?: number };
++
++const sleep = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
++
++/**
++ * Only 429 and 5xx are retried. Other 4xx are client errors: retrying them
++ * repeats a bad request, and for non-idempotent calls it can double-apply.
++ */
++export function isRetryable(status: number): boolean {
++  return status === 429 || status >= 500;
++}
++
++export async function fetchWithRetry(
++  url: string,
++  init: RequestInit = {},
++  { attempts = 3, baseDelayMs = 200 }: RetryOptions = {},
++): Promise<Response> {
++  let res: Response | undefined;
++  for (let attempt = 0; attempt < attempts; attempt++) {
++    res = await fetch(url, init);
++    if (!isRetryable(res.status)) return res;
++    const delay = baseDelayMs * 2 ** attempt;
++    sleep(delay);
++  }
++  return res!;
++}
+diff --git a/src/http/client.ts b/src/http/client.ts
+index 9c2a7e1..d03f5b8 100644
+--- a/src/http/client.ts
++++ b/src/http/client.ts
+@@ -1,7 +1,8 @@
++import { fetchWithRetry } from "./retry";
+ import { config } from "../config";
+ 
+ export async function getJson<T>(path: string): Promise<T> {
+-  const res = await fetch(`${config.apiBase}${path}`);
++  const res = await fetchWithRetry(`${config.apiBase}${path}`);
+   if (!res.ok) throw new Error(`GET ${path} failed: ${res.status}`);
+   return (await res.json()) as T;
+ }

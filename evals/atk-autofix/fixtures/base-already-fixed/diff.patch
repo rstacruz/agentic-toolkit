@@ -1,0 +1,37 @@
+diff --git a/src/cart/bulk-add.ts b/src/cart/bulk-add.ts
+new file mode 100644
+index 0000000..7c3e1a4
+--- /dev/null
++++ b/src/cart/bulk-add.ts
+@@ -0,0 +1,22 @@
++import { parseQuantity } from "./quantity";
++import type { Cart, CartLine } from "./types";
++
++export type BulkRow = { sku: string; qty: string };
++
++/**
++ * Adds every row from a pasted order sheet to the cart. Rows with an
++ * unparseable quantity are skipped and reported back to the caller.
++ */
++export function bulkAdd(cart: Cart, rows: BulkRow[]): { added: CartLine[]; skipped: BulkRow[] } {
++  const added: CartLine[] = [];
++  const skipped: BulkRow[] = [];
++  for (const row of rows) {
++    const quantity = parseQuantity(row.qty);
++    if (Number.isNaN(quantity)) {
++      skipped.push(row);
++      continue;
++    }
++    added.push(cart.addLine({ sku: row.sku, quantity }));
++  }
++  return { added, skipped };
++}
+diff --git a/src/cart/index.ts b/src/cart/index.ts
+index 2a91c0e..5d04b7f 100644
+--- a/src/cart/index.ts
++++ b/src/cart/index.ts
+@@ -1,3 +1,4 @@
+ export * from "./cart";
+ export * from "./quantity";
++export * from "./bulk-add";
+ export * from "./types";

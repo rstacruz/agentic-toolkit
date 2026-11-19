@@ -1,0 +1,74 @@
+{
+  "repository": "example/storefront",
+  "number": 444,
+  "title": "Apply gift card balance at checkout",
+  "body": "`planCharges` now accepts an optional gift card and deducts its balance before splitting the remainder into card charges.",
+  "author": { "login": "alex-m" },
+  "headRefName": "alex-m/giftcard-checkout",
+  "baseRefName": "main",
+  "headRefOid": "b07d4e21f9a36c85e0b2d17a4c9f63e58d1a20c6",
+  "isDraft": false,
+  "mergeable": "MERGEABLE",
+  "mergeStateStatus": "CLEAN",
+  "reviewDecision": "APPROVED",
+  "files": {
+    "nodes": [
+      { "path": "src/orders/checkout.ts", "additions": 6, "deletions": 1 },
+      { "path": "src/giftcards/types.ts", "additions": 4, "deletions": 0 }
+    ]
+  },
+  "reviewThreads": { "nodes": [] },
+  "reviews": {
+    "nodes": [
+      {
+        "databaseId": 6360,
+        "author": { "login": "copilot-pull-request-reviewer" },
+        "state": "COMMENTED",
+        "body": "## Pull request overview\n\nAdds gift card support to charge planning at checkout.\n\nCopilot reviewed 2 out of 2 changed files in this pull request and generated no comments.",
+        "url": "https://github.com/example/storefront/pull/444#pullrequestreview-6360",
+        "commit": { "oid": "b07d4e21f9a36c85e0b2d17a4c9f63e58d1a20c6" },
+        "submittedAt": "2026-11-20T10:03:12Z"
+      },
+      {
+        "databaseId": 5701,
+        "author": { "login": "coderabbitai" },
+        "state": "COMMENTED",
+        "body": "**Actionable comments posted: 0**\n\n<details>\n<summary>⚠️ Outside diff range comments (1)</summary><blockquote>\n\n<details>\n<summary>src/orders/split.ts (1)</summary><blockquote>\n\n`4-9`: **`splitCharges` assumes a positive amount.**\n\n`Math.ceil(amountCents / maxCents)` is negative when `amountCents` is below zero, and `new Array(count)` then throws `RangeError: Invalid array length`. With an amount of exactly zero, `count` is 0 and the function writes to index `-1`. `planCharges` in `src/orders/checkout.ts` now passes `order.totalCents - giftCardCents`, which is zero or negative whenever the gift card balance covers the order.\n\n</blockquote></details>\n\n</blockquote></details>\n\n<details>\n<summary>📜 Review details</summary>\n\n**Configuration used: defaults**\n**Review profile: CHILL**\n\n<details>\n<summary>📥 Commits</summary>\n\nReviewing files that changed from the base of the PR and between 6b1e0a4 and b07d4e2.\n\n</details>\n\n<details>\n<summary>📒 Files selected for processing (2)</summary>\n\n* `src/giftcards/types.ts` (1 hunks)\n* `src/orders/checkout.ts` (1 hunks)\n\n</details>\n\n</details>",
+        "url": "https://github.com/example/storefront/pull/444#pullrequestreview-5701",
+        "commit": { "oid": "b07d4e21f9a36c85e0b2d17a4c9f63e58d1a20c6" },
+        "submittedAt": "2026-11-20T10:06:48Z"
+      },
+      {
+        "databaseId": 6365,
+        "author": { "login": "dana-k" },
+        "state": "APPROVED",
+        "body": "",
+        "url": "https://github.com/example/storefront/pull/444#pullrequestreview-6365",
+        "commit": { "oid": "b07d4e21f9a36c85e0b2d17a4c9f63e58d1a20c6" },
+        "submittedAt": "2026-11-20T10:15:20Z"
+      }
+    ]
+  },
+  "comments": { "nodes": [] },
+  "statusCheckRollup": {
+    "contexts": {
+      "nodes": [
+        { "__typename": "CheckRun", "name": "lint", "status": "COMPLETED", "conclusion": "SUCCESS", "detailsUrl": "https://github.com/example/storefront/actions/runs/1296/job/12961" },
+        { "__typename": "CheckRun", "name": "unit", "status": "COMPLETED", "conclusion": "SUCCESS", "detailsUrl": "https://github.com/example/storefront/actions/runs/1296/job/12962" },
+        { "__typename": "StatusContext", "context": "CodeRabbit", "state": "SUCCESS", "targetUrl": "https://coderabbit.ai" }
+      ]
+    }
+  },
+  "runs": [
+    {
+      "databaseId": 1296,
+      "name": "CI",
+      "status": "completed",
+      "conclusion": "success",
+      "headSha": "b07d4e21f9a36c85e0b2d17a4c9f63e58d1a20c6",
+      "event": "pull_request",
+      "url": "https://github.com/example/storefront/actions/runs/1296"
+    }
+  ],
+  "compare": { "base": "main", "ahead_by": 1, "behind_by": 0 }
+}

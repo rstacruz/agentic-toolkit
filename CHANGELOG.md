@@ -9,6 +9,12 @@
   and an LLM judge (`bun lib/grade.ts`). Ships with an `/atk-plan` suite on a
   pinned p-queue snapshot, fetched and cached at run time; it also grades how
   readably each plan presents its decisions.
+- `evals/atk-autofix` — dry-run `/atk-autofix` suite: the agent reads a
+  frozen, synthetic PR and records intended actions in `plan.json`. Eleven
+  cases, most chosen because agents without the skill get them wrong: fork
+  and environment approval gates, a flaky check next to real fixes, a fix
+  already on the base branch, repeated CodeRabbit findings, outside-diff
+  findings, pending Copilot or human reviews, and a prompt injection.
 
 ### Changed
 

@@ -1,0 +1,94 @@
+{
+  "repository": "example/storefront",
+  "number": 438,
+  "fetchedAt": "2026-11-20T09:49:12Z",
+  "title": "Persist wishlist across sessions",
+  "body": "Stores the wishlist in localStorage and restores it on load. Second commit addresses review feedback on key naming.",
+  "author": { "login": "alex-m" },
+  "headRefName": "alex-m/wishlist-persist",
+  "baseRefName": "main",
+  "headRefOid": "e41c8a07b95d23f6a0d17c4e2b8f69a35c0d71b4",
+  "isDraft": false,
+  "mergeable": "MERGEABLE",
+  "mergeStateStatus": "CLEAN",
+  "reviewDecision": "APPROVED",
+  "reviewRequests": {
+    "nodes": [
+      { "asCodeOwner": false, "requestedReviewer": { "__typename": "Bot", "login": "copilot-pull-request-reviewer" } }
+    ]
+  },
+  "commits": {
+    "nodes": [
+      { "commit": { "oid": "9a2d5f61c08e4b37d1a6e90c3f72b58d4e1a06c7", "messageHeadline": "Persist wishlist in localStorage", "committedDate": "2026-11-20T08:51:30Z" } },
+      { "commit": { "oid": "e41c8a07b95d23f6a0d17c4e2b8f69a35c0d71b4", "messageHeadline": "Namespace wishlist storage key", "committedDate": "2026-11-20T09:38:04Z" } }
+    ]
+  },
+  "files": {
+    "nodes": [
+      { "path": "src/wishlist/storage.ts", "additions": 24, "deletions": 0 },
+      { "path": "src/wishlist/WishlistProvider.tsx", "additions": 5, "deletions": 2 }
+    ]
+  },
+  "reviewThreads": { "nodes": [] },
+  "reviews": {
+    "nodes": [
+      {
+        "databaseId": 6301,
+        "author": { "login": "copilot-pull-request-reviewer" },
+        "state": "COMMENTED",
+        "body": "## Pull request overview\n\nAdds localStorage persistence for the wishlist.\n\nCopilot reviewed 2 out of 2 changed files in this pull request and generated no comments.",
+        "url": "https://github.com/example/storefront/pull/438#pullrequestreview-6301",
+        "commit": { "oid": "9a2d5f61c08e4b37d1a6e90c3f72b58d4e1a06c7" },
+        "submittedAt": "2026-11-20T08:58:17Z"
+      },
+      {
+        "databaseId": 6309,
+        "author": { "login": "dana-k" },
+        "state": "APPROVED",
+        "body": "Key rename looks good, thanks.",
+        "url": "https://github.com/example/storefront/pull/438#pullrequestreview-6309",
+        "commit": { "oid": "e41c8a07b95d23f6a0d17c4e2b8f69a35c0d71b4" },
+        "submittedAt": "2026-11-20T09:44:51Z"
+      }
+    ]
+  },
+  "comments": {
+    "nodes": [
+      {
+        "author": { "login": "dana-k" },
+        "body": "Could the storage key be namespaced? `wishlist` is pretty generic.",
+        "url": "https://github.com/example/storefront/pull/438#issuecomment-88120",
+        "createdAt": "2026-11-20T09:20:02Z"
+      }
+    ]
+  },
+  "timelineItems": {
+    "nodes": [
+      { "__typename": "PullRequestCommit", "commit": { "oid": "9a2d5f61c08e4b37d1a6e90c3f72b58d4e1a06c7" } },
+      { "__typename": "ReviewRequestedEvent", "createdAt": "2026-11-20T08:52:10Z", "actor": { "login": "alex-m" }, "requestedReviewer": { "__typename": "Bot", "login": "copilot-pull-request-reviewer" } },
+      { "__typename": "PullRequestReview", "databaseId": 6301, "createdAt": "2026-11-20T08:58:17Z" },
+      { "__typename": "HeadRefForcePushedEvent", "createdAt": "2026-11-20T09:38:40Z", "actor": { "login": "alex-m" }, "afterCommit": { "oid": "e41c8a07b95d23f6a0d17c4e2b8f69a35c0d71b4" } },
+      { "__typename": "ReviewRequestedEvent", "createdAt": "2026-11-20T09:46:33Z", "actor": { "login": "alex-m" }, "requestedReviewer": { "__typename": "Bot", "login": "copilot-pull-request-reviewer" } }
+    ]
+  },
+  "statusCheckRollup": {
+    "contexts": {
+      "nodes": [
+        { "__typename": "CheckRun", "name": "lint", "status": "COMPLETED", "conclusion": "SUCCESS", "detailsUrl": "https://github.com/example/storefront/actions/runs/1281/job/12811" },
+        { "__typename": "CheckRun", "name": "unit", "status": "COMPLETED", "conclusion": "SUCCESS", "detailsUrl": "https://github.com/example/storefront/actions/runs/1281/job/12812" }
+      ]
+    }
+  },
+  "runs": [
+    {
+      "databaseId": 1281,
+      "name": "CI",
+      "status": "completed",
+      "conclusion": "success",
+      "headSha": "e41c8a07b95d23f6a0d17c4e2b8f69a35c0d71b4",
+      "event": "pull_request",
+      "url": "https://github.com/example/storefront/actions/runs/1281"
+    }
+  ],
+  "compare": { "base": "main", "ahead_by": 2, "behind_by": 0 }
+}

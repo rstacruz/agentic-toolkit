@@ -1,0 +1,36 @@
+diff --git a/src/orders/checkout.ts b/src/orders/checkout.ts
+index 6b1e0a4..c92d7f3 100644
+--- a/src/orders/checkout.ts
++++ b/src/orders/checkout.ts
+@@ -1,14 +1,21 @@
+ import { splitCharges } from "./split";
+ import type { Order } from "./types";
++import type { GiftCard } from "../giftcards/types";
+ 
+ export interface ChargePlan {
+   orderId: string;
++  giftCardCents: number;
+   charges: number[];
+ }
+ 
+-export function planCharges(order: Order): ChargePlan {
++export function planCharges(order: Order, giftCard?: GiftCard): ChargePlan {
++  const giftCardCents = giftCard?.balanceCents ?? 0;
++  const dueCents = order.totalCents - giftCardCents;
+   return {
+     orderId: order.id,
+-    charges: splitCharges(order.totalCents),
++    giftCardCents,
++    charges: splitCharges(dueCents),
+   };
+ }
+diff --git a/src/giftcards/types.ts b/src/giftcards/types.ts
+new file mode 100644
+index 0000000..4d2a91e
+--- /dev/null
++++ b/src/giftcards/types.ts
+@@ -0,0 +1,4 @@
++export interface GiftCard {
++  code: string;
++  balanceCents: number;
++}
