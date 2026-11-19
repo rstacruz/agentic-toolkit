@@ -1,6 +1,5 @@
 import { defineSuite } from "../lib/suite";
 import {
-  Plan,
   bucket,
   count,
   firstActionIs,
@@ -9,6 +8,7 @@ import {
   noPlanContains,
   notResolved,
   onePerFix,
+  parsePlan,
   planSchema,
   prCommentListsDispositions,
   repliesEndWith,
@@ -20,7 +20,7 @@ import {
 export default defineSuite({
   skill: "atk-autofix",
   deliverable: "plan.json",
-  parse: (raw) => Plan.parse(JSON.parse(raw)),
+  parse: parsePlan,
   files: { "plan.schema.json": planSchema },
   tools: ["read", "write"],
   maxCost: 2,
