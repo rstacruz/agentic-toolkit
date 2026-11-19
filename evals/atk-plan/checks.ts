@@ -20,6 +20,15 @@ export const everyDecisionHasRisk = (doc: Md): Result[] =>
     r(`everyDecisionHasRisk(### ${d.title})`, !!d.risk, d.risk ? (d.text.match(RISK)?.[0] ?? d.risk) : "no **Risk:** line"),
   );
 
+const ALTERNATIVE = /\*\*Alternatives:\*\*[\s\S]*?^\s*-\s*✗\s*(\S.*)/m;
+
+/** One row per `###` decision */
+export const everyDecisionHasAlternative = (doc: Md): Result[] =>
+  decisions(doc).map((d) => {
+    const alt = d.text.match(ALTERNATIVE)?.[1];
+    return r(`everyDecisionHasAlternative(### ${d.title})`, !!alt, alt ? `✗ ${alt.slice(0, 200)}` : "no ✗ alternative");
+  });
+
 /** Emits a row only when some decision is red risk */
 export function redRiskImpliesL4(doc: Md): Result[] {
   const red = decisions(doc).filter((d) => d.risk === "🔴 high");

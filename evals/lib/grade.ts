@@ -74,9 +74,10 @@ async function gradeArm(c: Case<unknown>, arm: Arm, dir: string): Promise<Gradin
   }
 
   const behavior = c.behavior?.(out) ?? [];
-  if (c.judge?.length) {
+  const criteria = [...(c.judge ?? []), ...(suite.judge ?? [])];
+  if (criteria.length) {
     try {
-      behavior.push(...(await judge(c.judge, raw, dir)));
+      behavior.push(...(await judge(criteria, raw, dir)));
     } catch (e) {
       return { ...base, outcome: "judge_error", judge_error: String(e).slice(0, 500) };
     }
