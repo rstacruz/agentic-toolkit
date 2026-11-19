@@ -7,7 +7,7 @@ import type { RemoteFixture } from "./suite";
 export async function ensureFixture(cacheRoot: string, f: RemoteFixture): Promise<string> {
   const [owner, repo] = new URL(f.repo).pathname.replace(/^\/|\.git$/g, "").split("/");
   const dir = `${cacheRoot}/${owner}-${repo}@${f.sha}`;
-  const marker = `${dir}.complete`;
+  const marker = `${dir}.complete`; // beside the tree, so staging never copies it
   if (await exists(marker)) return dir;
 
   await rm(dir, { recursive: true, force: true });

@@ -80,7 +80,7 @@ async function runArm(arm: string, flags: string[], stage: string, prompt: strin
       await $`mkdir -p ${cwd}/.omp/skills && cp -R ${REPO}/skills/${suite.skill} ${cwd}/.omp/skills/`;
       skillDigest = await treeHash(`${cwd}/.omp/skills/${suite.skill}`);
     }
-    const before = await hashFiles(cwd);
+    const before = await hashFiles(cwd); // after setup, so the injected skill never counts as a change
     const lock = await lockdown(conf, suite.tools);
 
     const res = await $`omp -p --no-session --no-context-files --no-rules --no-extensions ${flags} \
