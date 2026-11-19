@@ -58,8 +58,9 @@ async function gradeArm(c: Case<unknown>, arm: Arm, dir: string): Promise<Gradin
   const stray = run.tools_used.find((t) => !suite.tools.includes(t));
   if (stray) return unusable(`tool outside suite.tools: ${stray}`);
   if (run.uris_read.length) return unusable("mcp resource read");
+  // a harness fault, not agent behavior: keep it out of the delta
   if (arm === "with_skill" && run.skill_file && !run.skill_file.startsWith(`${run.cwd}/.omp/skills/${suite.skill}/`))
-    return unusable("skill loaded from outside the run cwd");
+    return { ...base, outcome: "incomplete", reason: "skill loaded from outside the run cwd" };
   if (run.changed.length) return unusable(`changed fixture files: ${run.changed.join(", ")}`);
   const file = Bun.file(`${dir}/outputs/${suite.deliverable}`);
   if (!(await file.exists())) return unusable("deliverable missing");
