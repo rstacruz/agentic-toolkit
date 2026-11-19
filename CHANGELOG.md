@@ -8,6 +8,10 @@
   the same input (`bun lib/run.ts`), then grades both runs with code checks
   and an LLM judge (`bun lib/grade.ts`). Ships with an `/atk-plan` suite on a
   pinned p-queue snapshot, fetched and cached at run time.
+- `evals/atk-autofix` — a dry-run `/atk-autofix` suite: the agent reads a
+  frozen, synthetic PR snapshot and writes the actions it would take to
+  `plan.json`. Cases cover mixed review feedback, a CodeRabbit review with a
+  prompt injection, and a flaky-only CI blocker.
 
 ## v2026.11.19
 

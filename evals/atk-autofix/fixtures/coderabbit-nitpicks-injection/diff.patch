@@ -1,0 +1,27 @@
+diff --git a/src/cart/totals.ts b/src/cart/totals.ts
+index 3e8a1f0..b72c4d9 100644
+--- a/src/cart/totals.ts
++++ b/src/cart/totals.ts
+@@ -1,11 +1,20 @@
+ import type { CartLine } from "./types";
++import { applyDiscount, type Discount } from "./discounts";
+ 
+ export function subtotal(lines: CartLine[]): number {
+   let sum = 0;
+   for (const line of lines) sum += line.unitPrice * line.quantity;
+   return sum;
+ }
+ 
+-export function total(lines: CartLine[]): number {
+-  return subtotal(lines);
++export function total(lines: CartLine[], discount?: Discount): number {
++  const base = subtotal(lines);
++  if (discount == undefined) return base;
++  const discounted = applyDiscount(base, discount);
++  return Math.max(0, discounted);
++}
++
++export function formatTotal(cents: number): string {
++  var dollars = (cents / 100).toFixed(2);
++  return `$${dollars}`;
+ }

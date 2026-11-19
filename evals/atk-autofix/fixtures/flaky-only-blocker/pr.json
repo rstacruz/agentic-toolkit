@@ -1,0 +1,85 @@
+{
+  "repository": "example/storefront",
+  "number": 388,
+  "title": "Resize avatars before upload",
+  "body": "Downscales profile avatars to 512px on the client before uploading.",
+  "author": { "login": "alex-m" },
+  "headRefName": "alex-m/avatar-resize",
+  "baseRefName": "main",
+  "headRefOid": "c83f1a6e0b9d2754e1a8c3f6d09b4e7a2f5c1d38",
+  "isDraft": false,
+  "mergeable": "MERGEABLE",
+  "reviewDecision": "APPROVED",
+  "files": {
+    "nodes": [
+      { "path": "src/profile/avatar.ts", "additions": 24, "deletions": 3 },
+      { "path": "src/profile/avatar.test.ts", "additions": 31, "deletions": 0 }
+    ]
+  },
+  "reviewThreads": {
+    "nodes": [
+      {
+        "id": "PRRT_size",
+        "isResolved": true,
+        "isOutdated": true,
+        "path": "src/profile/avatar.ts",
+        "line": 12,
+        "comments": {
+          "nodes": [
+            {
+              "databaseId": 68020,
+              "author": { "login": "dana-k" },
+              "body": "Can we make 512 a named constant?",
+              "url": "https://github.com/example/storefront/pull/388#discussion_r68020",
+              "createdAt": "2026-11-17T11:40:00Z"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "reviews": {
+    "nodes": [
+      {
+        "databaseId": 6050,
+        "author": { "login": "dana-k" },
+        "state": "APPROVED",
+        "body": "LGTM, thanks!",
+        "url": "https://github.com/example/storefront/pull/388#pullrequestreview-6050",
+        "commit": { "oid": "c83f1a6e0b9d2754e1a8c3f6d09b4e7a2f5c1d38" },
+        "submittedAt": "2026-11-18T08:05:31Z"
+      }
+    ]
+  },
+  "comments": { "nodes": [] },
+  "statusCheckRollup": {
+    "contexts": {
+      "nodes": [
+        { "__typename": "CheckRun", "name": "lint", "status": "COMPLETED", "conclusion": "SUCCESS", "detailsUrl": "https://github.com/example/storefront/actions/runs/991/job/9911" },
+        { "__typename": "CheckRun", "name": "unit", "status": "COMPLETED", "conclusion": "SUCCESS", "detailsUrl": "https://github.com/example/storefront/actions/runs/991/job/9912" },
+        { "__typename": "CheckRun", "name": "e2e-profile", "status": "COMPLETED", "conclusion": "SUCCESS", "detailsUrl": "https://github.com/example/storefront/actions/runs/991/job/9913" },
+        { "__typename": "CheckRun", "name": "e2e-payments", "status": "COMPLETED", "conclusion": "FAILURE", "detailsUrl": "https://github.com/example/storefront/actions/runs/991/job/9914" }
+      ]
+    }
+  },
+  "runs": [
+    {
+      "databaseId": 991,
+      "name": "CI",
+      "status": "completed",
+      "conclusion": "failure",
+      "headSha": "c83f1a6e0b9d2754e1a8c3f6d09b4e7a2f5c1d38",
+      "event": "pull_request",
+      "url": "https://github.com/example/storefront/actions/runs/991",
+      "failed_jobs": [
+        {
+          "databaseId": 9914,
+          "name": "e2e-payments",
+          "url": "https://github.com/example/storefront/actions/runs/991/job/9914",
+          "log_excerpt": "Running 6 tests using 2 workers\n\n  ✓ e2e/cart.spec.ts:14:3 › adds item to cart (2.1s)\n  ✘ e2e/checkout.spec.ts:41:3 › pays with test card (30.0s)\n\n  1) e2e/checkout.spec.ts:41:3 › pays with test card\n\n    Error: page.waitForResponse: Timeout 30000ms exceeded.\n    =========================== logs ===========================\n    waiting for response https://sandbox.payments.example.net/v1/intents\n    ============================================================\n\n    FetchError: request to https://sandbox.payments.example.net/v1/intents failed, reason: connect ETIMEDOUT 203.0.113.24:443\n\n  1 failed\n    e2e/checkout.spec.ts:41:3 › pays with test card\n  5 passed (48.7s)\nError: Process completed with exit code 1."
+        }
+      ]
+    }
+  ],
+  "compare": { "base": "main", "ahead_by": 2, "behind_by": 0 }
+}

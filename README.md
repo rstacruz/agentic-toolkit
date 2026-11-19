@@ -89,12 +89,13 @@ Use [`/atk-autofix`](https://github.com/rstacruz/agentic-toolkit/blob/main/skill
 
 ## Evals
 
-`evals/` holds a [Bun](https://bun.sh) harness. It runs each skill twice on the same input via headless `omp`, once with the skill loaded and once without, then grades both runs. Only `/atk-plan` has a suite so far.
+`evals/` holds a [Bun](https://bun.sh) harness. It runs each skill twice on the same input via headless `omp`, once with the skill loaded and once without, then grades both runs. Suites: `/atk-plan` (plans against a pinned p-queue snapshot) and `/atk-autofix` (dry run: reads a frozen, synthetic PR snapshot and writes the actions it would take to `plan.json`).
 
 ```sh
 cd evals && bun install
 bun lib/run.ts atk-plan --iteration 1 --model anthropic/claude-sonnet-4-5 [--runs 3] [--only remove-by-id]
 bun lib/grade.ts atk-plan --iteration 1 --judge-model anthropic/claude-haiku-4-5
+bun lib/run.ts atk-autofix --iteration 1 --model anthropic/claude-sonnet-4-5 --only mixed-feedback
 ```
 
 - The with-skill run asks for the skill by name (`skill://<skill>`); a bare `/<skill>` prefix gets ignored in headless mode. The report flags any with-skill run that never loaded the skill.
