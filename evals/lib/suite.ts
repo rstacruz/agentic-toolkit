@@ -9,7 +9,7 @@ export type Case<O> = {
   behavior?: (out: O) => Result[];
   /** with_skill only; conventions for actions this case expects */
   format?: (out: O) => Result[];
-  /** Prose criteria for the LLM judge; none skips it */
+  /** Prose criteria for the LLM judge, added to the suite's; the judge runs only when the combined list is non-empty */
   judge?: string[];
 };
 
