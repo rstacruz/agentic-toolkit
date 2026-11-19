@@ -8,8 +8,9 @@ export async function ensureFixture(cacheRoot: string, f: RemoteFixture): Promis
   const [owner, repo] = new URL(f.repo).pathname.replace(/^\/|\.git$/g, "").split("/");
   const dir = `${cacheRoot}/${owner}-${repo}@${f.sha}`;
   const marker = `${dir}.complete`; // beside the tree, so staging never copies it
-  if (await exists(marker)) return dir;
+  if ((await exists(marker)) && (await exists(dir))) return dir;
 
+  await rm(marker, { force: true });
   await rm(dir, { recursive: true, force: true });
   await mkdir(dir, { recursive: true });
   const git = await mkdtemp(`${tmpdir()}/fixture-git-`);
