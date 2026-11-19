@@ -29,6 +29,8 @@ export type Suite<O> = {
   maxCost: number;
   /** with_skill; conventions that apply to every case */
   format?: (out: O) => Result[];
+  /** Behavior criteria for every case, judged alongside the case's own */
+  judge?: string[];
   fixtures?: Record<string, RemoteFixture>;
   cases: Case<O>[];
 };

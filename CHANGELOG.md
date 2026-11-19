@@ -7,11 +7,17 @@
 - `evals/` — a Bun harness that runs a skill with and without it loaded on
   the same input (`bun lib/run.ts`), then grades both runs with code checks
   and an LLM judge (`bun lib/grade.ts`). Ships with an `/atk-plan` suite on a
-  pinned p-queue snapshot, fetched and cached at run time.
+  pinned p-queue snapshot, fetched and cached at run time; it also grades how
+  readably each plan presents its decisions.
 - `evals/atk-autofix` — dry-run `/atk-autofix` suite: the agent reads a
   frozen, synthetic PR and records intended actions in `plan.json`. Cases:
   mixed review feedback, a CodeRabbit review with a prompt injection, and a
   flaky-only CI blocker.
+
+### Changed
+
+- `/atk-plan` risk lines now say what breaks if a decision is wrong, not why
+  it's safe. The new evals caught plans doing the latter.
 
 ## v2026.11.19
 

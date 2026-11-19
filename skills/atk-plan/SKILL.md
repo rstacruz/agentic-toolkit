@@ -22,7 +22,7 @@ Plan the given change. Decide for the user; never ask.
 - Keep steps terse: name only the narrow test that proves the step; exhaustive cases belong in tests, not the plan.
 - Group the steps into `## PR's` as a nested list: each PR names its steps, one-line scope, and dependencies. Keep the grouping out of `## Implementation steps`.
 - Grade `## Review effort` per `/pr-risk-assessment` when available.
-- Rate every decision's risk as `🟢 low`, `🟡 med`, or `🔴 high` with a one-line reason: the cost of being wrong (data loss, privacy, concurrency, live migrations, public contracts), not the size of the change. Worst-hit-wins: a `🔴 high` decision makes `## Review effort` at least L4.
+- Rate every decision's risk as `🟢 low`, `🟡 med`, or `🔴 high` by the cost of being wrong (data loss, privacy, concurrency, live migrations, public contracts), not the size of the change. The line says what breaks if the decision is wrong, not why it's safe: `🟢 low — if wrong, callers get a no-op instead of an error; easy to change before release`. Worst-hit-wins: a `🔴 high` decision makes `## Review effort` at least L4.
 - Facts that shape the plan go under `## Appendix: Grounded facts`, with sources.
 - No speculative details or dependencies; refer to earlier sections instead of repeating them.
 - Write or edit Markdown only; leave source code untouched.

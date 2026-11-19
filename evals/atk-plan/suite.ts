@@ -1,6 +1,12 @@
 import { headingsInOrder, md } from "../lib/checks";
 import { defineSuite } from "../lib/suite";
-import { designHasChangeMarkers, everyDecisionHasRisk, noCodeBlocksInSteps, redRiskImpliesL4 } from "./checks";
+import {
+  designHasChangeMarkers,
+  everyDecisionHasAlternative,
+  everyDecisionHasRisk,
+  noCodeBlocksInSteps,
+  redRiskImpliesL4,
+} from "./checks";
 
 export default defineSuite({
   skill: "atk-plan",
@@ -30,9 +36,19 @@ export default defineSuite({
       "Appendix: Grounded facts",
     ]),
     ...everyDecisionHasRisk(doc),
+    ...everyDecisionHasAlternative(doc),
     ...redRiskImpliesL4(doc),
     ...designHasChangeMarkers(doc),
     ...noCodeBlocksInSteps(doc),
+  ],
+  // how decisions are shown to the reader, graded for both arms on every case
+  judge: [
+    "Collects the key decisions in one place, so a reader can review them without reading the whole plan",
+    "Each key decision states the chosen option and a one-line reason",
+    "Each key decision names at least one rejected alternative and why it lost in concrete terms (what breaks or costs more), not just a label",
+    "Each key decision says what goes wrong if it turns out to be wrong",
+    "Decisions are made, not deferred: no open questions are left for the user to resolve",
+    "A reader new to this codebase can follow each decision without opening the code: terms are explained and claims point to where they come from",
   ],
   cases: [
     {
