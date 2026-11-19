@@ -7,7 +7,7 @@ export type Md = { text: string; headings: string[]; section(h: string): string 
 type Heading = { level: number; text: string; line: number };
 
 /** ATX headings outside fenced code blocks */
-function scanHeadings(lines: string[]): Heading[] {
+export function scanHeadings(lines: string[]): Heading[] {
   const out: Heading[] = [];
   let fence: string | undefined;
   lines.forEach((line, i) => {
