@@ -96,6 +96,7 @@ cd evals && bun install
 bun lib/run.ts atk-plan --iteration 1 --model anthropic/claude-sonnet-4-5 [--runs 3] [--only remove-by-id]
 bun lib/grade.ts atk-plan --iteration 1 --judge-model anthropic/claude-haiku-4-5
 bun lib/run.ts atk-autofix --iteration 1 --model anthropic/claude-sonnet-4-5 --only mixed-feedback
+bun lib/grade.ts atk-autofix --iteration 1 --judge-model anthropic/claude-haiku-4-5
 ```
 
 - The with-skill run asks for the skill by name (`skill://<skill>`); a bare `/<skill>` prefix gets ignored in headless mode. The report flags any with-skill run that never loaded the skill.
