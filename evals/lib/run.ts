@@ -70,7 +70,7 @@ for (const c of suite.cases.filter((c) => !opt.only || c.id === opt.only)) {
 
 async function runArm(arm: string, flags: string[], stage: string, prompt: string, dir: string) {
   await mkdir(dir);
-  // realpath: omp reports skill paths under process.cwd(), which resolves symlinks (macOS /var → /private/var)
+  // canonical, so `skill_file` (also realpath'd) compares by prefix
   const cwd = await realpath(await mkdtemp(`${tmpdir()}/${skill}-eval-`));
   const conf = await mkdtemp(`${tmpdir()}/${skill}-conf-`);
   const t0 = performance.now();
@@ -103,7 +103,7 @@ async function runArm(arm: string, flags: string[], stage: string, prompt: strin
           duration_ms: Math.round(performance.now() - t0),
           changed: changedPaths(before, await hashFiles(cwd)).filter((p) => !p.startsWith("outputs/")),
           cwd,
-          ...evidence(res.stdout.toString()),
+          ...(await evidence(res.stdout.toString())),
         },
         null,
         2,
@@ -119,8 +119,8 @@ async function runArm(arm: string, flags: string[], stage: string, prompt: strin
   return skillDigest;
 }
 
-/** First-run safeguard evidence from the json event stream */
-function evidence(jsonl: string) {
+/** First-run safeguard evidence from the json event stream; runs before the cwd is deleted */
+async function evidence(jsonl: string) {
   const t = parseTranscript(jsonl);
   const skillFile = t.messages
     .values()
@@ -129,7 +129,8 @@ function evidence(jsonl: string) {
     .find(Boolean);
   return {
     tools_used: [...new Set(t.tools.map((x) => x.name))].sort(),
-    skill_file: skillFile ?? null,
+    // canonical, like `cwd`: omp may report either side of a symlink (macOS /var → /private/var)
+    skill_file: skillFile ? await realpath(skillFile).catch(() => skillFile) : null,
     uris_read: t.tools.flatMap((x) => (x.name === "read" && x.path?.startsWith("mcp://") ? [x.path] : [])),
   };
 }
