@@ -5,10 +5,12 @@
 #   Without --apply: prints the classification table only (dry run).
 #   With --apply: also minimizes everything classified "minimize".
 #   MINIMISE_KEEP_IDS: comma-separated subject IDs that are never minimized (always kept).
+#   MINIMISE_HIDE_IDS: comma-separated subject IDs that are always minimized (keep-ids wins).
 set -euo pipefail
 
 apply=false
 keepids=${MINIMISE_KEEP_IDS:-}
+hideids=${MINIMISE_HIDE_IDS:-}
 args=()
 for a in "$@"; do [ "$a" = --apply ] && apply=true || args+=("$a"); done
 
@@ -37,9 +39,9 @@ keepbots='^(github-actions|vercel|netlify|cloudflare-workers-and-pages)(\[bot\])
 # `manual verification` stays for older and hand-written comments.
 # `!\[` covers comments that embed evidence images even when they never say
 # "screenshot" (e.g. a grid of before/after captures with prose captions).
-keepauthor='(live verification|manual verification|verified in (nonprod|prod)|tested in (nonprod|prod)|screenshot|!\[|autofix report|review guide|for reviewers|call graph|feedback points|handover|^#+ ?Plan|^#+ ?Impact analysis|^#+ .*(autofix|implementation notes|handover))'
+keepauthor='(live verification|manual verification|verified in (nonprod|prod)|tested in (nonprod|prod)|screenshot|!\[|autofix report|review guide|for reviewers|call graph|feedback points|handover|^#+ ?Phase [0-9]+|^#+ ?Plan|^#+ ?(📊 ?)?Impact (analysis|assessment)|^#+ .*(autofix|implementation notes|handover))'
 
-rows=$(jq -r --arg author "$author" --arg keepbots "$keepbots" --arg keepauthor "$keepauthor" --arg keepids "$keepids" '
+rows=$(jq -r --arg author "$author" --arg keepbots "$keepbots" --arg keepauthor "$keepauthor" --arg keepids "$keepids" --arg hideids "$hideids" '
   .data.repository.pullRequest as $pr
 
   # Only the most recently *submitted* Copilot review survives; id of that review.
@@ -48,6 +50,8 @@ rows=$(jq -r --arg author "$author" --arg keepbots "$keepbots" --arg keepauthor 
   # IDs that must never be minimized (MINIMISE_KEEP_IDS, comma-separated).
   | ($keepids | split(",") | map(select(length>0))) as $keepids_list
 
+  | ($hideids | split(",") | map(select(length>0))) as $hideids_list
+
   # All inline comments already covered by the reviews connection (dedupe against these).
   | ([ $pr.reviews.nodes[].comments.nodes[].id ]) as $revids
 
@@ -55,6 +59,7 @@ rows=$(jq -r --arg author "$author" --arg keepbots "$keepbots" --arg keepauthor 
   | def vd(n):
       if n.isMinimized then {v:"skip",r:"already minimized"}
       elif ($keepids_list | index(n.id)) != null then {v:"keep",r:"kept by keep-ids"}
+      elif ($hideids_list | index(n.id)) != null then {v:"minimize",r:"hidden by hide-ids"}
       elif n.author.login=="copilot-pull-request-reviewer" then
         (if n.id==$latest then {v:"keep",r:"latest Copilot review"} else {v:"minimize",r:"superseded Copilot review"} end)
       elif n.author.__typename=="Bot" and (n.author.login|test($keepbots)) then {v:"keep",r:"deploy/preview bot"}

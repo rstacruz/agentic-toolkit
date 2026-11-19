@@ -8,10 +8,10 @@ graph LR
   atk_plan --> polish_plan["polish-plan"]
   atk_plan --> triangulate_plan["triangulate-plan"]
   atk_plan --> pr_risk_assessment["pr-risk-assessment"]
-  polish_plan --> polish_implementation["polish-implementation"]
-  triangulate_plan --> polish_implementation
-  polish_implementation --> atk_code_review["atk-code-review"]
-  polish_implementation --> trim_tests_and_comments["trim-tests-and-comments"]
+  polish_plan --> self_review["atk-pr-autofix --reviewers self"]
+  triangulate_plan --> self_review
+  self_review --> atk_code_review["atk-code-review"]
+  self_review --> trim_tests_and_comments["trim-tests-and-comments"]
   trim_tests_and_comments --> deslop_prose["deslop-prose"]
   deslop_prose --> atk_pr_autofix["atk-pr-autofix"]
   atk_pr_autofix --> minimise_pr_comments["minimise-pr-comments"]
@@ -37,7 +37,8 @@ Cook runs under goal mode: `/goal /cook <request>` — the `/goal` wrapper keeps
 
 ### Planning
 
-- [`/atk-plan`](../skills/atk-plan/SKILL.md) — Turns a rough idea into an actionable plan: judgement calls instead of interviewing, every call documented under `## Decisions` for veto at review
+- [`/atk-plan`](../skills/atk-plan/SKILL.md) — Compact, non-interactive plan in a fixed format: decides everything for the user, never asks, saves the Markdown to `~/.artefacts/`
+- [`/atk-plan-legacy`](../skills/atk-plan-legacy/SKILL.md) — The previous fuller planner: decide-first ladder, stakes levels, grounds facts, and asks on mid/high-stakes branches with `--interactive`
 
 ### Refining
 
@@ -46,7 +47,7 @@ Cook runs under goal mode: `/goal /cook <request>` — the `/goal` wrapper keeps
 
 ### Implementing
 
-- [`/polish-implementation`](../skills/polish-implementation/SKILL.md) — Iterative code review loop against a GitHub PR; self-review threads get fixed, replied to, and resolved, up to 10 passes
+- [`/atk-pr-autofix --reviewers self`](../skills/atk-pr-autofix/SKILL.md) — Self-review loop against a GitHub PR: `/atk-code-review` threads get fixed, replied to, and resolved, up to 4 passes
 
 ### Shipping
 

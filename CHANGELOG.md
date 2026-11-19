@@ -6,20 +6,26 @@
 
 - `/cook` — end-to-end orchestrator for an open-ended request: reframe → plan
   → implement → polish → CI, in a worktree with a draft PR. `--max`
-  enables the `/polish-plan` / `/polish-implementation` rigor passes, and its
+  enables the `/polish-plan` / `/atk-pr-autofix --reviewers self` rigor passes, and its
   `implement-plan.md` reference fans multi-PR plans out across subagent
   worktrees.
 - `/pr-review-guide` — the reviewer walkthrough guide, including a collapsed
-  LOC breakdown of the PR's changed lines by category.
+  LOC breakdown of the PR's changed lines by category. Mermaid blocks are
+  validated with `check-mermaid.sh` before posting.
 - `/minimise-pr-comments`, `/trim-tests-and-comments`, `/deslop-prose` — PR
   comment cleanup (keeps reviewer feedback, deploy notices, and author
   verification — including image-only evidence), lean tests/comments, and
-  prose review.
+  prose review. `MINIMISE_HIDE_IDS` force-hides specific comments.
+- `/atk-pr-autofix --reviewers self` — runs `/atk-code-review` as a reviewer
+  in the autofix loop, up to 4 passes. Never selected by default; combine it
+  with bots via `--reviewers auto,self`. `/cook --max` uses it in place of
+  `/polish-implementation`.
 
 ### Changed
 
-- `/atk-plan` no longer asks for a `## Post-implementation verification`
-  section in plans — dropped from both the template and the checklist.
+- `/atk-plan` is now compact and non-interactive: decides everything for the
+  user, never asks, and saves the plan to `~/.artefacts/`. The previous
+  decide-first planner is now `/atk-plan-legacy`.
 - Skill references now use `/skill-name` (eg, `/cook`) instead of
   `$skill-name` — in prose, pseudocode, and comments; invocation is unchanged.
 

@@ -2,11 +2,10 @@
 # Resolves review threads for a PR.
 # Usage: resolve-review-threads.sh [pr-number] [--thread-id ID[,ID...]]
 #
-# No --thread-id: resolves all unresolved threads (default; used by atk-pr-autofix).
+# No --thread-id: resolves all unresolved threads.
 # --thread-id set: resolves only the given thread ID(s), regardless of current
-#   resolved state — used by polish-implementation to scope resolution to the
-#   specific self-review threads it just handled, leaving any other (human/
-#   Copilot) threads untouched.
+#   resolved state — used by atk-pr-autofix to leave needs-discussion threads
+#   open.
 
 set -euo pipefail
 

@@ -42,6 +42,24 @@ emit_result() {
   exit 0
 }
 
+get_collection() {
+  gh api --paginate --slurp "repos/$REPO_NWO/$1" |
+    jq -ce 'if all(.[]; type == "array") then add // [] else error("invalid response") end |
+      if all(.[]; type == "object" and (.id | type == "number")) then sort_by(.id) else error("invalid item") end'
+}
+
+get_pr_state() {
+  gh pr view "$PR_NUMBER" --repo "$REPO_NWO" --json reviewRequests,statusCheckRollup |
+    jq -ce 'if (.reviewRequests | type) != "array" or
+      (has("statusCheckRollup") | not) or
+      ((.statusCheckRollup | type) != "array" and .statusCheckRollup != null) or
+      (all(.reviewRequests[]; ((.login // .name) | type) == "string") | not)
+      then error("invalid PR state") else . end |
+      {requests: [.reviewRequests[] | .login // .name] | sort,
+       checks: [(.statusCheckRollup // [])[] | {name: (.name // .context), status, conclusion, state}] | sort_by(.name, .status, .conclusion, .state)} |
+      if all(.checks[]; (.name | type) == "string") then . else error("invalid check") end'
+}
+
 get_merge_queue() {
   gh api graphql \
     -f query='query($owner: String!, $repo: String!, $number: Int!) {
@@ -49,18 +67,32 @@ get_merge_queue() {
         pullRequest(number: $number) { mergeQueueEntry { state position } }
       }
     }' \
-    -F owner="$OWNER" -F repo="$REPO" -F number="$PR_NUMBER" \
-    --jq '.data.repository.pullRequest.mergeQueueEntry | if . == null then "" else "\(.state):\(.position)" end' \
-    2>/dev/null || echo ""
+    -F owner="$OWNER" -F repo="$REPO" -F number="$PR_NUMBER" |
+    jq -c 'if .errors or (.data.repository.pullRequest | type) != "object" or
+      (.data.repository.pullRequest | has("mergeQueueEntry") | not) then error("invalid merge queue response")
+      else .data.repository.pullRequest.mergeQueueEntry |
+        if . == null or (type == "object" and (.state | type) == "string" and (.position | type) == "number")
+        then . else error("invalid merge queue entry") end end'
 }
 
-# --- Capture initial state ---
+capture_state() {
+  reviews=$(get_collection "pulls/$PR_NUMBER/reviews") &&
+    inline_comments=$(get_collection "pulls/$PR_NUMBER/comments") &&
+    issue_comments=$(get_collection "issues/$PR_NUMBER/comments") &&
+    pr_state=$(get_pr_state) &&
+    mq=$(get_merge_queue)
+}
 
-init_comments=$(gh api "repos/$REPO_NWO/pulls/$PR_NUMBER/comments" --jq 'length' 2>/dev/null || echo 0)
-init_reviews=$(gh api "repos/$REPO_NWO/pulls/$PR_NUMBER/reviews" --jq 'length' 2>/dev/null || echo 0)
-init_review_requests=$(gh pr view "$PR_NUMBER" --repo "$REPO_NWO" --json reviewRequests --jq '[.reviewRequests[].login] | join(",")' 2>/dev/null || echo "")
-init_ci=$(gh pr checks "$PR_NUMBER" --repo "$REPO_NWO" 2>/dev/null | awk -F'\t' '{print $2}' | sort | tr '\n' ',' || echo "")
-init_mq=$(get_merge_queue)
+# A failed initial snapshot must not become an empty baseline.
+if ! capture_state; then
+  echo "Failed to capture PR activity; GitHub data unavailable" >&2
+  exit 2
+fi
+init_reviews=$reviews
+init_inline_comments=$inline_comments
+init_issue_comments=$issue_comments
+init_pr_state=$pr_state
+init_mq=$mq
 
 echo "Waiting for activity on PR #$PR_NUMBER (timeout ${TIMEOUT}s, interval ${INTERVAL}s)..." >&2
 
@@ -69,36 +101,44 @@ while [[ $elapsed -lt $TIMEOUT ]]; do
   sleep "$INTERVAL"
   elapsed=$((elapsed + INTERVAL))
 
-  # --- Check new reviews (Copilot finishes even without comments) ---
-  cur_reviews=$(gh api "repos/$REPO_NWO/pulls/$PR_NUMBER/reviews" --jq 'length' 2>/dev/null || echo "$init_reviews")
-  if [[ "$cur_reviews" -gt "$init_reviews" ]]; then
-    new_count=$((cur_reviews - init_reviews))
-    emit_result "{\"reason\":\"new_reviews\",\"count\":$new_count,\"total\":$cur_reviews,\"elapsed\":$elapsed}"
+  # Compare only complete snapshots; API failures are not activity.
+  if ! capture_state; then
+    echo "  [${elapsed}s] unable to fetch PR activity; retrying" >&2
+    continue
   fi
 
-  # --- Check new comments ---
-  cur_comments=$(gh api "repos/$REPO_NWO/pulls/$PR_NUMBER/comments" --jq 'length' 2>/dev/null || echo "$init_comments")
-  if [[ "$cur_comments" -gt "$init_comments" ]]; then
-    new_count=$((cur_comments - init_comments))
-    emit_result "{\"reason\":\"new_comments\",\"count\":$new_count,\"total\":$cur_comments,\"elapsed\":$elapsed}"
+  if [[ "$reviews" != "$init_reviews" ]]; then
+    init_count=$(jq 'length' <<<"$init_reviews")
+    cur_count=$(jq 'length' <<<"$reviews")
+    if (( cur_count > init_count )); then
+      emit_result "{\"reason\":\"new_reviews\",\"count\":$((cur_count - init_count)),\"total\":$cur_count,\"elapsed\":$elapsed}"
+    fi
+    emit_result "{\"reason\":\"reviews_changed\",\"elapsed\":$elapsed}"
   fi
 
-  # --- Check review requests cleared ---
-  cur_review_requests=$(gh pr view "$PR_NUMBER" --repo "$REPO_NWO" --json reviewRequests --jq '[.reviewRequests[].login] | join(",")' 2>/dev/null || echo "")
-  if [[ -n "$init_review_requests" && -z "$cur_review_requests" ]]; then
-    emit_result "{\"reason\":\"review_completed\",\"was\":\"$init_review_requests\",\"elapsed\":$elapsed}"
+  if [[ "$inline_comments" != "$init_inline_comments" || "$issue_comments" != "$init_issue_comments" ]]; then
+    init_count=$(jq -n --argjson inline "$init_inline_comments" --argjson issue "$init_issue_comments" '$inline | length + ($issue | length)')
+    cur_count=$(jq -n --argjson inline "$inline_comments" --argjson issue "$issue_comments" '$inline | length + ($issue | length)')
+    if (( cur_count > init_count )); then
+      emit_result "{\"reason\":\"new_comments\",\"count\":$((cur_count - init_count)),\"total\":$cur_count,\"elapsed\":$elapsed}"
+    fi
+    emit_result "{\"reason\":\"comments_changed\",\"elapsed\":$elapsed}"
   fi
 
-  # --- Check CI changes ---
-  cur_ci=$(gh pr checks "$PR_NUMBER" --repo "$REPO_NWO" 2>/dev/null | awk -F'\t' '{print $2}' | sort | tr '\n' ',' || echo "")
+  init_requests=$(jq -c '.requests' <<<"$init_pr_state")
+  cur_requests=$(jq -c '.requests' <<<"$pr_state")
+  if [[ "$init_requests" != "[]" && "$cur_requests" == "[]" ]]; then
+    emit_result "$(jq -nc --argjson requests "$init_requests" --argjson elapsed "$elapsed" '{reason:"review_completed",was:($requests | join(",")),elapsed:$elapsed}')"
+  fi
+
+  init_ci=$(jq -c '.checks' <<<"$init_pr_state")
+  cur_ci=$(jq -c '.checks' <<<"$pr_state")
   if [[ "$cur_ci" != "$init_ci" ]]; then
-    emit_result "{\"reason\":\"ci_changed\",\"was\":\"$init_ci\",\"now\":\"$cur_ci\",\"elapsed\":$elapsed}"
+    emit_result "$(jq -nc --arg was "$init_ci" --arg now "$cur_ci" --argjson elapsed "$elapsed" '{reason:"ci_changed",was:$was,now:$now,elapsed:$elapsed}')"
   fi
 
-  # --- Check merge queue changes (entered, left, or state change) ---
-  cur_mq=$(get_merge_queue)
-  if [[ "$cur_mq" != "$init_mq" ]]; then
-    emit_result "{\"reason\":\"merge_queue_changed\",\"was\":\"$init_mq\",\"now\":\"$cur_mq\",\"elapsed\":$elapsed}"
+  if [[ "$mq" != "$init_mq" ]]; then
+    emit_result "$(jq -nc --argjson was "$init_mq" --argjson now "$mq" --argjson elapsed "$elapsed" '{reason:"merge_queue_changed",was:($was | if . == null then "" else "\(.state):\(.position)" end),now:($now | if . == null then "" else "\(.state):\(.position)" end),elapsed:$elapsed}')"
   fi
 
   echo "  [${elapsed}s] no activity yet" >&2
