@@ -7,7 +7,7 @@ export type Svg = { raw: string; text: string };
 const ENTITIES: Record<string, string> = { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: " " };
 const decode = (s: string) =>
   s.replace(/&(#x[\da-f]+|#\d+|\w+);/gi, (m, e: string) =>
-    e[0] !== "#" ? (ENTITIES[e] ?? m) : String.fromCodePoint(parseInt(e.slice(e[1] === "x" ? 2 : 1), e[1] === "x" ? 16 : 10)),
+    e[0] !== "#" ? (ENTITIES[e] ?? m) : String.fromCodePoint(/^#x/i.test(e) ? parseInt(e.slice(2), 16) : parseInt(e.slice(1), 10)),
   );
 const strip = (s: string) => decode(s.replace(/<[^>]*>/g, "")).trim();
 
