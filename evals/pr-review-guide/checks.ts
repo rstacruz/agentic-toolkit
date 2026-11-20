@@ -1,7 +1,7 @@
 import { matches } from "../lib/checks";
 import type { Result } from "../lib/suite";
 
-/** `text`: one line per `<text>`, or per `<tspan>` inside it, joined by "\n" */
+/** `text`: one line per `<text>`, or per positioned (`x`/`dy`) `<tspan>` inside it, joined by "\n" */
 export type Svg = { raw: string; text: string };
 
 const ENTITIES: Record<string, string> = { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: " " };
@@ -13,10 +13,10 @@ const strip = (s: string) => decode(s.replace(/<[^>]*>/g, "")).trim();
 
 export function svg(raw: string): Svg {
   if (!/<svg[\s>]/.test(raw)) throw new Error("no <svg> root");
-  const lines = [...raw.matchAll(/<text\b[^>]*>([\s\S]*?)<\/text>/g)].flatMap(([, inner]) => {
-    const spans = [...inner.matchAll(/<tspan\b[^>]*>([\s\S]*?)<\/tspan>/g)].map(([, t]) => strip(t));
-    return spans.length ? spans : [strip(inner)];
-  });
+  // Positioned tspans start a new line; inline tspans stay joined with the surrounding text
+  const lines = [...raw.matchAll(/<text\b[^>]*>([\s\S]*?)<\/text>/g)].flatMap(([, inner]) =>
+    inner.replace(/<tspan\b[^>]*\s(?:x|dy)=[^>]*>/g, "\n").split("\n").map(strip),
+  );
   return { raw, text: lines.filter(Boolean).join("\n") };
 }
 
