@@ -52,3 +52,14 @@ export function noCodeBlocksInSteps(doc: Md): Result[] {
   const m = body.match(/^ {0,3}(`{3,}|~{3,}).*$/m);
   return [r("noCodeBlocksInSteps", !m, m ? m[0] : "no fenced blocks")];
 }
+
+/** One row per `###` layer in Implementation steps */
+export function everyLayerHasRisk(doc: Md): Result[] {
+  const body = doc.section("Implementation steps");
+  if (body === undefined) return [];
+  return scanHeadings(body.split("\n")).flatMap((h) => {
+    if (h.level !== 3) return [];
+    const dot = h.text.match(/(🟢|🟡|🔴)$/u)?.[1];
+    return [r(`everyLayerHasRisk(### ${h.text})`, !!dot, dot ?? "no trailing 🟢/🟡/🔴")];
+  });
+}

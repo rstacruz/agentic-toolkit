@@ -22,6 +22,11 @@
   it's safe. The new evals caught plans doing the latter.
 - `/atk-plan` drops its Goals checklist and the "order the plan" line, which
   repeated the Format template. The evals score the same without them.
+- `/atk-plan` groups implementation steps into layers (Spec → Plumbing →
+  Core → Data → Observability → Rollout → Verification), in the style of a
+  review guide. Each layer has a risk dot, a collapsed summary of what to
+  check, and reviewer questions when it's 🟡 or 🔴. Steps can be commands,
+  flag flips or benchmarks, not only code edits.
 
 ## v2026.11.19
 

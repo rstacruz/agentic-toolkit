@@ -4,6 +4,7 @@ import {
   designHasChangeMarkers,
   everyDecisionHasAlternative,
   everyDecisionHasRisk,
+  everyLayerHasRisk,
   noCodeBlocksInSteps,
   redRiskImpliesL4,
 } from "./checks";
@@ -40,6 +41,7 @@ export default defineSuite({
     ...redRiskImpliesL4(doc),
     ...designHasChangeMarkers(doc),
     ...noCodeBlocksInSteps(doc),
+    ...everyLayerHasRisk(doc),
   ],
   // how decisions are shown to the reader, graded for both arms on every case
   judge: [

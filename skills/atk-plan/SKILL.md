@@ -9,11 +9,14 @@ Plan the given change. Decide for the user; never ask.
 ## Guidelines
 
 - Read related files, plans, and tickets first.
-- `## Design` owns contracts exactly once: data model, state, storage, types, markup, CSS, component tree. `## Implementation steps` is one line per step: files — action — done when. Never repeat a Design code block or attribute list; write `Apply Design → <section>` and keep only the step-specific delta.
+- `## Design` owns contracts exactly once: data model, state, storage, types, markup, CSS, component tree. Steps never repeat a Design code block or attribute list; write `Apply Design → <section>` and keep only the step-specific delta.
 - In `## Design`, mark code with `/* 🟢 New */`, `/* 🟡 Updated */`, or `/* 🔴 Removed */` so the design shows the change, not just the end state.
 - Give examples in `## Design` when they make a contract concrete: sample rows for each new table, a request and response for each API operation, a before and after value, and one refusal or error case. Use one scenario (same ids and values) across all examples so they read as a story. Mark made-up data as illustrative; copy real output when you ran something and say how. Skip examples for contracts that are self-evident, and never repeat them in `## Implementation steps`.
 - Keep steps terse: name only the narrow test that proves the step; exhaustive cases belong in tests, not the plan.
-- Group the steps into `## PR's` as a nested list: each PR names its steps, one-line scope, and dependencies. Keep the grouping out of `## Implementation steps`.
+- Group `## Implementation steps` into layers, in the order to build and review them. Pick from Spec (docs, contracts) → Plumbing (types, config, wiring with no behaviour of its own) → Core change → Data (migrations, backfills) → Observability → Rollout (flags, deploys, infra) → Verification (benchmarks, dashboards, prod checks). Skip layers that don't apply; split one that mixes unrelated risks.
+- A step is anything that has to happen, not only a code edit: run a benchmark, turn on a flag, run `pulumi preview`. One line each: target (files, command, flag, or system) — action — done when. Write commands inline.
+- Rate each layer 🟢, 🟡 or 🔴 on the decision scale; its riskiest step sets the rating. The `<summary>` says what the layer changes and what to check before moving on. Give 🟡 and 🔴 layers `**Questions:**`: what a reviewer would ask, each answered from Design or Grounded facts.
+- Group the steps into `## PR's` as a nested list: each PR names its steps (eg `1.1–2.3`), one-line scope, and dependencies. Layers order the work and PRs ship it, so a PR can span layers and Rollout often comes after the merge.
 - Grade `## Review effort` per `/pr-risk-assessment` when available.
 - Rate every decision's risk as `🟢 low`, `🟡 med`, or `🔴 high` by the cost of being wrong (data loss, privacy, concurrency, live migrations, public contracts), not the size of the change. The line says what breaks if the decision is wrong, not why it's safe: `🟢 low — if wrong, callers get a no-op instead of an error`. Worst-hit-wins: a `🔴 high` decision makes `## Review effort` at least L4.
 - Facts that shape the plan go under `## Appendix: Grounded facts`, with sources.
@@ -76,10 +79,24 @@ Plan the given change. Decide for the user; never ask.
 
 ## Implementation steps
 
-<one line per step: files — action (reference `Design → <section>`) — done when. PR grouping lives in `## PR's`.>
+<layers in build order, each rated 🟢/🟡/🔴. Steps: target — action (reference `Design → <section>`) — done when. PR grouping lives in `## PR's`.>
 
-### 1. <name>
+### 1. <Layer>: <what it delivers> 🟡
+
+<details>
+<summary><what this layer changes>. Check <what to confirm before moving on>.</summary>
+
+#### 1.1 <name>
 `path/a`, `path/b` — <action; see Design → <section>>. Done when <observable result>.
+
+#### 1.2 <name>
+`<command>` — <action>. Done when <observable result>.
+
+**Questions:**
+
+- **<what a reviewer would ask>?** <answer, from Design or Grounded facts>
+
+</details>
 
 ## PR's
 
