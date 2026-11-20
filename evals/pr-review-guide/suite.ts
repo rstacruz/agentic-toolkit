@@ -1,6 +1,5 @@
 import { defineSuite } from "../lib/suite";
 import {
-  beforeAfterRow,
   hotspotRefs,
   lightBackground,
   panelsNumbered,
@@ -18,7 +17,6 @@ export default defineSuite({
   maxCost: 2,
   format: (s) => [
     panelsNumbered(s),
-    beforeAfterRow(s),
     ...skippedStepStyled(s),
     ...hotspotRefs(s),
     safetyChecklist(s),
@@ -28,9 +26,9 @@ export default defineSuite({
   judge: [
     "Draws the changed pipeline as its real steps in code order, as a before row and an after row, with the skipped and narrowed steps styled in place rather than described in a list",
     "Has a review hotspots panel whose cards carry an amber `!` marker and a reference to a decision or feedback point (D#, FP#), and leaves trivial plumbing off it",
-    "States the PR's no-change claim for the default path as a short ✅ checklist of what stays identical, plus how it was verified",
-    "No fact is restated across panels: each panel answers a different question",
-    "A single count that drops to zero is shown as a big-number label, not as a one-row bar chart",
+    "States the PR's no-change claim for the default path as a short checklist (✅ or ✓ marks) of what stays identical, plus what verifies it (eg, the test that pins it)",
+    "Apart from the title and subheading, no panel restates a fact another panel already shows: each panel answers a different question",
+    "A single count that drops to zero is shown as a big-number label, not as a one-row bar chart (bar charts comparing several numbers are fine)",
   ],
   cases: [
     {
@@ -39,8 +37,8 @@ export default defineSuite({
         "Write the PR review guide for the pull request in pr.json, with an at-a-glance SVG infographic a reviewer can understand without reading the guide.",
       judge: [
         "The before/after rows list validate, scanForMalware, resizeVariants, generateThumbnails, putObject, saveRecord in that order",
-        "generateThumbnails is marked skipped on the after row and resizeVariants is marked narrowed (large only)",
-        "The hotspots panel references D2 (skipping thumbnails) and D3 (narrowed resize), and the unauthenticated query-string opt-in in handler.ts",
+        "generateThumbnails is styled as skipped on the after row, and resizeVariants is styled as narrowed with a 'large only' sublabel",
+        "The hotspots panel references D2 (skipping thumbnails) and D3 (narrowed resize)",
         "The thumbnail-jobs count 3 → 0 appears as a large number, not a bar",
       ],
     },

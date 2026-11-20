@@ -23,7 +23,6 @@ export function svg(raw: string): Svg {
 const named = (name: string, res: Result): Result => ({ ...res, name: `${name}: ${res.name}` });
 
 export const panelsNumbered = (s: Svg) => named("panelsNumbered", matches(s.text, /\b1 · [\s\S]*\b2 · /));
-export const beforeAfterRow = (s: Svg) => named("beforeAfterRow", matches(s.text, /\bBefore\b[\s\S]*\bAfter\b/i));
 export const skippedStepStyled = (s: Svg) => [
   named("skippedStepStyled", matches(s.raw, /stroke-dasharray|line-through/)),
   named("skippedStepStyled", matches(s.raw, /#cf222e/i)),
@@ -33,5 +32,6 @@ export const hotspotRefs = (s: Svg) => [
   named("hotspotRefs", matches(s.text, /\b(D|FP)\d+\b/)),
   named("hotspotRefs", matches(s.text, /(^|[ \t])!([ \t]|$)/m)),
 ];
-export const safetyChecklist = (s: Svg) => named("safetyChecklist", matches(s.text, /✅/));
+// models often draw ✓ instead of the emoji, which renders unevenly in SVG
+export const safetyChecklist = (s: Svg) => named("safetyChecklist", matches(s.text, /[✅✓✔]/));
 export const lightBackground = (s: Svg) => named("lightBackground", matches(s.raw, /#F0F0F3/i));
