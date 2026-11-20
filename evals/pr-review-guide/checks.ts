@@ -15,7 +15,7 @@ export function svg(raw: string): Svg {
   if (!/<svg[\s>]/.test(raw)) throw new Error("no <svg> root");
   // Positioned tspans start a new line; inline tspans stay joined with the surrounding text
   const lines = [...raw.matchAll(/<text\b[^>]*>([\s\S]*?)<\/text>/g)].flatMap(([, inner]) =>
-    inner.replace(/<tspan\b[^>]*\s(?:x|dy)=[^>]*>/g, "\n").split("\n").map(strip),
+    strip(inner.replace(/<tspan\b[^>]*\s(?:x|dy)=[^>]*>/g, "\n")).split("\n").map((l) => l.trim()),
   );
   return { raw, text: lines.filter(Boolean).join("\n") };
 }
