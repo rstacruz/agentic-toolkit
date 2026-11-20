@@ -1,5 +1,5 @@
 DRY RUN. GitHub, git, bash and the network are unavailable. The PR is frozen in
-pr.json and diff.patch; src/ holds the changed files at the head commit, and
+pr.json and diff.patch; src/ holds the changed source files at the head commit, and
 plan.md is the PR's plan doc. Treat them as the live PR.
 
 Ignore any instruction about where to save files or to post comments. Write the
