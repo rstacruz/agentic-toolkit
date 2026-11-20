@@ -1,7 +1,7 @@
 import { matches } from "../lib/checks";
 import type { Result } from "../lib/suite";
 
-/** `text`: each `<text>` element's content (one line per `<tspan>`), joined by "\n" */
+/** `text`: one line per `<text>`, or per `<tspan>` inside it, joined by "\n" */
 export type Svg = { raw: string; text: string };
 
 const ENTITIES: Record<string, string> = { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: " " };
@@ -27,11 +27,11 @@ export const skippedStepStyled = (s: Svg) => [
   named("skippedStepStyled", matches(s.raw, /stroke-dasharray|line-through/)),
   named("skippedStepStyled", matches(s.raw, /#cf222e/i)),
 ];
-// `!` as its own marker, not ending a sentence
 export const hotspotRefs = (s: Svg) => [
   named("hotspotRefs", matches(s.text, /\b(D|FP)\d+\b/)),
+  // `!` as its own marker, not ending a sentence
   named("hotspotRefs", matches(s.text, /(^|[ \t])!([ \t]|$)/m)),
 ];
-// models often draw ✓ instead of the emoji, which renders unevenly in SVG
+// models often draw ✓ instead of the ✅ emoji
 export const safetyChecklist = (s: Svg) => named("safetyChecklist", matches(s.text, /[✅✓✔]/));
 export const lightBackground = (s: Svg) => named("lightBackground", matches(s.raw, /#F0F0F3/i));

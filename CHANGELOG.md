@@ -26,10 +26,10 @@
 - `/atk-plan` drops its Goals checklist and the "order the plan" line, which
   repeated the Format template. The evals score the same without them.
 - `/pr-review-guide` infographics draw the changed pipeline as before/after
-  rows with skipped and narrowed steps styled in place, add a review hotspots
-  panel with `D#`/`FP#` references, show a "no change" claim as a ✅
-  checklist, never repeat a fact across panels, and show a single count as a
-  big number rather than a one-row chart.
+  rows, with skipped and narrowed steps styled in place. They add a review
+  hotspots panel with `D#`/`FP#` references and show a "no change" claim as a
+  ✅ checklist. No fact repeats across panels, and a single count is a big
+  number, not a one-row chart.
 
 ## v2026.11.19
 

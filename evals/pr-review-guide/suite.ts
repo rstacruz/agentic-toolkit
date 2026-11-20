@@ -10,7 +10,7 @@ import {
 
 export default defineSuite({
   skill: "pr-review-guide",
-  // the guide is written too, so D#/FP# refs have a target, but only the infographic is graded
+  // Guide is written too so D#/FP# refs resolve; ungraded
   deliverable: "infographic.svg",
   parse: svg,
   tools: ["read", "write", "grep", "glob"],
@@ -22,7 +22,6 @@ export default defineSuite({
     safetyChecklist(s),
     lightBackground(s),
   ],
-  // the infographic structure rules, graded for both arms on every case
   judge: [
     "Draws the changed pipeline as its real steps in code order, as a before row and an after row, with the skipped and narrowed steps styled in place rather than described in a list",
     "Has a review hotspots panel whose cards carry an amber `!` marker and a reference to a decision or feedback point (D#, FP#), and leaves trivial plumbing off it",
