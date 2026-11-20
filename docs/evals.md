@@ -73,7 +73,7 @@ A dry run tests judgment, not whether the skill's scripts are called correctly, 
 
 `/pr-review-guide` posts to GitHub and runs scripts, so its suite is a dry run too. The case `fast-path-upload` freezes a synthetic PR in `pr.json` and `diff.patch`, with the changed files at the head commit under `src/` and the PR's plan doc in `plan.md`. The agent writes `outputs/guide.md` and `outputs/infographic.svg`; only the infographic is graded. Format checks read the SVG's text and markup; the judge reads the raw SVG.
 
-The PR adds an opt-in option that skips one pipeline step and narrows another, with a count that drops to zero, two 🟡 med decisions, an unauthenticated opt-in, and a "default path unchanged" claim backed by a test. Without the skill, an agent tends to draw text panels that restate the PR body and a bar that goes to 0. The skill asks for the pipeline as before/after rows with the changed steps styled in place, a hotspots panel with `D#`/`FP#` references, a ✅ checklist for the safety claim, no fact repeated across panels, and the count as a big number.
+The PR adds an opt-in option that skips one pipeline step and narrows another, with a count that drops to zero, two 🟡 med decisions, an unauthenticated opt-in, and a "default path unchanged" claim backed by a test. The skill asks for the pipeline as before/after rows with the changed steps styled in place, a hotspots panel with `D#`/`FP#` references, a ✅ checklist for the safety claim, no fact repeated across panels, and the count as a big number. Without the skill, agents already draw the before/after rows, but list risks as a plain text list without decision references, and put the count in a line of body text.
 
 ## Adding a suite
 
