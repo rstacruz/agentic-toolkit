@@ -69,6 +69,12 @@ Most cases are there because an agent without the skill gets them wrong. Each on
 
 A dry run tests judgment, not whether the skill's scripts are called correctly, whether the fixes compile, or how the loop behaves over time.
 
+### `/pr-review-guide`
+
+`/pr-review-guide` posts to GitHub and runs scripts, so its suite is a dry run too. The case `fast-path-upload` freezes a synthetic PR in `pr.json` and `diff.patch`, with the changed files at the head commit under `src/` and the PR's plan doc in `plan.md`. The agent writes `outputs/guide.md` and `outputs/infographic.svg`; only the infographic is graded. Format checks read the SVG's text and markup; the judge reads the raw SVG.
+
+The PR adds an opt-in option that skips one pipeline step and narrows another, with a count that drops to zero, two 🟡 med decisions, an unauthenticated opt-in, and a "default path unchanged" claim backed by a test. Without the skill, an agent tends to draw text panels that restate the PR body and a bar that goes to 0. The skill asks for the pipeline as before/after rows with the changed steps styled in place, a hotspots panel with `D#`/`FP#` references, a ✅ checklist for the safety claim, no fact repeated across panels, and the count as a big number.
+
 ## Adding a suite
 
 1. Create `evals/<skill>/suite.ts` with `defineSuite()` from `lib/suite.ts`: the output file, a `parse` function, tools, `maxCost` and cases.

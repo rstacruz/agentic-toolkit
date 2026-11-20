@@ -76,7 +76,7 @@ Try to order sections like so:
 
 Show before telling. For each section, pick the visual form first and fall back to prose only when none fits.
 
-- **Numbers to compare** (line counts, latency, counts before/after, per-file size): draw a bar chart in the infographic, with before as a light bar and after as a solid bar overlaid. Never list them as prose or a bare table.
+- **Numbers to compare** (line counts, latency, counts before/after, per-file size): draw a bar chart in the infographic, with before as a light bar and after as a solid bar overlaid. Never list them as prose or a bare table. A single count (eg, `5 → 0` steps) is a big-number label, not a one-row chart.
 - **Flow, order, state, dependencies:** Mermaid (call graph, sequence diagram, state diagram).
 - **UI changes:** annotated screenshots or mockups traced from real screenshots.
 - **Review attention:** mark where a reviewer should look on the visual itself (amber `!` marker, red/green/yellow overlay), not in a separate paragraph.
@@ -96,7 +96,10 @@ Draw an SVG infographic that a reviewer can understand without reading the guide
 **Content:**
 
 - Explain the problem, solution, before/after.
-- Lay it out as numbered panels in reading order (`1 · …`, `2 · …`).
+- Lay it out as numbered panels in reading order (`1 · …`, `2 · …`). Each panel answers a different question; never restate a fact another panel already shows.
+- **Draw the changed system, not a list about it.** When the PR changes a pipeline, waterfall, state machine or call chain, draw its real elements in code order as a before row and an after row, and style what changed in place: skipped (red, dashed, struck through), narrowed (amber, with a short sublabel), unchanged (plain). Read the order from the code at the head commit.
+- **Review hotspots panel:** when the guide has risky decisions or open feedback points, give each one a card with an amber `!` marker and its guide reference (`D4`, `FP3`), so the reviewer knows where to spend time. Keep trivial plumbing off it.
+- **State the safety claim:** when the PR claims no change for existing paths (dark launch, opt-in option, flag off), show it as a short ✅ checklist of what stays identical, plus how it was verified.
 - Title (h1) states the outcome, not the topic (eg, "Duplicate queue deliveries are now skipped", not "Queue worker changes"). Max 9 words.
 - Add a one-line subheading under the title that explains the idea further (the why or mechanism, eg, "Later steps only add fields, so the first result is final"). Never repeat the ticket ID, PR number or other metadata there; the PR already shows those.
 - In screenshots, highlight changed areas with overlay boxes with red/green/yellow strokes.

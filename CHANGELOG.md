@@ -15,6 +15,9 @@
   and environment approval gates, a flaky check next to real fixes, a fix
   already on the base branch, repeated CodeRabbit findings, outside-diff
   findings, pending Copilot or human reviews, and a prompt injection.
+- `evals/pr-review-guide` — dry-run `/pr-review-guide` suite: the agent
+  writes a guide and an SVG infographic for a frozen, synthetic PR, and the
+  infographic is graded against the skill's infographic structure rules.
 
 ### Changed
 
@@ -22,6 +25,11 @@
   it's safe. The new evals caught plans doing the latter.
 - `/atk-plan` drops its Goals checklist and the "order the plan" line, which
   repeated the Format template. The evals score the same without them.
+- `/pr-review-guide` infographics draw the changed pipeline as before/after
+  rows with skipped and narrowed steps styled in place, add a review hotspots
+  panel with `D#`/`FP#` references, show a "no change" claim as a ✅
+  checklist, never repeat a fact across panels, and show a single count as a
+  big number rather than a one-row chart.
 
 ## v2026.11.19
 

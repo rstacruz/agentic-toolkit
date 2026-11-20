@@ -10,5 +10,5 @@
     "allowImportingTsExtensions": true
   },
   "include": ["**/*.ts"],
-  "exclude": [".workspace", "node_modules"]
+  "exclude": [".workspace", "node_modules", "*/fixtures"]
 }
