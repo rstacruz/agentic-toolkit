@@ -6,11 +6,11 @@
 
 ```sh
 cd evals && bun install
-bun lib/run.ts atk-plan --iteration 1 --model anthropic/claude-sonnet-4-5 [--runs 3] [--only remove-by-id]
-bun lib/grade.ts atk-plan --iteration 1 --judge-model anthropic/claude-haiku-4-5
+bun lib/run.ts atk-plan --iteration 1 --model anthropic/claude-sonnet-5-5 [--runs 3] [--only remove-by-id]
+bun lib/grade.ts atk-plan --iteration 1 --judge-model anthropic/claude-opus-5-5
 ```
 
-- **Models:** use exact `provider/model` IDs. The judge model must differ from the runner model.
+- **Models:** use exact `provider/model` IDs. The judge model must differ from the runner model. Prefer `anthropic/claude-sonnet-5-5` as the runner and `anthropic/claude-opus-5-5` as the judge; avoid Haiku as the judge, as its verdicts are noisy.
 - **Iterations:** use a fresh `--iteration` for every batch, since pairs are never overwritten.
 - **Cost:** each run is capped at the suite's `maxCost` ($2), so a full iteration can cost tens of dollars. Use `--only` and `--runs 1` while authoring.
 - **Results:** go to `evals/.workspace/<skill>/iteration-N/`, which is gitignored. `grade.ts` prints the report and writes `report.json`.
