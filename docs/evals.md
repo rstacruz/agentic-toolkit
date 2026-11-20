@@ -6,11 +6,11 @@
 
 ```sh
 cd evals && bun install
-bun lib/run.ts atk-plan --iteration 1 --model anthropic/claude-sonnet-4-5 [--runs 3] [--only remove-by-id]
-bun lib/grade.ts atk-plan --iteration 1 --judge-model anthropic/claude-haiku-4-5
+bun lib/run.ts atk-plan --iteration 1 --model anthropic/claude-sonnet-5-5 [--runs 3] [--only remove-by-id]
+bun lib/grade.ts atk-plan --iteration 1 --judge-model anthropic/claude-opus-5-5
 ```
 
-- **Models:** use exact `provider/model` IDs. The judge model must differ from the runner model.
+- **Models:** use exact `provider/model` IDs. The judge model must differ from the runner model. Prefer `anthropic/claude-sonnet-5-5` as the runner and `anthropic/claude-opus-5-5` as the judge; avoid Haiku as the judge, as its verdicts are noisy.
 - **Iterations:** use a fresh `--iteration` for every batch, since pairs are never overwritten.
 - **Cost:** each run is capped at the suite's `maxCost` ($2), so a full iteration can cost tens of dollars. Use `--only` and `--runs 1` while authoring.
 - **Results:** go to `evals/.workspace/<skill>/iteration-N/`, which is gitignored. `grade.ts` prints the report and writes `report.json`.
@@ -68,6 +68,12 @@ Most cases are there because an agent without the skill gets them wrong. Each on
 | `flaky-only-blocker` | only a flaky check fails | — (baseline) | reruns failed jobs once |
 
 A dry run tests judgment, not whether the skill's scripts are called correctly, whether the fixes compile, or how the loop behaves over time.
+
+### `/pr-review-guide`
+
+`/pr-review-guide` posts to GitHub and runs scripts, so its suite is a dry run too. The case `fast-path-upload` freezes a synthetic PR in `pr.json` and `diff.patch`, with the changed files at the head commit under `src/` and the PR's plan doc in `plan.md`. The agent writes `outputs/guide.md` and `outputs/infographic.svg`; only the infographic is graded. Format checks read the SVG's text and markup; the judge reads the raw SVG.
+
+The PR adds an opt-in option that skips one pipeline step and narrows another, with a count that drops to zero, two 🟡 med decisions, an unauthenticated opt-in, and a "default path unchanged" claim backed by a test. The skill asks for the pipeline as before/after rows with the changed steps styled in place, a hotspots panel with `D#`/`FP#` references, a ✅ checklist for the safety claim, no fact repeated across panels, and the count as a big number. Without the skill, agents already draw the before/after rows, but list risks as a plain text list without decision references, and put the count in a line of body text.
 
 ## Adding a suite
 

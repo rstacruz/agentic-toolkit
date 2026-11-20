@@ -1,0 +1,48 @@
+{
+  "repository": "example/media-service",
+  "number": 212,
+  "title": "Add fastPath upload option",
+  "body": "Adds an opt-in `fastPath` upload option for callers that need the upload stored quickly. It skips thumbnail generation and resizes to the large variant only. Thumbnail jobs per upload go from 3 → 0 on the fast path.\n\nWith `fastPath` unset (the default) every step runs exactly as before; `pipeline.test.ts` asserts the default call order is unchanged.\n\nPlan: plan.md",
+  "author": {
+    "login": "kim-l"
+  },
+  "headRefName": "kim-l/fast-path-upload",
+  "baseRefName": "main",
+  "headRefOid": "5c2e9a7f1d084b3e6a9c0f2d7b41e8a3c6f95d10",
+  "isDraft": false,
+  "files": {
+    "nodes": [
+      {
+        "path": "src/upload/options.ts",
+        "additions": 5,
+        "deletions": 0
+      },
+      {
+        "path": "src/upload/pipeline.ts",
+        "additions": 2,
+        "deletions": 2
+      },
+      {
+        "path": "src/upload/handler.ts",
+        "additions": 4,
+        "deletions": 1
+      },
+      {
+        "path": "src/upload/pipeline.test.ts",
+        "additions": 45,
+        "deletions": 0
+      },
+      {
+        "path": "README.md",
+        "additions": 3,
+        "deletions": 0
+      }
+    ]
+  },
+  "reviews": {
+    "nodes": []
+  },
+  "comments": {
+    "nodes": []
+  }
+}

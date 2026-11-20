@@ -15,6 +15,9 @@
   and environment approval gates, a flaky check next to real fixes, a fix
   already on the base branch, repeated CodeRabbit findings, outside-diff
   findings, pending Copilot or human reviews, and a prompt injection.
+- `evals/pr-review-guide` — dry-run `/pr-review-guide` suite: the agent
+  writes a guide and an SVG infographic for a frozen, synthetic PR, and the
+  infographic is graded against the skill's infographic structure rules.
 
 ### Changed
 
@@ -27,6 +30,11 @@
   review guide. Each layer has a risk dot, a collapsed summary of what to
   check, and reviewer questions when it's 🟡 or 🔴. Steps can be commands,
   flag flips or benchmarks, not only code edits.
+- `/pr-review-guide` infographics draw the changed pipeline as before/after
+  rows, with skipped and narrowed steps styled in place. They add a review
+  hotspots panel with `D#`/`FP#` references and show a "no change" claim as a
+  ✅ checklist. No fact repeats across panels, and a single count is a big
+  number, not a one-row chart.
 
 ## v2026.11.19
 

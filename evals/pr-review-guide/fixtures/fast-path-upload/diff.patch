@@ -1,0 +1,106 @@
+diff --git a/README.md b/README.md
+index 9e47959..ec6f9b7 100644
+--- a/README.md
++++ b/README.md
+@@ -7,3 +7,6 @@ Stores user uploads and the image variants the apps display.
+ `POST /uploads` with a multipart `file` field. Each upload is validated,
+ scanned, resized to three variants (large, medium, small), given three
+ thumbnails (64, 128, 256 px) and stored. Returns the stored record.
++
++Add `?fast=1` to skip thumbnails and store the large variant only. Use it when
++the caller needs the upload stored quickly and never shows thumbnails.
+diff --git a/src/upload/handler.ts b/src/upload/handler.ts
+index 19e6e80..e52e370 100644
+--- a/src/upload/handler.ts
++++ b/src/upload/handler.ts
+@@ -5,6 +5,9 @@ const MAX_BYTES = 20 * 1024 * 1024;
+ 
+ export async function handleUpload(req: Request, res: Response) {
+   if (!req.file) return res.status(400).json({ error: "missing file" });
+-  const record = await runUploadPipeline(req.file, { maxBytes: MAX_BYTES });
++  const record = await runUploadPipeline(req.file, {
++    maxBytes: MAX_BYTES,
++    fastPath: req.query.fast === "1",
++  });
+   res.status(201).json(record);
+ }
+diff --git a/src/upload/options.ts b/src/upload/options.ts
+index 9c03605..4d2e49c 100644
+--- a/src/upload/options.ts
++++ b/src/upload/options.ts
+@@ -1,4 +1,9 @@
+ export interface UploadOptions {
+   /** Reject files larger than this; defaults to 20 MB. */
+   maxBytes?: number;
++  /**
++   * Skip thumbnails and resize to the large variant only, for callers that
++   * need the upload stored quickly. Off by default.
++   */
++  fastPath?: boolean;
+ }
+diff --git a/src/upload/pipeline.test.ts b/src/upload/pipeline.test.ts
+new file mode 100644
+index 0000000..e8ce545
+--- /dev/null
++++ b/src/upload/pipeline.test.ts
+@@ -0,0 +1,45 @@
++import { beforeEach, expect, test, vi } from "vitest";
++import { runUploadPipeline } from "./pipeline";
++
++const { calls, step } = vi.hoisted(() => {
++  const calls: string[] = [];
++  const step =
++    (name: string, result?: unknown) =>
++    (..._args: unknown[]) => {
++      calls.push(name);
++      return result;
++    };
++  return { calls, step };
++});
++
++vi.mock("./validate", () => ({ validate: step("validate") }));
++vi.mock("../security/scan", () => ({ scanForMalware: step("scanForMalware") }));
++vi.mock("../images/transform", () => ({
++  resizeVariants: step("resizeVariants", [{ name: "large" }]),
++  generateThumbnails: step("generateThumbnails", []),
++}));
++vi.mock("../storage/objects", () => ({ putObject: step("putObject", "uploads/abc") }));
++vi.mock("../db/uploads", () => ({ saveRecord: step("saveRecord") }));
++
++const file = { name: "cat.jpg", mimeType: "image/jpeg", bytes: new Uint8Array(8) };
++
++beforeEach(() => {
++  calls.length = 0;
++});
++
++test("default options run every step in the same order as before", async () => {
++  await runUploadPipeline(file, {});
++  expect(calls).toEqual([
++    "validate",
++    "scanForMalware",
++    "resizeVariants",
++    "generateThumbnails",
++    "putObject",
++    "saveRecord",
++  ]);
++});
++
++test("fastPath skips thumbnails", async () => {
++  await runUploadPipeline(file, { fastPath: true });
++  expect(calls).toEqual(["validate", "scanForMalware", "resizeVariants", "putObject", "saveRecord"]);
++});
+diff --git a/src/upload/pipeline.ts b/src/upload/pipeline.ts
+index 8710d86..2454800 100644
+--- a/src/upload/pipeline.ts
++++ b/src/upload/pipeline.ts
+@@ -18,8 +18,8 @@ export interface UploadedFile {
+ export async function runUploadPipeline(file: UploadedFile, opts: UploadOptions) {
+   validate(file, opts);
+   await scanForMalware(file);
+-  const variants = await resizeVariants(file, VARIANTS);
+-  const thumbnails = await generateThumbnails(file, THUMBNAIL_SIZES);
++  const variants = await resizeVariants(file, opts.fastPath ? ["large"] : VARIANTS);
++  const thumbnails = opts.fastPath ? [] : await generateThumbnails(file, THUMBNAIL_SIZES);
+   const key = await putObject(file, [...variants, ...thumbnails]);
+   return saveRecord({
+     key,
